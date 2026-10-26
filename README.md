@@ -1,59 +1,96 @@
-# REPINDSA · Node.js / GitHub / GoDaddy
+# REPINDSA · GoDaddy Node.js y MySQL
 
-Versión 1.2.0 · Código actualizado al 26 de octubre de 2026.
+La instalación nueva utiliza **la base MySQL alojada por GoDaddy** y guarda allí
+los registros, las sesiones y los adjuntos privados. No requiere cuentas de Turso,
+S3 ni otro proveedor. El código conserva el adaptador SQLite/libSQL para desarrollo
+local y pruebas, pero selecciona MySQL automáticamente cuando existe `DB_HOST`.
 
-Sube **todo el contenido descomprimido de este ZIP** a un repositorio privado. `package.json` debe quedar en la raíz. No necesitas añadir, quitar ni editar archivos del paquete. Después conecta ese repositorio con GoDaddy Node.js Hosting.
-
-## Configuración del alojamiento
+## Configuración en GoDaddy
 
 | Campo | Valor |
 |---|---|
-| Node.js | 22 LTS actualizado o 24 LTS |
+| Node.js | 24 LTS o 22 LTS actualizado, mínimo 22.13 |
 | Instalación | `npm ci` |
 | Compilación | `npm run build` |
 | Inicio | `npm start` |
 | Entrada | `server.js` |
-| Puerto | El `PORT` asignado automáticamente por GoDaddy |
-| Comprobación de salud | `/healthz` |
+| Puerto | `PORT` asignado por GoDaddy, escucha en `0.0.0.0` |
+| Salud | `/healthz` |
 
-Las dependencias de compilación y ejecución están declaradas en `dependencies`, para los despliegues que no instalan `devDependencies`.
+Conecta `procesosrep/repindsaapp`, rama `main`, con `package.json` en la raíz.
+Necesitas un plan que ejecute Node.js para publicar. La pestaña **Base de datos
+alojada → Abrir la guía de la base de datos** indica cómo conectar su MySQL.
 
-## Variables del servidor
+En **Configuración → Secretos → Vista previa** conserva los valores MySQL
+proporcionados por GoDaddy; no copies los asteriscos del panel:
 
-Configúralas desde el panel de GoDaddy, sin modificar los archivos. El TXT privado entregado por separado contiene la clave de restauración y los pasos completos. **Ese TXT no forma parte del ZIP ni debe subirse a GitHub.**
+- `DB_HOST`, `DB_PORT` (normalmente 3306), `DB_USER`, `DB_PASSWORD`, `DB_NAME`.
+- `APP_ORIGIN`: URL HTTPS completa del entorno, sin rutas ni parámetros.
+- `ADMIN_USERNAME`: nombre del primer administrador, 3 a 50 caracteres
+  (letras minúsculas, números, punto, guion o guion bajo).
+- `ADMIN_NAME`: nombre visible.
+- `ADMIN_PASSWORD`: contraseña privada inicial de 12 a 128 caracteres.
+- `MIGRATION_AUTO_IMPORT=0`: instalación nueva, también predeterminado.
 
-- `APP_ORIGIN`: URL pública HTTPS exacta.
-- `DATABASE_URL`: base **libSQL/Turso remota, nueva y vacía**.
-- `DATABASE_AUTH_TOKEN`: token de esa base, cuando lo requiera el proveedor.
-- `S3_BUCKET`: bucket privado para adjuntos.
-- `S3_REGION`: región del proveedor; `auto` para Cloudflare R2.
-- `S3_ENDPOINT`: endpoint compatible con S3; vacío para Amazon S3.
-- `S3_ACCESS_KEY_ID` y `S3_SECRET_ACCESS_KEY`: acceso limitado al bucket.
-- `MIGRATION_IMPORT_KEY`: clave privada del TXT. Necesaria sólo para restaurar por primera vez.
+Si la guía exige TLS, agrega `DB_SSL=true` y, cuando corresponda, `DB_SSL_CA`
+con el certificado CA del proveedor. La verificación de certificados permanece
+activa. No se habilita TLS ni se selecciona una CA por adivinación.
 
-Estos valores son privados del servidor. No uses prefijos `NEXT_PUBLIC_` para ellos.
+`DB_USERNAME` y `DB_DATABASE` se admiten como alias, pero la guía mostrada utiliza
+`DB_USER` y `DB_NAME`. No configures `DATABASE_URL`, `DATABASE_AUTH_TOKEN`,
+`MIGRATION_IMPORT_KEY` ni `S3_*` para este modo.
 
-## Base de datos incluida
+Guarda los secretos y actualiza la vista previa. El arranque aplica el esquema,
+prepara las tablas de adjuntos y crea el primer administrador si la base aún no
+tiene usuarios ni propietario. No se restaura el respaldo cifrado, ni se cargan
+proyectos del CRM o registros comerciales de demostración. No se borra una base
+existente. Algunos catálogos de trabajo se inicializan al usar sus módulos.
 
-`migration/repindsa-backup.enc` contiene el respaldo real cifrado con AES-256-GCM: solicitudes de materiales, compras, registros relacionados, usuarios, hashes de contraseñas, permisos, folios, catálogos, bitácoras y adjuntos.
+Al ingresar debes cambiar la contraseña. Después retira `ADMIN_PASSWORD` del
+panel; los reinicios nunca restablecen una contraseña ni crean otro administrador
+si ya existen usuarios o propietario. También está disponible `npm run admin:create`
+para instalaciones con terminal privada.
 
-`migration/backup-info.json` indica la fecha exacta del corte y los conteos. No se transfieren las sesiones abiertas ni los contadores temporales de intentos. Los usuarios ingresan nuevamente con sus contraseñas actuales.
+## Publicación, almacenamiento y permisos
 
-La instalación nueva es ahora el modo predeterminado: no restaura el respaldo ni necesita su clave. Sólo si configuras explícitamente `MIGRATION_AUTO_IMPORT=1`, el inicio restaura y verifica cada fila y cada adjunto en los servicios configurados. No ejecutes `admin:create` durante esta migración. Tras finalizar, los reinicios reconocen la restauración y **conservan las operaciones nuevas sin volver a importar ni sobrescribirlas**. La clave puede retirarse del panel de GoDaddy tras verificar la instalación.
+La pantalla de GoDaddy indica que **Vista previa y Publicar comparten MySQL**:
+no son bases aisladas. Las pruebas que hagas en la vista previa pueden modificar
+los datos publicados. Configura los secretos de cada entorno y usa su propio
+`APP_ORIGIN`; conserva la misma identidad de administrador. No reinicialices la
+base al publicar. Publica desde el panel cuando la vista previa esté verificada.
 
-Si la base de destino ya contiene información, el importador la rechaza: no sobrescribe datos existentes. Si la restauración se interrumpe, se reanuda con el mismo respaldo y verifica su contenido antes de iniciar la aplicación.
+Los adjuntos se guardan en las tablas `app_files` y `app_file_chunks`, divididos
+en bloques de 256 KiB y confirmados en una transacción InnoDB. No dependen del
+disco temporal del proceso. Siguen pasando por los permisos de las API privadas;
+no se generan URLs públicas del almacenamiento. Los adjuntos consumen la cuota
+y el respaldo de MySQL: comprueba los límites del plan y conserva copias de seguridad.
 
-El respaldo es un corte, no sincronización en tiempo real. Para un cambio definitivo de alojamiento, evita capturas simultáneas en ambos sistemas y realiza una sincronización final de lo registrado después del corte.
+La cuenta MySQL debe poder crear tablas, índices y triggers, además de leer y
+escribir datos. Los triggers mantienen la bitácora dentro de la misma transacción
+y rechazan modificarla o eliminarla. No se desactiva esa protección para completar
+un despliegue. Si el proveedor no concede permisos de triggers, revisa la guía
+con soporte antes de publicar.
 
-## Requisitos adicionales evaluados
+## Diagnóstico
 
-Se necesita un plan que ejecute Node.js, base libSQL/Turso, almacenamiento privado S3/R2, salida de red hacia ambos servicios y HTTPS. Un alojamiento estático, WordPress o sólo PHP no puede ejecutar este sistema. No se utiliza el almacenamiento temporal del despliegue para conservar información empresarial.
+El registro `[REPINDSA]` indica la etapa que falla: configuración, base de datos,
+Next.js o puerto. Los mensajes no imprimen contraseñas ni conexiones completas.
+La aplicación no anuncia estar lista hasta completar la inicialización y abrir
+el puerto. Un proceso sin `DB_HOST` sigue usando el adaptador local y en producción
+rechaza almacenamiento temporal salvo que exista un volumen explícitamente configurado.
 
-Se sustituyeron las dependencias del entorno Cloudflare Workers por un adaptador Node.js para base de datos y archivos. La identidad se valida mediante las sesiones de la aplicación; el servidor elimina las cabeceras de identidad externas recibidas del cliente.
+`server.js` fija el directorio de trabajo desde su propia ubicación y las
+migraciones localizan los SQL respecto a sus archivos. La conexión remota no
+requiere crear una carpeta local `data`. El esquema existente de SQLite se adapta
+a MySQL: texto, índices, upserts y contadores con bloqueo dentro de transacciones.
+Las migraciones DDL de MySQL son reanudables y se marcan después de completarse,
+ya que MySQL confirma DDL implícitamente. Los lotes de datos utilizan transacciones
+reales y revierten también los eventos de auditoría si fallan.
 
-Incluye el módulo de incidentes laborales, las mejoras de solicitudes, cuatro grupos de estado y «Agregar más» para artículos fuera de catálogo. Los módulos existentes y sus flujos se mantienen.
+## Desarrollo y comprobaciones
 
-## Verificación
+Sin variables externas, `npm run dev` usa `data/repindsa.db` y `data/uploads`,
+ignorados por Git. No crees worktrees para tareas normales en el entorno aislado.
 
 ```bash
 npm ci
@@ -61,78 +98,28 @@ npm test
 npm run typecheck
 npm run test:flows
 npm run build
+npm run dev
 ```
 
-En GoDaddy basta configurar las variables y desplegar. La validación de GitHub Actions no requiere la clave del respaldo. Para verificar el registro de restauración en un entorno ya configurado: `npm run migration:verify`.
+Las pruebas de integración MySQL requieren un servidor de prueba cuya cuenta pueda
+crear una base temporal. Nunca ejecutes estas pruebas contra una cuenta de producción:
 
-El paquete se probó con restauración real sobre una base vacía, comparación exacta de tablas y adjuntos, arranque de producción y acceso autenticado a las API de registros, materiales, compras, bitácora e incidentes. Las credenciales y conectividad de los servicios que contrates se verifican al configurar tu alojamiento.
+```bash
+MYSQL_TEST_HOST=127.0.0.1 MYSQL_TEST_PORT=3307 MYSQL_TEST_USER=root npm test
+```
 
-## Despliegue y diagnóstico en GoDaddy
+La contraseña de pruebas, si corresponde, se proporciona privadamente mediante
+`MYSQL_TEST_PASSWORD`. Las pruebas crean y eliminan únicamente una base aleatoria
+con prefijo `repindsa_test_`. Sin servidor configurado esa integración se omite de
+forma explícita; las demás pruebas siguen ejecutándose.
 
-Confirma que el plan permite ejecutar una aplicación Node.js con un proceso
-persistente. Un plan compartido que sólo ofrece PHP o archivos estáticos no
-puede iniciar este servidor. Este repositorio usa un servidor personalizado;
-no se debe publicar únicamente la carpeta `.next` ni exportarlo como sitio estático.
+## Respaldo y ejemplos anteriores
 
-1. Conecta el repositorio con `package.json` y `server.js` en la raíz de la aplicación.
-2. Selecciona Node.js 24 LTS o 22 LTS actualizado (mínimo 22.13).
-3. Configura las variables privadas en el panel, tomando `.env.example` como
-   lista de nombres. `APP_ORIGIN` debe ser el origen HTTPS exacto, sin rutas.
-   El servidor escucha en `0.0.0.0` usando el `PORT` interno asignado por el plan.
-4. Ejecuta `npm ci` y `npm run build`; inicia con `npm start`.
-5. Comprueba `/healthz`, la página principal y el inicio de sesión. Revisa los
-   registros si el proceso termina durante las migraciones o la restauración.
+Se conserva `migration/repindsa-backup.enc` y su información para una eventual
+recuperación separada. No se importan en la instalación nueva. El importador antiguo
+es para SQLite/libSQL y no se ejecuta automáticamente en MySQL. Conserva el archivo
+privado de la clave fuera de GitHub; no publiques credenciales.
 
-El archivo `server.js` fija el directorio de la aplicación desde su propia
-ubicación: puede iniciarse desde otro directorio del alojamiento. Las migraciones
-buscan los SQL por su ubicación real y sólo crean directorios para bases locales;
-una conexión remota no exige escribir una carpeta `data` en el código desplegado.
-Los mensajes `[REPINDSA]` indican la etapa de inicio y sólo se anuncia el estado
-listo después de completar la inicialización y abrir el puerto. Si faltan el
-dominio público, las credenciales o la clave original de restauración, se mantiene
-el cierre por error para evitar iniciar con una base vacía accidentalmente.
-
-Para conservar los datos incluidos, utiliza una base remota nueva y vacía,
-almacenamiento S3 privado y la clave original del respaldo. No se puede generar
-otra clave para descifrarlo. No configures `MIGRATION_AUTO_IMPORT=0` si tu objetivo
-es recuperar ese respaldo. No ejecutes `admin:create` sobre esa restauración.
-
-Para una instalación **nueva y vacía**, crea primero una base libSQL/Turso nueva
- y configura en **Secretos → Vista previa** (y en Publicar cuando corresponda):
-
-- `APP_ORIGIN`: URL HTTPS exacta de ese entorno.
-- `DATABASE_URL` y `DATABASE_AUTH_TOKEN`: conexión y token reales de la base nueva.
-- `MIGRATION_AUTO_IMPORT=0`: modo vacío, también predeterminado si se omite.
-- `ADMIN_USERNAME`, `ADMIN_NAME` y `ADMIN_PASSWORD`: primer administrador;
-  contraseña privada de 12 a 128 caracteres. No hay credenciales predeterminadas.
-- Las variables `S3_*` anteriores para almacenar adjuntos de forma persistente.
-
-Al iniciar, se crean las tablas y el primer administrador automáticamente.
-No se restauran el respaldo, los proyectos del CRM ni los registros de ejemplo.
-Los catálogos de trabajo pueden inicializarse al usar los módulos. No se borra
-información de bases existentes. El administrador debe cambiar la contraseña
-al entrar; después retira `ADMIN_PASSWORD` de Secretos. Los reinicios no cambian
-la contraseña ni crean administradores adicionales aunque esas variables sigan
-configuradas. Si no defines el administrador, también puedes crearlo con
-`npm run admin:create` desde una terminal privada.
-
-`DB_HOST`, `DB_PORT` y `DB_NAME` no configuran esta aplicación: requiere
-libSQL/Turso, no una conexión MySQL. El repositorio no crea el servicio remoto
-ni sus credenciales. No habilites almacenamiento local en GoDaddy sin un volumen
-persistente confirmado. Conserva el respaldo cifrado por separado para una
-posible recuperación posterior.
-
-En desarrollo, `npm run dev` usa la base local y los adjuntos locales por defecto
-y no importa el respaldo automáticamente. No requiere copiar `.env.example`.
-No uses el almacenamiento local temporal del alojamiento para datos de producción.
-
-Los archivos `app/data/frisa-example.json` y `app/data/template-examples.json`
-son **demostraciones nuevas**, con costos internos simulados y precios de
-referencia usados por las pruebas. No recuperan las cotizaciones originales.
-Sólo se agregan cuando el administrador solicita preparar los ejemplos; no
-sustituyen el respaldo cifrado ni se cargan durante el inicio del servidor.
-
-## Referencias oficiales
-
-- [Requisitos de aplicaciones Node.js en GoDaddy](https://developer.godaddy.com/en/docs/api-users/hosting/app-requirements)
-- [Servidor personalizado de Next.js](https://nextjs.org/docs/pages/guides/custom-server)
+`app/data/frisa-example.json` y `template-examples.json` contienen demostraciones
+nuevas, no cotizaciones originales recuperadas. Se cargan únicamente por solicitud
+explícita del administrador, no durante el inicio.

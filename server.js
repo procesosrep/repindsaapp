@@ -3,6 +3,7 @@ import {fileURLToPath} from 'node:url';
 import {serverConfig} from './server/config.mjs';
 import next from 'next';
 import {initializeFreshDatabase, bootstrapAdministrator} from './server/fresh-install.mjs';
+import {initializeMySQLAudit} from './server/mysql-audit.mjs';
 import {migrate} from './scripts/migrate.mjs';
 import {importEncryptedMigration} from './scripts/import-encrypted.mjs';
 
@@ -19,6 +20,7 @@ try {
   console.log('[REPINDSA] Comprobando base de datos y migraciones.');
   // Fresh installations are the default; restoration requires explicit opt-in.
   const autoImport = process.env.MIGRATION_AUTO_IMPORT === '1';
+  if(autoImport && process.env.DB_HOST)throw Error('Configura MIGRATION_AUTO_IMPORT=0 para la instalación nueva de MySQL. El respaldo antiguo requiere su adaptador libSQL.');
   if (autoImport) {
     stage = 'restauración del respaldo';
     console.log('[REPINDSA] Comprobando restauración del respaldo.');
@@ -31,6 +33,11 @@ try {
     }
     if (await initializeFreshDatabase(db)) console.log('[REPINDSA] Base nueva inicializada sin datos históricos ni ejemplos.');
     if (await bootstrapAdministrator(db)) console.log('[REPINDSA] Primer administrador creado; debe cambiar su contraseña al ingresar.');
+    if(db.dialect==='mysql'){
+      stage='bitácora MySQL (permiso de triggers)';
+      console.log('[REPINDSA] Preparando bitácora protegida de MySQL.');
+      await initializeMySQLAudit(db);
+    }
   }
   stage = 'preparación de Next.js';
   console.log('[REPINDSA] Preparando Next.js.');

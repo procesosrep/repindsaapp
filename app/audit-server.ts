@@ -1,7 +1,9 @@
+import {initializeMySQLAudit} from '../server/mysql-audit.mjs';
 type R=Record<string,any>;
 const ready=new WeakMap<object,Promise<void>>();
 export async function ensureAudit(db:any){let pending=ready.get(db);if(!pending){pending=initializeAudit(db).catch(error=>{ready.delete(db);throw error});ready.set(db,pending);}await pending;}
 async function initializeAudit(db:any){
+  if(db.dialect==='mysql'){await initializeMySQLAudit(db);return;}
   // Triggers capture committed record changes in the same transaction, including linked operations.
   await db.batch([
     db.prepare(`CREATE TABLE IF NOT EXISTS operation_audit (id INTEGER PRIMARY KEY AUTOINCREMENT,event_key TEXT UNIQUE,record_id TEXT NOT NULL,kind TEXT NOT NULL,label TEXT,actor TEXT NOT NULL,actor_name TEXT,occurred_at TEXT NOT NULL,action TEXT NOT NULL,previous_status TEXT,status TEXT,changes TEXT,origin TEXT NOT NULL DEFAULT 'live')`),
