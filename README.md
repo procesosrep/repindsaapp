@@ -83,6 +83,15 @@ no se debe publicar únicamente la carpeta `.next` ni exportarlo como sitio est�
 5. Comprueba `/healthz`, la página principal y el inicio de sesión. Revisa los
    registros si el proceso termina durante las migraciones o la restauración.
 
+El archivo `server.js` fija el directorio de la aplicación desde su propia
+ubicación: puede iniciarse desde otro directorio del alojamiento. Las migraciones
+buscan los SQL por su ubicación real y sólo crean directorios para bases locales;
+una conexión remota no exige escribir una carpeta `data` en el código desplegado.
+Los mensajes `[REPINDSA]` indican la etapa de inicio y sólo se anuncia el estado
+listo después de completar la inicialización y abrir el puerto. Si faltan el
+dominio público, las credenciales o la clave original de restauración, se mantiene
+el cierre por error para evitar iniciar con una base vacía accidentalmente.
+
 Para conservar los datos incluidos, utiliza una base remota nueva y vacía,
 almacenamiento S3 privado y la clave original del respaldo. No se puede generar
 otra clave para descifrarlo. No configures `MIGRATION_AUTO_IMPORT=0` si tu objetivo
