@@ -1,3 +1,4 @@
+import {recordMutation,recordIdentity,captureRecordChange} from './mysql-record-audit.mjs';
 import mysql from 'mysql2/promise';
 
 // Compatibility for the application's small, parameterized SQLite query surface.
@@ -37,7 +38,25 @@ export class MySQLDatabase {
     } catch(error) {if(!schema)await connection.rollback();throw error;}
     finally {connection.release();}
   }
-  async execute(connection, source, args=[]) {
+  async execute(connection, source, args=[], internal=false) {
+    if(!internal&&/^\s*(?:UPDATE|DELETE\s+FROM|REPLACE\s+INTO|TRUNCATE(?:\s+TABLE)?|DROP\s+TABLE|ALTER\s+TABLE)\s+`?operation_audit`?\b/i.test(source)) {
+      throw Object.assign(new Error('La bitácora es de sólo lectura'),{code:'AUDIT_READ_ONLY'});
+    }
+    const operation=recordMutation(source);
+    if(!internal&&operation&&this.applicationAudit?.has(operation)) {
+      const id=recordIdentity(source,args);
+      let before=null;
+      if(operation!=='INSERT'||/ON CONFLICT|ON DUPLICATE KEY/i.test(source)) {
+        const [rows]=await connection.execute('SELECT id,kind,payload FROM records WHERE id=? FOR UPDATE',[id]);before=rows[0]||null;
+      }
+      const result=await this.execute(connection,source,args,true);
+      if(result.meta.changes) {
+        const [rows]=await connection.execute('SELECT id,kind,payload FROM records WHERE id=?',[id]);
+        const after=rows[0]||null;
+        await captureRecordChange(connection,before&&after?'UPDATE':after?'INSERT':'DELETE',before,after);
+      }
+      return result;
+    }
     if (/sqlite_schema/.test(source)) {
       const name=source.match(/name\s*=\s*'([^']+)'/i)?.[1];
       const [rows]=await connection.execute('SELECT TABLE_NAME AS name FROM information_schema.tables WHERE TABLE_SCHEMA=DATABASE()'+(name?' AND TABLE_NAME=?':''),name?[name]:[]);

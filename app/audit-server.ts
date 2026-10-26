@@ -24,7 +24,7 @@ async function initializeAudit(db:any){
   await db.batch([
     db.prepare(`INSERT OR IGNORE INTO operation_audit(event_key,record_id,kind,label,actor,actor_name,occurred_at,action,previous_status,status,changes,origin) SELECT 'history:'||r.id||':'||j.key,r.id,r.kind,COALESCE(json_extract(r.payload,'$.folio'),json_extract(r.payload,'$.name'),r.id),COALESCE(json_extract(j.value,'$.actor'),'sin registro'),json_extract(j.value,'$.actorName'),json_extract(j.value,'$.date'),COALESCE(json_extract(j.value,'$.action'),'Estado registrado'),json_extract(j.value,'$.previousStatus'),json_extract(j.value,'$.status'),json_extract(j.value,'$.changes'),'history' FROM records r,json_each(r.payload,'$.history') j WHERE json_extract(j.value,'$.date') IS NOT NULL`),
     db.prepare(`INSERT OR IGNORE INTO operation_audit(event_key,record_id,kind,label,actor,occurred_at,action,origin) SELECT 'access:'||id,id,kind,'Administración de accesos',COALESCE(json_extract(payload,'$.actor'),'sin registro'),json_extract(payload,'$.date'),COALESCE(json_extract(payload,'$.message'),'Acceso actualizado'),'history' FROM records WHERE kind='accessAudit' AND json_extract(payload,'$.date') IS NOT NULL`),
-    db.prepare("INSERT OR IGNORE INTO records(id,kind,payload,revision,updated) VALUES('operation-audit-history-v1','config','{\"name\":\"Bitácora inicializada\"}',1,?)").bind(new Date().toISOString())
+    db.prepare("INSERT OR IGNORE INTO records(id,kind,payload,revision,updated) VALUES('operation-audit-history-v1','config','{\"id\":\"operation-audit-history-v1\",\"kind\":\"config\",\"name\":\"Bitácora inicializada\"}',1,?)").bind(new Date().toISOString())
   ]);
 }
 export function auditAccess(profile:R){return ['Administrador','Dirección'].includes(profile.role);}

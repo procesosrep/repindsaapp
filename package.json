@@ -15,7 +15,8 @@
     "typecheck": "tsc --noEmit --incremental false",
     "test:flows": "node scripts/check-flows.mjs",
     "migration:import": "node --env-file-if-exists=.env scripts/import-encrypted.mjs",
-    "migration:verify": "node --env-file-if-exists=.env scripts/verify-encrypted.mjs"
+    "migration:verify": "node --env-file-if-exists=.env scripts/verify-encrypted.mjs",
+    "test:mysql:startup": "node scripts/test-mysql-startup.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",

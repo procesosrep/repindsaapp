@@ -1,6 +1,7 @@
 import http from 'node:http';
 import {fileURLToPath} from 'node:url';
 import {serverConfig} from './server/config.mjs';
+import {startupDiagnostics} from './server/startup-diagnostics.mjs';
 import next from 'next';
 import {initializeFreshDatabase, bootstrapAdministrator} from './server/fresh-install.mjs';
 import {initializeMySQLAudit} from './server/mysql-audit.mjs';
@@ -15,6 +16,9 @@ let stage = 'configuración';
 let app;
 try {
   console.log('[REPINDSA] Inicio del servidor.');
+  const required=process.env.DB_HOST?['APP_ORIGIN','DB_HOST','DB_PORT','DB_USER','DB_PASSWORD','DB_NAME']:['APP_ORIGIN','DB_HOST'];
+  const missing=required.filter(name=>!process.env[name]&&!(name==='DB_USER'&&process.env.DB_USERNAME)&&!(name==='DB_NAME'&&process.env.DB_DATABASE)&&name!=='DB_PORT');
+  if(!dev&&missing.length&&!process.env.DATABASE_URL)console.log('[REPINDSA] Variables no definidas: '+missing.join(', ')+'. Se muestran sólo nombres, nunca valores.');
   const {port, origin} = serverConfig(process.env, dev);
   stage = 'migraciones y conexión a la base de datos';
   console.log('[REPINDSA] Comprobando base de datos y migraciones.');
@@ -34,7 +38,7 @@ try {
     if (await initializeFreshDatabase(db)) console.log('[REPINDSA] Base nueva inicializada sin datos históricos ni ejemplos.');
     if (await bootstrapAdministrator(db)) console.log('[REPINDSA] Primer administrador creado; debe cambiar su contraseña al ingresar.');
     if(db.dialect==='mysql'){
-      stage='bitácora MySQL (permiso de triggers)';
+      stage='bitácora transaccional MySQL';
       console.log('[REPINDSA] Preparando bitácora protegida de MySQL.');
       await initializeMySQLAudit(db);
     }
@@ -75,15 +79,7 @@ try {
   });
   console.log(`[REPINDSA] Listo en puerto ${port}. Salud: /healthz`);
 } catch (error) {
-  // Driver messages can contain URLs/credentials: expose only safe local causes.
-  console.error(`[REPINDSA] Falló el inicio en la etapa: ${stage}.`);
-  if (stage === 'configuración' || String(error.message).startsWith('Configura ') ||
-      String(error.message).startsWith('La importación está pendiente.')) {
-    console.error(error.message);
-  } else {
-    const code = String(error.code || 'STARTUP_ERROR');
-    console.error(`[REPINDSA] Código: ${/^[A-Z0-9_]+$/.test(code) ? code : 'STARTUP_ERROR'}. Revisa la configuración de esta etapa en README.md.`);
-  }
+  for(const message of startupDiagnostics(error,stage))console.error(message);
   if (app) await app.close().catch(() => {});
   process.exit(1);
 }

@@ -65,11 +65,17 @@ disco temporal del proceso. Siguen pasando por los permisos de las API privadas;
 no se generan URLs públicas del almacenamiento. Los adjuntos consumen la cuota
 y el respaldo de MySQL: comprueba los límites del plan y conserva copias de seguridad.
 
-La cuenta MySQL debe poder crear tablas, índices y triggers, además de leer y
-escribir datos. Los triggers mantienen la bitácora dentro de la misma transacción
-y rechazan modificarla o eliminarla. No se desactiva esa protección para completar
-un despliegue. Si el proveedor no concede permisos de triggers, revisa la guía
-con soporte antes de publicar.
+La cuenta MySQL debe poder crear tablas e índices, además de leer y escribir datos.
+No se requieren `SUPER`, `CREATE ROUTINE`, ni `TRIGGER`: la bitácora se escribe
+mediante el adaptador de la aplicación, en la **misma transacción** que cambia el
+registro. Si el lote falla, también se revierte la auditoría. El adaptador rechaza
+editar o borrar la bitácora. Los triggers de una instalación anterior, si existen,
+se conservan y se detectan para evitar duplicar eventos.
+
+En el modo de auditoría de aplicación, las escrituras directas realizadas desde
+un cliente MySQL externo no pasan por el adaptador y no se registran automáticamente;
+quien tenga esas credenciales puede modificar las tablas directamente. Usa las API
+de la aplicación para las operaciones normales y limita el acceso directo a la base.
 
 ## Diagnóstico
 
@@ -102,10 +108,12 @@ npm run dev
 ```
 
 Las pruebas de integración MySQL requieren un servidor de prueba cuya cuenta pueda
-crear una base temporal. Nunca ejecutes estas pruebas contra una cuenta de producción:
+crear una base y un usuario temporales. Nunca ejecutes estas pruebas contra una cuenta de producción:
 
 ```bash
 MYSQL_TEST_HOST=127.0.0.1 MYSQL_TEST_PORT=3307 MYSQL_TEST_USER=root npm test
+# Después de npm run build, verificar HTTP con usuario sin SUPER/TRIGGER:
+MYSQL_TEST_HOST=127.0.0.1 MYSQL_TEST_PORT=3307 MYSQL_TEST_USER=root npm run test:mysql:startup
 ```
 
 La contraseña de pruebas, si corresponde, se proporciona privadamente mediante
