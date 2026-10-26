@@ -1,0 +1,2 @@
+import {readFile} from 'node:fs/promises';import {env} from '../server/runtime.mjs';
+const meta=JSON.parse(await readFile('migration/backup-info.json','utf8'));try{const state=await env.DB.prepare('SELECT id,status FROM app_import_state').first();if(state?.id!==meta.backupId||state.status!=='complete')throw Error('El respaldo no está restaurado por completo.');console.log('Restauración inicial completada. Las modificaciones posteriores se conservan.');process.exit(0)}catch(e){console.error(e.message);process.exit(1)}

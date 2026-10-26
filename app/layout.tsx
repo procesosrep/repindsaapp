@@ -1,0 +1,2 @@
+import {ModuleBoundary} from './module-boundary';
+import "./globals.css"; export const metadata={title:"REPINDSA | Proyectos y campo",description:"Presupuestos, cotizaciones y administración de campo",icons:{icon:"/repindsa-logo.png"}}; export default function Layout({children}:{children:React.ReactNode}){return <html lang="es"><body><ModuleBoundary>{children}</ModuleBoundary></body></html>}

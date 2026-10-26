@@ -1,0 +1,4 @@
+import {readdir,readFile,mkdir} from 'node:fs/promises';
+import {env} from '../server/runtime.mjs';
+export async function migrate(){await mkdir('data',{recursive:true});const db=env.DB;await db.prepare('CREATE TABLE IF NOT EXISTS app_migrations (name TEXT PRIMARY KEY, applied_at TEXT NOT NULL)').run();for(const name of (await readdir('drizzle')).filter(f=>f.endsWith('.sql')).sort()){if(await db.prepare('SELECT name FROM app_migrations WHERE name=?').bind(name).first())continue;const sql=await readFile('drizzle/'+name,'utf8');const stmts=sql.split(';').map(s=>s.replace(/--> statement-breakpoint/g,'').trim()).filter(Boolean).map(s=>db.prepare(s));stmts.push(db.prepare('INSERT INTO app_migrations VALUES(?,?)').bind(name,new Date().toISOString()));await db.batch(stmts);}return db;}
+if(process.argv[1]?.endsWith('/migrate.mjs')){try{await migrate();console.log('Migraciones aplicadas.');process.exit(0)}catch(e){console.error(e.message);process.exit(1)}}

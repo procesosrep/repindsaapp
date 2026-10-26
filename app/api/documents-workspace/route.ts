@@ -1,0 +1,4 @@
+import {featureGuard} from '../../feature-server';
+import {cashContext} from '../../cash-server';
+import {canRead} from '../../permissions';
+export async function GET(req:Request){const unavailable=await featureGuard(req);if(unavailable)return unavailable;const c=await cashContext(req);if(!c||!canRead(c.profile,'controlledDocument'))return Response.json({error:'Inicia sesión con acceso al visor de documentos.'},{status:401});const docs=c.rows.filter(r=>r.kind==='controlledDocument'&&r.status==='Vigente'),ids=new Set(docs.map(d=>d.id)),assets=c.rows.filter(r=>r.kind==='controlledAsset'&&ids.has(r.ownerId)).map(r=>{const v={...r};delete v.key;return v;});return Response.json({records:[...docs,...assets],user:{name:c.profile.name||c.email,level:c.profile.level||c.actualRole}},{headers:{'Cache-Control':'no-store'}});}

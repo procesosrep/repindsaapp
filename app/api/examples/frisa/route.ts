@@ -1,0 +1,8 @@
+import {featureGuard} from '../../../feature-server';
+import {applicationRequest} from '../../../application-request';
+import {ensureTemplateExamples} from '../../../template-examples';
+import {env} from '@/server/runtime.mjs';
+import {ensureFrisaExample} from '../../../frisa-example';
+import {POST as saveRecord} from '../../records/route';
+let running:Promise<void>|null=null;
+export async function POST(req:Request){const unavailable=await featureGuard(req);if(unavailable)return unavailable;req=await applicationRequest(req);const userId=req.headers.get('oai-authenticated-user-id');if(!userId)return Response.json({error:'Inicia sesión.'},{status:401});const db=env.DB!;const owner:any=await db.prepare('SELECT payload FROM records WHERE id=?').bind('system-admin').first();const email=(req.headers.get('oai-authenticated-user-email')||'').toLowerCase();const member:any=await db.prepare('SELECT payload FROM records WHERE id=?').bind('membership-'+encodeURIComponent(email)).first();const membership=member?JSON.parse(member.payload):null;if(!owner||JSON.parse(owner.payload).userId!==userId&&!(membership?.role==='Administrador'&&membership.status==='Activo'))return Response.json({error:'Solo el administrador prepara el ejemplo.'},{status:403});try{if(!running)running=ensureFrisaExample(req,db,saveRecord).then(()=>ensureTemplateExamples(req,db,saveRecord)).finally(()=>{running=null});await running;return Response.json({ok:true,quoteIds:['frisa-example-quote-v1','template-piping-quote-v1','template-precommissioning-quote-v1','template-complete-quote-v1']});}catch(e:any){console.error('FRISA example:',e.message);return Response.json({error:'No se pudo completar el ejemplo. Los registros existentes se conservan.'},{status:500});}}

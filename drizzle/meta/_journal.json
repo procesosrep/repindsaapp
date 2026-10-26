@@ -1,0 +1,41 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1792426130202,
+      "tag": "0000_fearless_lila_cheney",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1792427504844,
+      "tag": "0001_wild_may_parker",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1792428889653,
+      "tag": "0002_clever_flatman",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1792686720767,
+      "tag": "0003_tough_callisto",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1792688717114,
+      "tag": "0004_cute_carmella_unuscione",
+      "breakpoints": true
+    }
+  ]
+}

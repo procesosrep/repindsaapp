@@ -1,0 +1,6 @@
+"use client";
+import {useId} from 'react';
+export function WorkspaceLoader({compact=false,label='Cargando tu espacio de trabajo…'}:{compact?:boolean,label?:string}){
+ const id=useId().replace(/:/g,'');const fillId='brand-fill-'+id;const alphaId='brand-alpha-'+id;const symbolId='brand-symbol-'+id;
+ return <div className={'workspaceLoader'+(compact?' compact':'')} role="status" aria-live="polite" aria-busy="true" aria-label={label}><svg className="loaderBrand" viewBox="14 15 124 142" aria-hidden="true" focusable="false"><defs><clipPath id={symbolId}><path d="M77 19L134 51V120L78 152L19 120V52Z"/></clipPath><filter id={alphaId} x="0" y="0" width="100%" height="100%" colorInterpolationFilters="sRGB"><feColorMatrix type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 -5 -5 -5 0 14"/></filter><clipPath id={fillId}><rect className="loaderBrandFill" x="14" y="15" width="124" height="142"/></clipPath></defs><g clipPath={'url(#'+symbolId+')'}><g className="loaderBrandBase"><image filter={'url(#'+alphaId+')'} href="/repindsa-logo.png" width="504" height="186"/></g><g clipPath={'url(#'+fillId+')'}><image filter={'url(#'+alphaId+')'} href="/repindsa-logo.png" width="504" height="186"/></g></g></svg></div>;
+}

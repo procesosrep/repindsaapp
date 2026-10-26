@@ -1,0 +1,9 @@
+{
+  "format": "repindsa-encrypted-backup-v1",
+  "backupId": "e739118ae4d12737c43b9a666e9036d0464776ab439a4d8a7692098b6f177ada",
+  "capturedAt": "2026-10-26T20:37:46.085Z",
+  "records": 370,
+  "materialRequests": 16,
+  "users": 16,
+  "files": 13
+}

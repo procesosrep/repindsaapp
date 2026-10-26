@@ -1,0 +1,4 @@
+import assets from '../../private-assets/reference-assets.json';
+import {cashContext,cashFail} from '../../cash-server';
+import {canRead} from '../../permissions';
+export async function GET(req:Request){const c=await cashContext(req);if(!c)return cashFail('Inicia sesión.',401);if(!canRead(c.profile.role,'quote'))return cashFail('Sin acceso a documentos comerciales.',403);const name=decodeURIComponent(new URL(req.url).pathname.split('/').pop()||'');if(!Object.hasOwn(assets,name))return cashFail('No encontrado.',404);const asset=(assets as Record<string,{type:string,data:string}>)[name];if(!asset)return cashFail('No encontrado.',404);return new Response(Uint8Array.from(atob(asset.data),c=>c.charCodeAt(0)),{headers:{'Content-Type':asset.type,'Cache-Control':'private, no-store','Content-Disposition':'inline','X-Content-Type-Options':'nosniff','Content-Security-Policy':"default-src 'none'; frame-ancestors 'self'"}});}

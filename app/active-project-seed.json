@@ -1,0 +1,496 @@
+[
+  {
+    "rp": "RP-680-26",
+    "name": "Forjados",
+    "clientName": "Frisa",
+    "responsible": "Alfredo Sanchez",
+    "serviceTypes": [
+      "Piping",
+      "Precom"
+    ],
+    "sourceDeals": [
+      {
+        "id": "282",
+        "stage": "Cerrado Ganado",
+        "businessUnit": "Precom",
+        "name": "Forjados",
+        "rp": "RP-680-26"
+      },
+      {
+        "id": "280",
+        "stage": "Cerrado Ganado",
+        "businessUnit": "Piping",
+        "name": "Forjados",
+        "rp": "RP-680-26"
+      }
+    ]
+  },
+  {
+    "rp": "RP-739-26",
+    "name": "Aceria Pesqueria",
+    "clientName": "Ternium",
+    "responsible": "Alfredo Sanchez",
+    "serviceTypes": [
+      "Precom"
+    ],
+    "sourceDeals": [
+      {
+        "id": "228",
+        "stage": "Cerrado Ganado",
+        "businessUnit": "Precom",
+        "name": "Aceria Pesqueria",
+        "rp": "RP-739-26"
+      }
+    ]
+  },
+  {
+    "rp": "RP-710-26",
+    "name": "Pesqueria",
+    "clientName": "Ternium",
+    "responsible": "Alfredo Sanchez",
+    "serviceTypes": [
+      "Piping"
+    ],
+    "sourceDeals": [
+      {
+        "id": "188",
+        "stage": "Cerrado Ganado",
+        "businessUnit": "Piping",
+        "name": "Pesqueria",
+        "rp": "RP-710-26"
+      }
+    ]
+  },
+  {
+    "rp": "RP-704-26",
+    "name": "Guerrero",
+    "clientName": "Ternium",
+    "responsible": "Alfredo Sanchez",
+    "serviceTypes": [
+      "Piping"
+    ],
+    "sourceDeals": [
+      {
+        "id": "186",
+        "stage": "Cerrado Ganado",
+        "businessUnit": "Piping",
+        "name": "Guerrero",
+        "rp": "RP-704-26"
+      }
+    ]
+  },
+  {
+    "rp": "RP-706-26",
+    "name": "M3",
+    "clientName": "PCM",
+    "responsible": "Alfredo Sanchez",
+    "serviceTypes": [
+      "Precom"
+    ],
+    "sourceDeals": [
+      {
+        "id": "180",
+        "stage": "Cerrado Ganado",
+        "businessUnit": "Precom",
+        "name": "M3",
+        "rp": "RP-706-26"
+      }
+    ]
+  },
+  {
+    "rp": "RP-701-26",
+    "name": "M3",
+    "clientName": "PCM",
+    "responsible": "Alfredo Sanchez",
+    "serviceTypes": [
+      "Precom"
+    ],
+    "sourceDeals": [
+      {
+        "id": "178",
+        "stage": "Cerrado Ganado",
+        "businessUnit": "Precom",
+        "name": "M3",
+        "rp": "RP-701-26"
+      }
+    ]
+  },
+  {
+    "rp": "RP-700-26",
+    "name": "M3",
+    "clientName": "PCM",
+    "responsible": "Alfredo Sanchez",
+    "serviceTypes": [
+      "Precom"
+    ],
+    "sourceDeals": [
+      {
+        "id": "176",
+        "stage": "Cerrado Ganado",
+        "businessUnit": "Precom",
+        "name": "M3",
+        "rp": "RP-700-26"
+      }
+    ]
+  },
+  {
+    "rp": "RP-699-26",
+    "name": "M3",
+    "clientName": "PCM",
+    "responsible": "Alfredo Sanchez",
+    "serviceTypes": [
+      "Precom"
+    ],
+    "sourceDeals": [
+      {
+        "id": "174",
+        "stage": "Cerrado Ganado",
+        "businessUnit": "Precom",
+        "name": "M3",
+        "rp": "RP-699-26"
+      }
+    ]
+  },
+  {
+    "rp": "RP-698-26",
+    "name": "Colada Continua T. Pesqueria",
+    "clientName": "Ternium",
+    "responsible": "Alfredo Sanchez",
+    "serviceTypes": [
+      "Piping"
+    ],
+    "sourceDeals": [
+      {
+        "id": "172",
+        "stage": "Cerrado Ganado",
+        "businessUnit": "Piping",
+        "name": "Colada Continua T. Pesqueria",
+        "rp": "RP-698-26"
+      }
+    ]
+  },
+  {
+    "rp": "RP-694-26",
+    "name": "Aceria",
+    "clientName": "Frisa",
+    "responsible": "Alfredo Sanchez",
+    "serviceTypes": [
+      "Precom"
+    ],
+    "sourceDeals": [
+      {
+        "id": "164",
+        "stage": "Cerrado Ganado",
+        "businessUnit": "Precom",
+        "name": "Aceria",
+        "rp": "RP-694-26"
+      }
+    ]
+  },
+  {
+    "rp": "RP-693-26",
+    "name": "M3",
+    "clientName": "PCM",
+    "responsible": "Alfredo Sanchez",
+    "serviceTypes": [
+      "Precom"
+    ],
+    "sourceDeals": [
+      {
+        "id": "162",
+        "stage": "Cerrado Ganado",
+        "businessUnit": "Precom",
+        "name": "M3",
+        "rp": "RP-693-26"
+      }
+    ]
+  },
+  {
+    "rp": "RP-691-26",
+    "name": "Reubicación tuberia de gas",
+    "clientName": "Tamsa",
+    "responsible": "Alfredo Sanchez",
+    "serviceTypes": [
+      "Precom"
+    ],
+    "sourceDeals": [
+      {
+        "id": "158",
+        "stage": "Cerrado Ganado",
+        "businessUnit": "Precom",
+        "name": "Reubicación tuberia de gas",
+        "rp": "RP-691-26"
+      }
+    ]
+  },
+  {
+    "rp": "RP-690-26",
+    "name": "Ternium Pesquería Aceróa",
+    "clientName": "Ternium",
+    "responsible": "Alfredo Sanchez",
+    "serviceTypes": [
+      "Precom"
+    ],
+    "sourceDeals": [
+      {
+        "id": "156",
+        "stage": "Cerrado Ganado",
+        "businessUnit": "Precom",
+        "name": "Ternium Pesquería Aceróa",
+        "rp": "RP-690-26"
+      }
+    ]
+  },
+  {
+    "rp": "RP-686-26",
+    "name": "M3",
+    "clientName": "PCM",
+    "responsible": "Alfredo Sanchez",
+    "serviceTypes": [
+      "Precom"
+    ],
+    "sourceDeals": [
+      {
+        "id": "148",
+        "stage": "Cerrado Ganado",
+        "businessUnit": "Precom",
+        "name": "M3",
+        "rp": "RP-686-26"
+      }
+    ]
+  },
+  {
+    "rp": "RP-684-26",
+    "name": "M3",
+    "clientName": "PCM",
+    "responsible": "Alfredo Sanchez",
+    "serviceTypes": [
+      "Precom"
+    ],
+    "sourceDeals": [
+      {
+        "id": "144",
+        "stage": "Cerrado Ganado",
+        "businessUnit": "Precom",
+        "name": "M3",
+        "rp": "RP-684-26"
+      }
+    ]
+  },
+  {
+    "rp": "RP-679-26",
+    "name": "Precom Pesquería",
+    "clientName": "Ternium",
+    "responsible": "Alfredo Sanchez",
+    "serviceTypes": [
+      "Precom"
+    ],
+    "sourceDeals": [
+      {
+        "id": "138",
+        "stage": "Cerrado Ganado",
+        "businessUnit": "Precom",
+        "name": "Precom Pesquería",
+        "rp": "RP-679-26"
+      }
+    ]
+  },
+  {
+    "rp": "RP-677-26",
+    "name": "Fase 3 Adicionales",
+    "clientName": "Frisa",
+    "responsible": "Alfredo Sanchez",
+    "serviceTypes": [
+      "Piping"
+    ],
+    "sourceDeals": [
+      {
+        "id": "134",
+        "stage": "Cerrado Ganado",
+        "businessUnit": "Piping",
+        "name": "Fase 3 Adicionales",
+        "rp": "RP-677-26"
+      }
+    ]
+  },
+  {
+    "rp": "RP-673-26",
+    "name": "Fase 3",
+    "clientName": "Frisa",
+    "responsible": "Alfredo Sanchez",
+    "serviceTypes": [
+      "Precom"
+    ],
+    "sourceDeals": [
+      {
+        "id": "126",
+        "stage": "Cerrado Ganado",
+        "businessUnit": "Precom",
+        "name": "Fase 3",
+        "rp": "RP-673-26"
+      }
+    ]
+  },
+  {
+    "rp": "RP-672-26",
+    "name": "Fase 3 (adicionales)",
+    "clientName": "Frisa",
+    "responsible": "Alfredo Sanchez",
+    "serviceTypes": [
+      "Piping"
+    ],
+    "sourceDeals": [
+      {
+        "id": "124",
+        "stage": "Cerrado Ganado",
+        "businessUnit": "Piping",
+        "name": "Fase 3 (adicionales)",
+        "rp": "RP-672-26"
+      }
+    ]
+  },
+  {
+    "rp": "RP-653-26",
+    "name": "Presurización de Reactor REDI",
+    "clientName": "Welmon QMF",
+    "responsible": "Alfredo Sanchez",
+    "serviceTypes": [
+      "Precom"
+    ],
+    "sourceDeals": [
+      {
+        "id": "100",
+        "stage": "Cerrado Ganado",
+        "businessUnit": "Precom",
+        "name": "Presurización de Reactor REDI",
+        "rp": "RP-653-26"
+      }
+    ]
+  },
+  {
+    "rp": "RP-658-26",
+    "name": "M3",
+    "clientName": "PCM",
+    "responsible": "Alfredo Sanchez",
+    "serviceTypes": [
+      "Precom"
+    ],
+    "sourceDeals": [
+      {
+        "id": "92",
+        "stage": "Cerrado Ganado",
+        "businessUnit": "Precom",
+        "name": "M3",
+        "rp": "RP-658-26"
+      }
+    ]
+  },
+  {
+    "rp": "RP-659-26",
+    "name": "Mantenimiento 2026",
+    "clientName": "Fuerza y Energia de Tuxpan",
+    "responsible": "Alfredo Sanchez",
+    "serviceTypes": [
+      "Precom"
+    ],
+    "sourceDeals": [
+      {
+        "id": "90",
+        "stage": "Cerrado Ganado",
+        "businessUnit": "Precom",
+        "name": "Mantenimiento 2026",
+        "rp": "RP-659-26"
+      }
+    ]
+  },
+  {
+    "rp": "RP-670-26",
+    "name": "Pesquería Acería",
+    "clientName": "Ternium",
+    "responsible": "Alfredo Sanchez",
+    "serviceTypes": [
+      "Precom"
+    ],
+    "sourceDeals": [
+      {
+        "id": "70",
+        "stage": "Cerrado Ganado",
+        "businessUnit": "Precom",
+        "name": "Pesquería Acería",
+        "rp": "RP-670-26"
+      }
+    ]
+  },
+  {
+    "rp": "RP-722-26",
+    "name": "Servicio de instalación de tubería on board VOD",
+    "clientName": "Frisa",
+    "responsible": "Alfredo Sanchez",
+    "serviceTypes": [
+      "Piping & Precom"
+    ],
+    "sourceDeals": [
+      {
+        "id": "58",
+        "stage": "Cerrado Ganado",
+        "businessUnit": "Piping & Precom",
+        "name": "Servicio de instalación de tubería on board VOD",
+        "rp": "RP-722-26"
+      }
+    ]
+  },
+  {
+    "rp": "RP-724-26",
+    "name": "Limpieza química tubería de oxigeno",
+    "clientName": "Ternium",
+    "responsible": "Alfredo Sanchez",
+    "serviceTypes": [
+      "Precom"
+    ],
+    "sourceDeals": [
+      {
+        "id": "54",
+        "stage": "Cerrado Ganado",
+        "businessUnit": "Precom",
+        "name": "Limpieza química tubería de oxigeno",
+        "rp": "RP-724-26"
+      }
+    ]
+  },
+  {
+    "rp": "RP-721-26",
+    "name": "Montaje de tubería de oxigeno",
+    "clientName": "Tamsa",
+    "responsible": "Alfredo Sanchez",
+    "serviceTypes": [
+      "Piping & Precom"
+    ],
+    "sourceDeals": [
+      {
+        "id": "36",
+        "stage": "Cerrado Ganado",
+        "businessUnit": "Piping & Precom",
+        "name": "Montaje de tubería de oxigeno",
+        "rp": "RP-721-26"
+      }
+    ]
+  },
+  {
+    "rp": "RP-727-26",
+    "name": "Sistema de Grasa",
+    "clientName": "Ternium",
+    "responsible": "Alfredo Sanchez",
+    "serviceTypes": [
+      "Precom"
+    ],
+    "sourceDeals": [
+      {
+        "id": "26",
+        "stage": "Cerrado Ganado",
+        "businessUnit": "Precom",
+        "name": "Sistema de Grasa",
+        "rp": "RP-727-26"
+      }
+    ]
+  }
+]

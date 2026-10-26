@@ -1,0 +1,20 @@
+node_modules/
+.next/
+dist/
+.env
+.env.*
+!.env.example
+data/
+*.db
+*.db-*
+*.sqlite*
+*.tsbuildinfo
+*.log
+.DS_Store
+
+# Respaldo empresarial: no subir al repositorio
+migration-data/
+
+# Sólo se incluye el respaldo cifrado, nunca la clave
+*CLAVE*
+*CONFIGURACION_PRIVADA*

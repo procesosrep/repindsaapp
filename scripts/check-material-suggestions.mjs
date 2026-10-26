@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import {mergeSuggestedLines,suggestedArticles,templateLines,draftFingerprint} from '../app/material-suggestions.ts';
+const catalog=[{id:'a',description:'Artículo A',category:'Herramientas',unit:'Pieza'},{id:'b',description:'Artículo B',category:'EPP',unit:'Pieza'},{id:'off',description:'Baja',status:'Inactivo'}];
+let seq=0;const makeLine=()=>({id:'new-'+(++seq),evidence:[],attachmentNames:[],available:0,delivered:0});
+const old=[{id:'keep',catalogId:'a',quantity:9,notes:'Conservar',evidence:['actual']}];
+const merged=mergeSuggestedLines(old,[{catalogId:'a',quantity:3},{catalogId:'b',quantity:4,id:'foreign',evidence:['private'],delivered:4,managerQuantity:4,notes:'Nota'},{catalogId:'off'},{catalogId:'missing'},{catalogId:'b'}],catalog,makeLine);
+assert.equal(merged.added,1);assert.equal(merged.skipped,4);assert.equal(merged.lines[0],old[0]);assert.equal(merged.lines[1].quantity,4);assert.equal(merged.lines[1].id,'new-1');assert.deepEqual(merged.lines[1].evidence,[]);assert.equal(merged.lines[1].delivered,0);assert.equal(merged.lines[1].managerQuantity,undefined);
+const full=Array.from({length:100},(_,i)=>({catalogId:'existing-'+i}));assert.equal(mergeSuggestedLines(full,[{catalogId:'b'}],catalog,makeLine).lines.length,100);
+assert.deepEqual(templateLines(merged.lines).map(l=>l.id),[undefined,undefined]);assert(templateLines(merged.lines).every(l=>!l.evidence&&!l.managerQuantity));
+const history=[{projectId:'p',requesterId:'u',status:'Pendiente',lines:[{catalogId:'b'},{catalogId:'b'},{catalogId:'off'}]},{projectId:'other',status:'Completada',lines:[{catalogId:'a'}]},{projectId:'p',status:'Borrador',lines:[{catalogId:'a'}]}];assert.deepEqual(suggestedArticles(history,catalog,'p','u').map(c=>c.id),['b','a']);
+assert.equal(draftFingerprint({id:'x',revision:1,projectId:'p',lines:[]}),draftFingerprint({id:'y',revision:2,projectId:'p',lines:[]}));assert.notEqual(draftFingerprint({lines:[{quantity:1}]}),draftFingerprint({lines:[{quantity:2}]}));
+console.log('Material suggestions passed: no duplicate articles, 100-line limit, inactive items excluded, original lines preserved, fresh line IDs, no copied receipts/attachments/approvals, scoped frequency ranking and draft fingerprint.');

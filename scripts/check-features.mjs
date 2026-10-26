@@ -1,0 +1,17 @@
+import './test-policy.mjs';
+import fs from 'node:fs';import ts from 'typescript';import assert from 'node:assert/strict';
+const code=f=>ts.transpile(fs.readFileSync(f,'utf8').replace(/^import .*;$/gm,'').replace(/export /g,''),{target:ts.ScriptTarget.ES2022});
+let state={revision:1,public:{cycle4:false,cashProof:false,materialPurchase:false}},session={role:'Recursos Humanos'};
+const env={DB:{prepare(){return {first:async()=>({payload:JSON.stringify(state),revision:1})}}}};
+const server=new Function('env','materialSession',code('app/feature-server.ts')+';return {readFeatures,featureGuard}')(env,async()=>session);
+const req=(path,body)=>new Request('https://test'+path,body?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}:{});
+assert.equal(featureAllowed({role:'Administrador',features:state},'employee'),true);
+assert.equal(featureAllowed({role:'Recursos Humanos',features:state},'employee'),false);
+assert.equal((await server.featureGuard(req('/api/tickets'))).status,403);
+assert.equal((await server.featureGuard(req('/api/cash',{action:'saveProof',record:{kind:'cashAdvance'}}))).status,403);
+assert.equal((await server.featureGuard(req('/api/cash',{action:'materialConfirmPurchase',record:{kind:'materialRequest'}}))).status,403);
+assert.equal(await server.featureGuard(req('/api/material-workspace')),null);
+session={role:'Administrador'};assert.equal(await server.featureGuard(req('/api/tickets')),null);
+session={role:'Recursos Humanos'};state={revision:2,public:{cycle4:true,ticketRequest:true}};assert.equal(await server.featureGuard(req('/api/tickets')),null);
+assert.equal(hasAccess({role:'Visor'},'requestMaterials'),false);
+console.log('Feature gates verified: private module, private function, administrator preview, direct API, forged kind, publication and unchanged role permissions.');
