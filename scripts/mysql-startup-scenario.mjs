@@ -6,10 +6,11 @@ import {randomBytes} from 'node:crypto';
 import assert from 'node:assert/strict';
 const username='smoke-admin';const password=randomBytes(24).toString('hex');const nextPassword=randomBytes(24).toString('hex');
 const origin='https://repindsa.example';
+const previewOrigin='https://repindsa.preview.example';
 const listener=net.createServer();await new Promise(resolve=>listener.listen(0,'127.0.0.1',resolve));const port=listener.address().port;await new Promise(resolve=>listener.close(resolve));
 const env={...process.env,DB_HOST:process.env.MYSQL_TEST_HOST,DB_PORT:process.env.MYSQL_TEST_PORT||'3306',DB_USER:process.env.MYSQL_SMOKE_USER,DB_PASSWORD:process.env.MYSQL_SMOKE_PASSWORD,DB_NAME:process.env.MYSQL_SMOKE_DATABASE,APP_ORIGIN:origin,PORT:String(port),ADMIN_USERNAME:username,ADMIN_NAME:'Administrador de prueba',ADMIN_PASSWORD:password};
 let server;let logs='';
-const request=(path,options)=>fetch('http://127.0.0.1:'+port+path,options);
+const request=(path,options={})=>fetch('http://127.0.0.1:'+port+path,{...options,headers:{...options.headers,...(options.headers?.Origin===origin?{Origin:previewOrigin,'Sec-Fetch-Site':'same-origin'}:{})}});
 async function start(){
  server=spawn(process.execPath,[fileURLToPath(new URL('../server.js',import.meta.url))],{cwd:tmpdir(),env,stdio:['ignore','pipe','pipe']});
  server.stdout.on('data',b=>logs+=b);server.stderr.on('data',b=>logs+=b);
@@ -26,7 +27,10 @@ const login=async(pass)=>{
  assert.equal(r.status,200);assert.equal((await r.json()).user.role,'Administrador');return r.headers.get('set-cookie').split(';')[0];
 };
 try{
- await start();assert.deepEqual(await (await request('/healthz')).json(),{status:'ok'});
+ await start();
+ const hostile=await request('/api/material-access',{method:'POST',headers:{'Content-Type':'application/json',Origin:'https://external.example','Sec-Fetch-Site':'cross-site'},body:JSON.stringify({action:'login',username,password})});assert.equal(hostile.status,403);
+ const unknown=await request('/api/material-access',{method:'POST',headers:{'Content-Type':'application/json',Origin:previewOrigin},body:JSON.stringify({action:'login',username,password})});assert.equal(unknown.status,403);
+ assert.deepEqual(await (await request('/healthz')).json(),{status:'ok'});
  const home=await request('/');assert.equal(home.status,200);assert.match(await home.text(),/<html/);
  assert.deepEqual(await (await request('/api/material-access')).json(),{user:null});
  let cookie=await login(password);
@@ -41,5 +45,5 @@ try{
  assert.equal((await request(asset.url)).status,401);
  await stop();await start();cookie=await login(nextPassword);
  const retained=await request(asset.url,{headers:{Cookie:cookie}});assert.equal(retained.status,200);assert.deepEqual(new Uint8Array(await retained.arrayBuffer()),bytes);
- console.log('Production HTTP passed: health, homepage, login, password change, empty records, audit query, private uploads/downloads, denial without login, and persistence after restart.');
+ console.log('Production HTTP passed: preview origin through proxy, cross-site rejection, health, homepage, login, password change, empty records, audit query, private uploads/downloads, denial without login, and persistence after restart.');
 }finally{await stop();}

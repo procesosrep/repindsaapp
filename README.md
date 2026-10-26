@@ -77,6 +77,17 @@ un cliente MySQL externo no pasan por el adaptador y no se registran automática
 quien tenga esas credenciales puede modificar las tablas directamente. Usa las API
 de la aplicación para las operaciones normales y limita el acceso directo a la base.
 
+## Origen de la vista previa
+
+`APP_ORIGIN` conserva la dirección pública canónica. Cuando GoDaddy/Airo presenta
+la aplicación mediante otra URL de vista previa, el servidor acepta también las
+solicitudes que el navegador identifica explícitamente con
+`Sec-Fetch-Site: same-origin`, siempre con un origen HTTPS válido. Normaliza ese
+origen internamente antes de aplicar las verificaciones existentes de las API.
+No se confía en `X-Forwarded-Host`, no se habilita CORS y se siguen rechazando
+orígenes externos, opacos (`null`) o de otro sitio. Navegadores/clientes sin Fetch
+Metadata deben utilizar el origen configurado en `APP_ORIGIN`.
+
 ## Diagnóstico
 
 El registro `[REPINDSA]` indica la etapa que falla: configuración, base de datos,

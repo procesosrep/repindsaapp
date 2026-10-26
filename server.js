@@ -1,6 +1,7 @@
 import http from 'node:http';
 import {fileURLToPath} from 'node:url';
 import {serverConfig} from './server/config.mjs';
+import {normalizePreviewOrigin} from './server/request-origin.mjs';
 import {startupDiagnostics} from './server/startup-diagnostics.mjs';
 import next from 'next';
 import {initializeFreshDatabase, bootstrapAdministrator} from './server/fresh-install.mjs';
@@ -55,6 +56,9 @@ try {
       }
       // Identity is derived from application sessions, never external headers.
       req.headers['cf-connecting-ip'] = req.socket.remoteAddress || 'unknown';
+      if (/^\/api\//.test(req.url||'') && !['GET','HEAD','OPTIONS'].includes(req.method||'GET')) {
+        normalizePreviewOrigin(req.headers,origin.origin,{dev});
+      }
       if (!dev) {
         req.headers.host = origin.host;
         req.headers['x-forwarded-host'] = origin.host;
