@@ -67,6 +67,43 @@ En GoDaddy basta configurar las variables y desplegar. La validación de GitHub 
 
 El paquete se probó con restauración real sobre una base vacía, comparación exacta de tablas y adjuntos, arranque de producción y acceso autenticado a las API de registros, materiales, compras, bitácora e incidentes. Las credenciales y conectividad de los servicios que contrates se verifican al configurar tu alojamiento.
 
+## Despliegue y diagnóstico en GoDaddy
+
+Confirma que el plan permite ejecutar una aplicación Node.js con un proceso
+persistente. Un plan compartido que sólo ofrece PHP o archivos estáticos no
+puede iniciar este servidor. Este repositorio usa un servidor personalizado;
+no se debe publicar únicamente la carpeta `.next` ni exportarlo como sitio estático.
+
+1. Conecta el repositorio con `package.json` y `server.js` en la raíz de la aplicación.
+2. Selecciona Node.js 24 LTS o 22 LTS actualizado (mínimo 22.13).
+3. Configura las variables privadas en el panel, tomando `.env.example` como
+   lista de nombres. `APP_ORIGIN` debe ser el origen HTTPS exacto, sin rutas.
+   El servidor escucha en `0.0.0.0` usando el `PORT` interno asignado por el plan.
+4. Ejecuta `npm ci` y `npm run build`; inicia con `npm start`.
+5. Comprueba `/healthz`, la página principal y el inicio de sesión. Revisa los
+   registros si el proceso termina durante las migraciones o la restauración.
+
+Para conservar los datos incluidos, utiliza una base remota nueva y vacía,
+almacenamiento S3 privado y la clave original del respaldo. No se puede generar
+otra clave para descifrarlo. No configures `MIGRATION_AUTO_IMPORT=0` si tu objetivo
+es recuperar ese respaldo. No ejecutes `admin:create` sobre esa restauración.
+
+Para una instalación **nueva y vacía**, configura `MIGRATION_AUTO_IMPORT=0` y
+los servicios remotos; aplica `npm run db:migrate` y crea tu primer administrador
+con `npm run admin:create`, proporcionando `ADMIN_USERNAME`, `ADMIN_NAME` y
+`ADMIN_PASSWORD` de forma privada (contraseña de 12 a 128 caracteres). Después
+retira esas variables. Los comandos de importación no son necesarios en este modo.
+
+En desarrollo, `npm run dev` usa la base local y los adjuntos locales por defecto
+y no importa el respaldo automáticamente. No requiere copiar `.env.example`.
+No uses el almacenamiento local temporal del alojamiento para datos de producción.
+
+Los archivos `app/data/frisa-example.json` y `app/data/template-examples.json`
+son **demostraciones nuevas**, con costos internos simulados y precios de
+referencia usados por las pruebas. No recuperan las cotizaciones originales.
+Sólo se agregan cuando el administrador solicita preparar los ejemplos; no
+sustituyen el respaldo cifrado ni se cargan durante el inicio del servidor.
+
 ## Referencias oficiales
 
 - [Requisitos de aplicaciones Node.js en GoDaddy](https://developer.godaddy.com/en/docs/api-users/hosting/app-requirements)

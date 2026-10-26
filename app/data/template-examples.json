@@ -1,0 +1,821 @@
+[
+  {
+    "client": {
+      "id": "template-piping-client-v1",
+      "kind": "client",
+      "name": "Cliente de demostración Piping",
+      "status": "Activo",
+      "requirements": []
+    },
+    "opportunity": {
+      "id": "template-piping-opportunity-v1",
+      "kind": "opportunity",
+      "name": "DEMOSTRACIÓN · Piping",
+      "clientId": "template-piping-client-v1",
+      "division": "Piping",
+      "serviceType": "Piping",
+      "amount": 747500,
+      "status": "Oportunidad",
+      "origin": "Demostración",
+      "responsible": "Área Comercial"
+    },
+    "quote": {
+      "id": "template-piping-quote-v1",
+      "kind": "quote",
+      "name": "DEMOSTRACIÓN · Piping",
+      "clientId": "template-piping-client-v1",
+      "opportunityId": "template-piping-opportunity-v1",
+      "division": "Piping",
+      "serviceType": "Piping",
+      "status": "Borrador",
+      "pricingVersion": 2,
+      "wizardVersion": 2,
+      "executionDays": 30,
+      "margin": 0,
+      "tax": 16,
+      "discount": 0,
+      "budgetReviewed": true,
+      "terms": "Anticipo y pagos por avances, sujetos a acuerdo. Propuesta de demostración sin validez comercial.",
+      "generalTerms": "Demostración del sistema. Validar alcance, seguridad y condiciones antes de cualquier trabajo.",
+      "notes": "PRESUPUESTO SIMULADO: datos de demostración nuevos, no recuperados de documentos ni cotizaciones originales.",
+      "scope": "Ejemplo técnico para verificar el sistema; no representa una oferta real.",
+      "items": [
+        {
+          "description": "Servicio demostrativo 1",
+          "unit": "servicio",
+          "quantity": 1,
+          "resources": [],
+          "indirectPct": 0,
+          "marginPct": 0,
+          "contingencyPct": 0,
+          "priceMode": "manual",
+          "saleUnitPrice": 186875.0,
+          "system": "Sistema 1",
+          "subsystem": "Subsistema 1",
+          "activities": [
+            "Preparación del área",
+            "Ejecución conforme al procedimiento aprobado",
+            "Inspección y registro"
+          ],
+          "allocationWeight": 1,
+          "images": [
+            {
+              "url": "/quote-reference/registro-prueba.jpg",
+              "caption": "Registro de prueba de referencia",
+              "fit": "contain"
+            }
+          ],
+          "annexes": [
+            {
+              "name": "Lista de liberación de ejemplo",
+              "url": "/quote-reference/lista-liberacion.pdf",
+              "type": "application/pdf",
+              "pages": [
+                {
+                  "url": "/quote-reference/lista-liberacion.jpg",
+                  "page": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "description": "Servicio demostrativo 2",
+          "unit": "servicio",
+          "quantity": 1,
+          "resources": [],
+          "indirectPct": 0,
+          "marginPct": 0,
+          "contingencyPct": 0,
+          "priceMode": "manual",
+          "saleUnitPrice": 186875.0,
+          "system": "Sistema 2",
+          "subsystem": "Subsistema 2",
+          "activities": [
+            "Preparación del área",
+            "Ejecución conforme al procedimiento aprobado",
+            "Inspección y registro"
+          ],
+          "allocationWeight": 1,
+          "images": [
+            {
+              "url": "/quote-reference/registro-prueba.jpg",
+              "caption": "Registro de prueba de referencia",
+              "fit": "contain"
+            }
+          ],
+          "annexes": [
+            {
+              "name": "Lista de liberación de ejemplo",
+              "url": "/quote-reference/lista-liberacion.pdf",
+              "type": "application/pdf",
+              "pages": [
+                {
+                  "url": "/quote-reference/lista-liberacion.jpg",
+                  "page": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "description": "Servicio demostrativo 3",
+          "unit": "servicio",
+          "quantity": 1,
+          "resources": [],
+          "indirectPct": 0,
+          "marginPct": 0,
+          "contingencyPct": 0,
+          "priceMode": "manual",
+          "saleUnitPrice": 186875.0,
+          "system": "Sistema 1",
+          "subsystem": "Subsistema 1",
+          "activities": [
+            "Preparación del área",
+            "Ejecución conforme al procedimiento aprobado",
+            "Inspección y registro"
+          ],
+          "allocationWeight": 1,
+          "images": [
+            {
+              "url": "/quote-reference/registro-prueba.jpg",
+              "caption": "Registro de prueba de referencia",
+              "fit": "contain"
+            }
+          ],
+          "annexes": [
+            {
+              "name": "Lista de liberación de ejemplo",
+              "url": "/quote-reference/lista-liberacion.pdf",
+              "type": "application/pdf",
+              "pages": [
+                {
+                  "url": "/quote-reference/lista-liberacion.jpg",
+                  "page": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "description": "Servicio demostrativo 4",
+          "unit": "servicio",
+          "quantity": 1,
+          "resources": [],
+          "indirectPct": 0,
+          "marginPct": 0,
+          "contingencyPct": 0,
+          "priceMode": "manual",
+          "saleUnitPrice": 186875.0,
+          "system": "Sistema 2",
+          "subsystem": "Subsistema 2",
+          "activities": [
+            "Preparación del área",
+            "Ejecución conforme al procedimiento aprobado",
+            "Inspección y registro"
+          ],
+          "allocationWeight": 1,
+          "images": [
+            {
+              "url": "/quote-reference/registro-prueba.jpg",
+              "caption": "Registro de prueba de referencia",
+              "fit": "contain"
+            }
+          ],
+          "annexes": [
+            {
+              "name": "Lista de liberación de ejemplo",
+              "url": "/quote-reference/lista-liberacion.pdf",
+              "type": "application/pdf",
+              "pages": [
+                {
+                  "url": "/quote-reference/lista-liberacion.jpg",
+                  "page": 1
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "presentation": {
+        "sections": [
+          {
+            "title": "Alcance de demostración STI-2333",
+            "body": "REPINDSA proporciona los servicios descritos para ilustrar el funcionamiento de la plataforma.",
+            "image": "/quote-reference/piping-outline.svg",
+            "fit": "contain"
+          }
+        ],
+        "annexes": [
+          {
+            "name": "Referencia de demostración",
+            "url": "/quote-reference/registro-prueba.pdf"
+          }
+        ]
+      },
+      "budgetMode": "general",
+      "budgetResources": [
+        {
+          "name": "Material del presupuesto demostrativo",
+          "category": "Material",
+          "unit": "lote",
+          "quantity": 1,
+          "unitCost": 10000,
+          "basis": "concept"
+        },
+        {
+          "name": "Técnico de demostración",
+          "category": "Puesto",
+          "unit": "jornada",
+          "quantity": 1,
+          "unitCost": 15000,
+          "basis": "concept",
+          "costingMode": "personnel",
+          "personnelCostVersion": 2,
+          "headcount": 1,
+          "days": 6,
+          "salaryPeriod": "Mensual",
+          "dailyAllowance": 0,
+          "allowancePeriod": "Mensual",
+          "allowanceBasis": "Calendario",
+          "includeEmployer": false
+        }
+      ],
+      "payrollCostVersion": 2,
+      "workDaysPerWeek": 6,
+      "structure": [
+        {
+          "system": "Sistema 1",
+          "subsystem": "Subsistema 1",
+          "description": "Documentación de demostración",
+          "images": [
+            {
+              "url": "/quote-reference/registro-prueba.jpg",
+              "caption": "Registro de prueba de referencia",
+              "fit": "contain"
+            }
+          ],
+          "annexes": [
+            {
+              "name": "Lista de liberación de ejemplo",
+              "url": "/quote-reference/lista-liberacion.pdf",
+              "type": "application/pdf",
+              "pages": [
+                {
+                  "url": "/quote-reference/lista-liberacion.jpg",
+                  "page": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "client": {
+      "id": "template-precommissioning-client-v1",
+      "kind": "client",
+      "name": "Cliente de demostración Precomisionamiento",
+      "status": "Activo",
+      "requirements": []
+    },
+    "opportunity": {
+      "id": "template-precommissioning-opportunity-v1",
+      "kind": "opportunity",
+      "name": "DEMOSTRACIÓN · Precomisionamiento",
+      "clientId": "template-precommissioning-client-v1",
+      "division": "Precomisionamiento",
+      "serviceType": "Precomisionamiento",
+      "amount": 17237844.75,
+      "status": "Oportunidad",
+      "origin": "Demostración",
+      "responsible": "Área Comercial"
+    },
+    "quote": {
+      "id": "template-precommissioning-quote-v1",
+      "kind": "quote",
+      "name": "DEMOSTRACIÓN · Precomisionamiento",
+      "clientId": "template-precommissioning-client-v1",
+      "opportunityId": "template-precommissioning-opportunity-v1",
+      "division": "Precomisionamiento",
+      "serviceType": "Precomisionamiento",
+      "status": "Borrador",
+      "pricingVersion": 2,
+      "wizardVersion": 2,
+      "executionDays": 30,
+      "margin": 0,
+      "tax": 16,
+      "discount": 0,
+      "budgetReviewed": true,
+      "terms": "Anticipo y pagos por avances, sujetos a acuerdo. Propuesta de demostración sin validez comercial.",
+      "generalTerms": "Demostración del sistema. Validar alcance, seguridad y condiciones antes de cualquier trabajo.",
+      "notes": "PRESUPUESTO SIMULADO: datos de demostración nuevos, no recuperados de documentos ni cotizaciones originales.",
+      "scope": "Ejemplo técnico para verificar el sistema; no representa una oferta real.",
+      "items": [
+        {
+          "description": "Servicio demostrativo 1",
+          "unit": "servicio",
+          "quantity": 1,
+          "resources": [],
+          "indirectPct": 0,
+          "marginPct": 0,
+          "contingencyPct": 0,
+          "priceMode": "manual",
+          "saleUnitPrice": 4309461.19,
+          "system": "Sistema 1",
+          "subsystem": "Subsistema 1",
+          "activities": [
+            "Preparación del área",
+            "Ejecución conforme al procedimiento aprobado",
+            "Inspección y registro"
+          ],
+          "allocationWeight": 1,
+          "images": [
+            {
+              "url": "/quote-reference/registro-prueba.jpg",
+              "caption": "Registro de prueba de referencia",
+              "fit": "contain"
+            }
+          ],
+          "annexes": [
+            {
+              "name": "Lista de liberación de ejemplo",
+              "url": "/quote-reference/lista-liberacion.pdf",
+              "type": "application/pdf",
+              "pages": [
+                {
+                  "url": "/quote-reference/lista-liberacion.jpg",
+                  "page": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "description": "Servicio demostrativo 2",
+          "unit": "servicio",
+          "quantity": 1,
+          "resources": [],
+          "indirectPct": 0,
+          "marginPct": 0,
+          "contingencyPct": 0,
+          "priceMode": "manual",
+          "saleUnitPrice": 4309461.19,
+          "system": "Sistema 2",
+          "subsystem": "Subsistema 2",
+          "activities": [
+            "Preparación del área",
+            "Ejecución conforme al procedimiento aprobado",
+            "Inspección y registro"
+          ],
+          "allocationWeight": 1,
+          "images": [
+            {
+              "url": "/quote-reference/registro-prueba.jpg",
+              "caption": "Registro de prueba de referencia",
+              "fit": "contain"
+            }
+          ],
+          "annexes": [
+            {
+              "name": "Lista de liberación de ejemplo",
+              "url": "/quote-reference/lista-liberacion.pdf",
+              "type": "application/pdf",
+              "pages": [
+                {
+                  "url": "/quote-reference/lista-liberacion.jpg",
+                  "page": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "description": "Servicio demostrativo 3",
+          "unit": "servicio",
+          "quantity": 1,
+          "resources": [],
+          "indirectPct": 0,
+          "marginPct": 0,
+          "contingencyPct": 0,
+          "priceMode": "manual",
+          "saleUnitPrice": 4309461.19,
+          "system": "Sistema 3",
+          "subsystem": "Subsistema 1",
+          "activities": [
+            "Preparación del área",
+            "Ejecución conforme al procedimiento aprobado",
+            "Inspección y registro"
+          ],
+          "allocationWeight": 1,
+          "images": [
+            {
+              "url": "/quote-reference/registro-prueba.jpg",
+              "caption": "Registro de prueba de referencia",
+              "fit": "contain"
+            }
+          ],
+          "annexes": [
+            {
+              "name": "Lista de liberación de ejemplo",
+              "url": "/quote-reference/lista-liberacion.pdf",
+              "type": "application/pdf",
+              "pages": [
+                {
+                  "url": "/quote-reference/lista-liberacion.jpg",
+                  "page": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "description": "Servicio demostrativo 4",
+          "unit": "servicio",
+          "quantity": 1,
+          "resources": [],
+          "indirectPct": 0,
+          "marginPct": 0,
+          "contingencyPct": 0,
+          "priceMode": "manual",
+          "saleUnitPrice": 4309461.18,
+          "system": "Sistema 4",
+          "subsystem": "Subsistema 2",
+          "activities": [
+            "Preparación del área",
+            "Ejecución conforme al procedimiento aprobado",
+            "Inspección y registro"
+          ],
+          "allocationWeight": 1,
+          "images": [
+            {
+              "url": "/quote-reference/registro-prueba.jpg",
+              "caption": "Registro de prueba de referencia",
+              "fit": "contain"
+            }
+          ],
+          "annexes": [
+            {
+              "name": "Lista de liberación de ejemplo",
+              "url": "/quote-reference/lista-liberacion.pdf",
+              "type": "application/pdf",
+              "pages": [
+                {
+                  "url": "/quote-reference/lista-liberacion.jpg",
+                  "page": 1
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "presentation": {
+        "sections": [
+          {
+            "title": "Alcance de demostración STI-2333",
+            "body": "REPINDSA proporciona los servicios descritos para ilustrar el funcionamiento de la plataforma.",
+            "image": "/quote-reference/piping-outline.svg",
+            "fit": "contain"
+          }
+        ],
+        "annexes": [
+          {
+            "name": "Referencia de demostración",
+            "url": "/quote-reference/registro-prueba.pdf"
+          }
+        ]
+      },
+      "budgetMode": "general",
+      "budgetResources": [
+        {
+          "name": "Material del presupuesto demostrativo",
+          "category": "Material",
+          "unit": "lote",
+          "quantity": 1,
+          "unitCost": 10000,
+          "basis": "concept"
+        },
+        {
+          "name": "Técnico de demostración",
+          "category": "Puesto",
+          "unit": "jornada",
+          "quantity": 1,
+          "unitCost": 15000,
+          "basis": "concept",
+          "costingMode": "personnel",
+          "personnelCostVersion": 2,
+          "headcount": 1,
+          "days": 6,
+          "salaryPeriod": "Mensual",
+          "dailyAllowance": 0,
+          "allowancePeriod": "Mensual",
+          "allowanceBasis": "Calendario",
+          "includeEmployer": false
+        }
+      ],
+      "payrollCostVersion": 2,
+      "workDaysPerWeek": 6,
+      "structure": [
+        {
+          "system": "Sistema 1",
+          "subsystem": "Subsistema 1",
+          "description": "Documentación de demostración",
+          "images": [
+            {
+              "url": "/quote-reference/registro-prueba.jpg",
+              "caption": "Registro de prueba de referencia",
+              "fit": "contain"
+            }
+          ],
+          "annexes": [
+            {
+              "name": "Lista de liberación de ejemplo",
+              "url": "/quote-reference/lista-liberacion.pdf",
+              "type": "application/pdf",
+              "pages": [
+                {
+                  "url": "/quote-reference/lista-liberacion.jpg",
+                  "page": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "client": {
+      "id": "template-complete-client-v1",
+      "kind": "client",
+      "name": "Cliente de demostración Piping",
+      "status": "Activo",
+      "requirements": []
+    },
+    "opportunity": {
+      "id": "template-complete-opportunity-v1",
+      "kind": "opportunity",
+      "name": "DEMOSTRACIÓN · Piping",
+      "clientId": "template-complete-client-v1",
+      "division": "Piping",
+      "serviceType": "Piping",
+      "amount": 747500,
+      "status": "Oportunidad",
+      "origin": "Demostración",
+      "responsible": "Área Comercial"
+    },
+    "quote": {
+      "id": "template-complete-quote-v1",
+      "kind": "quote",
+      "name": "DEMOSTRACIÓN · Piping",
+      "clientId": "template-complete-client-v1",
+      "opportunityId": "template-complete-opportunity-v1",
+      "division": "Piping",
+      "serviceType": "Piping",
+      "status": "Borrador",
+      "pricingVersion": 2,
+      "wizardVersion": 2,
+      "executionDays": 30,
+      "margin": 0,
+      "tax": 16,
+      "discount": 0,
+      "budgetReviewed": true,
+      "terms": "Anticipo y pagos por avances, sujetos a acuerdo. Propuesta de demostración sin validez comercial.",
+      "generalTerms": "Demostración del sistema. Validar alcance, seguridad y condiciones antes de cualquier trabajo.",
+      "notes": "PRESUPUESTO SIMULADO: datos de demostración nuevos, no recuperados de documentos ni cotizaciones originales.",
+      "scope": "Ejemplo técnico para verificar el sistema; no representa una oferta real.",
+      "items": [
+        {
+          "description": "Servicio demostrativo 1",
+          "unit": "servicio",
+          "quantity": 1,
+          "resources": [],
+          "indirectPct": 0,
+          "marginPct": 0,
+          "contingencyPct": 0,
+          "priceMode": "manual",
+          "saleUnitPrice": 186875.0,
+          "system": "Sistema 1",
+          "subsystem": "Subsistema 1",
+          "activities": [
+            "Preparación del área",
+            "Ejecución conforme al procedimiento aprobado",
+            "Inspección y registro"
+          ],
+          "allocationWeight": 1,
+          "images": [
+            {
+              "url": "/quote-reference/registro-prueba.jpg",
+              "caption": "Registro de prueba de referencia",
+              "fit": "contain"
+            }
+          ],
+          "annexes": [
+            {
+              "name": "Lista de liberación de ejemplo",
+              "url": "/quote-reference/lista-liberacion.pdf",
+              "type": "application/pdf",
+              "pages": [
+                {
+                  "url": "/quote-reference/lista-liberacion.jpg",
+                  "page": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "description": "Servicio demostrativo 2",
+          "unit": "servicio",
+          "quantity": 1,
+          "resources": [],
+          "indirectPct": 0,
+          "marginPct": 0,
+          "contingencyPct": 0,
+          "priceMode": "manual",
+          "saleUnitPrice": 186875.0,
+          "system": "Sistema 2",
+          "subsystem": "Subsistema 2",
+          "activities": [
+            "Preparación del área",
+            "Ejecución conforme al procedimiento aprobado",
+            "Inspección y registro"
+          ],
+          "allocationWeight": 1,
+          "images": [
+            {
+              "url": "/quote-reference/registro-prueba.jpg",
+              "caption": "Registro de prueba de referencia",
+              "fit": "contain"
+            }
+          ],
+          "annexes": [
+            {
+              "name": "Lista de liberación de ejemplo",
+              "url": "/quote-reference/lista-liberacion.pdf",
+              "type": "application/pdf",
+              "pages": [
+                {
+                  "url": "/quote-reference/lista-liberacion.jpg",
+                  "page": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "description": "Servicio demostrativo 3",
+          "unit": "servicio",
+          "quantity": 1,
+          "resources": [],
+          "indirectPct": 0,
+          "marginPct": 0,
+          "contingencyPct": 0,
+          "priceMode": "manual",
+          "saleUnitPrice": 186875.0,
+          "system": "Sistema 1",
+          "subsystem": "Subsistema 1",
+          "activities": [
+            "Preparación del área",
+            "Ejecución conforme al procedimiento aprobado",
+            "Inspección y registro"
+          ],
+          "allocationWeight": 1,
+          "images": [
+            {
+              "url": "/quote-reference/registro-prueba.jpg",
+              "caption": "Registro de prueba de referencia",
+              "fit": "contain"
+            }
+          ],
+          "annexes": [
+            {
+              "name": "Lista de liberación de ejemplo",
+              "url": "/quote-reference/lista-liberacion.pdf",
+              "type": "application/pdf",
+              "pages": [
+                {
+                  "url": "/quote-reference/lista-liberacion.jpg",
+                  "page": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "description": "Servicio demostrativo 4",
+          "unit": "servicio",
+          "quantity": 1,
+          "resources": [],
+          "indirectPct": 0,
+          "marginPct": 0,
+          "contingencyPct": 0,
+          "priceMode": "manual",
+          "saleUnitPrice": 186875.0,
+          "system": "Sistema 2",
+          "subsystem": "Subsistema 2",
+          "activities": [
+            "Preparación del área",
+            "Ejecución conforme al procedimiento aprobado",
+            "Inspección y registro"
+          ],
+          "allocationWeight": 1,
+          "images": [
+            {
+              "url": "/quote-reference/registro-prueba.jpg",
+              "caption": "Registro de prueba de referencia",
+              "fit": "contain"
+            }
+          ],
+          "annexes": [
+            {
+              "name": "Lista de liberación de ejemplo",
+              "url": "/quote-reference/lista-liberacion.pdf",
+              "type": "application/pdf",
+              "pages": [
+                {
+                  "url": "/quote-reference/lista-liberacion.jpg",
+                  "page": 1
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "presentation": {
+        "sections": [
+          {
+            "title": "Alcance de demostración STI-2333",
+            "body": "REPINDSA proporciona los servicios descritos para ilustrar el funcionamiento de la plataforma.",
+            "image": "/quote-reference/piping-outline.svg",
+            "fit": "contain"
+          }
+        ],
+        "annexes": [
+          {
+            "name": "Referencia de demostración",
+            "url": "/quote-reference/registro-prueba.pdf"
+          }
+        ]
+      },
+      "budgetMode": "general",
+      "budgetResources": [
+        {
+          "name": "Material del presupuesto demostrativo",
+          "category": "Material",
+          "unit": "lote",
+          "quantity": 1,
+          "unitCost": 10000,
+          "basis": "concept"
+        },
+        {
+          "name": "Técnico de demostración",
+          "category": "Puesto",
+          "unit": "jornada",
+          "quantity": 1,
+          "unitCost": 15000,
+          "basis": "concept",
+          "costingMode": "personnel",
+          "personnelCostVersion": 2,
+          "headcount": 1,
+          "days": 6,
+          "salaryPeriod": "Mensual",
+          "dailyAllowance": 0,
+          "allowancePeriod": "Mensual",
+          "allowanceBasis": "Calendario",
+          "includeEmployer": false
+        }
+      ],
+      "payrollCostVersion": 2,
+      "workDaysPerWeek": 6,
+      "structure": [
+        {
+          "system": "Sistema 1",
+          "subsystem": "Subsistema 1",
+          "description": "Documentación de demostración",
+          "images": [
+            {
+              "url": "/quote-reference/registro-prueba.jpg",
+              "caption": "Registro de prueba de referencia",
+              "fit": "contain"
+            }
+          ],
+          "annexes": [
+            {
+              "name": "Lista de liberación de ejemplo",
+              "url": "/quote-reference/lista-liberacion.pdf",
+              "type": "application/pdf",
+              "pages": [
+                {
+                  "url": "/quote-reference/lista-liberacion.jpg",
+                  "page": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+]

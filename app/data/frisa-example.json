@@ -1,0 +1,3008 @@
+{
+  "client": {
+    "id": "frisa-example-client-v1",
+    "kind": "client",
+    "name": "FRISA",
+    "status": "Activo",
+    "requirements": []
+  },
+  "opportunity": {
+    "id": "frisa-example-opportunity-v1",
+    "kind": "opportunity",
+    "name": "DEMOSTRACIÓN FRISA · Servicios industriales",
+    "clientId": "frisa-example-client-v1",
+    "division": "Precomisionamiento",
+    "serviceType": "Precomisionamiento",
+    "amount": 42614311.75,
+    "status": "Oportunidad",
+    "origin": "Demostración",
+    "responsible": "Área Comercial"
+  },
+  "quote": {
+    "id": "frisa-example-quote-v1",
+    "kind": "quote",
+    "name": "DEMOSTRACIÓN FRISA · Servicios industriales",
+    "clientId": "frisa-example-client-v1",
+    "opportunityId": "frisa-example-opportunity-v1",
+    "division": "Precomisionamiento",
+    "serviceType": "Precomisionamiento",
+    "status": "Borrador",
+    "pricingVersion": 2,
+    "wizardVersion": 2,
+    "executionDays": 30,
+    "margin": 0,
+    "tax": 16,
+    "discount": 0,
+    "budgetReviewed": true,
+    "terms": "Anticipo y pagos por avances, sujetos a acuerdo. Propuesta de demostración sin validez comercial.",
+    "generalTerms": "Demostración del sistema. Validar alcance, seguridad y condiciones antes de cualquier trabajo.",
+    "notes": "PRESUPUESTO SIMULADO: datos de demostración nuevos, no recuperados de documentos ni cotizaciones originales. El nombre FRISA se conserva por compatibilidad con la función de ejemplo.",
+    "scope": "Ejemplo técnico para verificar el sistema; no representa una oferta real.",
+    "items": [
+      {
+        "description": "Servicio demostrativo 1",
+        "unit": "servicio",
+        "quantity": 1,
+        "resources": [
+          {
+            "name": "Material demostrativo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Consumibles demostrativos",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Servicio de preparación",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Herramientas de apoyo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Inspección de referencia",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Documentación de prueba",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          }
+        ],
+        "indirectPct": 0,
+        "marginPct": 0,
+        "contingencyPct": 0,
+        "priceMode": "manual",
+        "saleUnitPrice": 1000000,
+        "system": "Sistema hidráulico",
+        "subsystem": "Circuito 1",
+        "activities": [
+          "Preparación del área",
+          "Ejecución conforme al procedimiento aprobado",
+          "Inspección y registro"
+        ]
+      },
+      {
+        "description": "Servicio demostrativo 2",
+        "unit": "servicio",
+        "quantity": 1,
+        "resources": [
+          {
+            "name": "Material demostrativo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Consumibles demostrativos",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Servicio de preparación",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Herramientas de apoyo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Inspección de referencia",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Documentación de prueba",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          }
+        ],
+        "indirectPct": 0,
+        "marginPct": 0,
+        "contingencyPct": 0,
+        "priceMode": "manual",
+        "saleUnitPrice": 1000000,
+        "system": "Sistema hidráulico",
+        "subsystem": "Circuito 1",
+        "activities": [
+          "Preparación del área",
+          "Ejecución conforme al procedimiento aprobado",
+          "Inspección y registro"
+        ]
+      },
+      {
+        "description": "Servicio demostrativo 3",
+        "unit": "servicio",
+        "quantity": 1,
+        "resources": [
+          {
+            "name": "Material demostrativo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Consumibles demostrativos",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Servicio de preparación",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Herramientas de apoyo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Inspección de referencia",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Documentación de prueba",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          }
+        ],
+        "indirectPct": 0,
+        "marginPct": 0,
+        "contingencyPct": 0,
+        "priceMode": "manual",
+        "saleUnitPrice": 1000000,
+        "system": "Sistema hidráulico",
+        "subsystem": "Circuito 1",
+        "activities": [
+          "Preparación del área",
+          "Ejecución conforme al procedimiento aprobado",
+          "Inspección y registro"
+        ]
+      },
+      {
+        "description": "Servicio demostrativo 4",
+        "unit": "servicio",
+        "quantity": 1,
+        "resources": [
+          {
+            "name": "Material demostrativo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Consumibles demostrativos",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Servicio de preparación",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Herramientas de apoyo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Inspección de referencia",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Documentación de prueba",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          }
+        ],
+        "indirectPct": 0,
+        "marginPct": 0,
+        "contingencyPct": 0,
+        "priceMode": "manual",
+        "saleUnitPrice": 1000000,
+        "system": "Sistema hidráulico",
+        "subsystem": "Circuito 1",
+        "activities": [
+          "Preparación del área",
+          "Ejecución conforme al procedimiento aprobado",
+          "Inspección y registro"
+        ]
+      },
+      {
+        "description": "Servicio demostrativo 5",
+        "unit": "servicio",
+        "quantity": 1,
+        "resources": [
+          {
+            "name": "Material demostrativo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Consumibles demostrativos",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Servicio de preparación",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Herramientas de apoyo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Inspección de referencia",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Documentación de prueba",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          }
+        ],
+        "indirectPct": 0,
+        "marginPct": 0,
+        "contingencyPct": 0,
+        "priceMode": "manual",
+        "saleUnitPrice": 1000000,
+        "system": "Sistema hidráulico",
+        "subsystem": "Circuito 1",
+        "activities": [
+          "Preparación del área",
+          "Ejecución conforme al procedimiento aprobado",
+          "Inspección y registro"
+        ]
+      },
+      {
+        "description": "Servicio demostrativo 6",
+        "unit": "servicio",
+        "quantity": 1,
+        "resources": [
+          {
+            "name": "Material demostrativo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Consumibles demostrativos",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Servicio de preparación",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Herramientas de apoyo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Inspección de referencia",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Documentación de prueba",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          }
+        ],
+        "indirectPct": 0,
+        "marginPct": 0,
+        "contingencyPct": 0,
+        "priceMode": "manual",
+        "saleUnitPrice": 1000000,
+        "system": "Sistema hidráulico",
+        "subsystem": "Circuito 1",
+        "activities": [
+          "Preparación del área",
+          "Ejecución conforme al procedimiento aprobado",
+          "Inspección y registro"
+        ]
+      },
+      {
+        "description": "Servicio demostrativo 7",
+        "unit": "servicio",
+        "quantity": 1,
+        "resources": [
+          {
+            "name": "Material demostrativo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Consumibles demostrativos",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Servicio de preparación",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Herramientas de apoyo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Inspección de referencia",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Documentación de prueba",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          }
+        ],
+        "indirectPct": 0,
+        "marginPct": 0,
+        "contingencyPct": 0,
+        "priceMode": "manual",
+        "saleUnitPrice": 1000000,
+        "system": "Sistema hidráulico",
+        "subsystem": "Circuito 1",
+        "activities": [
+          "Preparación del área",
+          "Ejecución conforme al procedimiento aprobado",
+          "Inspección y registro"
+        ]
+      },
+      {
+        "description": "Servicio demostrativo 8",
+        "unit": "servicio",
+        "quantity": 1,
+        "resources": [
+          {
+            "name": "Material demostrativo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Consumibles demostrativos",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Servicio de preparación",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Herramientas de apoyo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Inspección de referencia",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Documentación de prueba",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          }
+        ],
+        "indirectPct": 0,
+        "marginPct": 0,
+        "contingencyPct": 0,
+        "priceMode": "manual",
+        "saleUnitPrice": 1000000,
+        "system": "Sistema hidráulico",
+        "subsystem": "Circuito 1",
+        "activities": [
+          "Preparación del área",
+          "Ejecución conforme al procedimiento aprobado",
+          "Inspección y registro"
+        ]
+      },
+      {
+        "description": "Servicio demostrativo 9",
+        "unit": "servicio",
+        "quantity": 1,
+        "resources": [
+          {
+            "name": "Material demostrativo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Consumibles demostrativos",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Servicio de preparación",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Herramientas de apoyo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Inspección de referencia",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Documentación de prueba",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          }
+        ],
+        "indirectPct": 0,
+        "marginPct": 0,
+        "contingencyPct": 0,
+        "priceMode": "manual",
+        "saleUnitPrice": 1000000,
+        "system": "Sistema hidráulico",
+        "subsystem": "Circuito 1",
+        "activities": [
+          "Preparación del área",
+          "Ejecución conforme al procedimiento aprobado",
+          "Inspección y registro"
+        ]
+      },
+      {
+        "description": "Servicio demostrativo 10",
+        "unit": "servicio",
+        "quantity": 1,
+        "resources": [
+          {
+            "name": "Material demostrativo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Consumibles demostrativos",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Servicio de preparación",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Herramientas de apoyo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Inspección de referencia",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Documentación de prueba",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          }
+        ],
+        "indirectPct": 0,
+        "marginPct": 0,
+        "contingencyPct": 0,
+        "priceMode": "manual",
+        "saleUnitPrice": 1000000,
+        "system": "Sistema hidráulico",
+        "subsystem": "Circuito 1",
+        "activities": [
+          "Preparación del área",
+          "Ejecución conforme al procedimiento aprobado",
+          "Inspección y registro"
+        ]
+      },
+      {
+        "description": "Servicio demostrativo 11",
+        "unit": "servicio",
+        "quantity": 1,
+        "resources": [
+          {
+            "name": "Material demostrativo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Consumibles demostrativos",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Servicio de preparación",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Herramientas de apoyo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Inspección de referencia",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Documentación de prueba",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          }
+        ],
+        "indirectPct": 0,
+        "marginPct": 0,
+        "contingencyPct": 0,
+        "priceMode": "manual",
+        "saleUnitPrice": 1000000,
+        "system": "Sistema hidráulico",
+        "subsystem": "Circuito 1",
+        "activities": [
+          "Preparación del área",
+          "Ejecución conforme al procedimiento aprobado",
+          "Inspección y registro"
+        ]
+      },
+      {
+        "description": "Servicio demostrativo 12",
+        "unit": "servicio",
+        "quantity": 1,
+        "resources": [
+          {
+            "name": "Material demostrativo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Consumibles demostrativos",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Servicio de preparación",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Herramientas de apoyo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Inspección de referencia",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Documentación de prueba",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          }
+        ],
+        "indirectPct": 0,
+        "marginPct": 0,
+        "contingencyPct": 0,
+        "priceMode": "manual",
+        "saleUnitPrice": 1000000,
+        "system": "Sistema hidráulico",
+        "subsystem": "Circuito 2",
+        "activities": [
+          "Preparación del área",
+          "Ejecución conforme al procedimiento aprobado",
+          "Inspección y registro"
+        ]
+      },
+      {
+        "description": "Servicio demostrativo 13",
+        "unit": "servicio",
+        "quantity": 1,
+        "resources": [
+          {
+            "name": "Material demostrativo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Consumibles demostrativos",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Servicio de preparación",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Herramientas de apoyo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Inspección de referencia",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Documentación de prueba",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          }
+        ],
+        "indirectPct": 0,
+        "marginPct": 0,
+        "contingencyPct": 0,
+        "priceMode": "manual",
+        "saleUnitPrice": 1000000,
+        "system": "Sistema hidráulico",
+        "subsystem": "Circuito 2",
+        "activities": [
+          "Preparación del área",
+          "Ejecución conforme al procedimiento aprobado",
+          "Inspección y registro"
+        ]
+      },
+      {
+        "description": "Servicio demostrativo 14",
+        "unit": "servicio",
+        "quantity": 1,
+        "resources": [
+          {
+            "name": "Material demostrativo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Consumibles demostrativos",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Servicio de preparación",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Herramientas de apoyo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Inspección de referencia",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Documentación de prueba",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          }
+        ],
+        "indirectPct": 0,
+        "marginPct": 0,
+        "contingencyPct": 0,
+        "priceMode": "manual",
+        "saleUnitPrice": 1000000,
+        "system": "Sistema hidráulico",
+        "subsystem": "Circuito 2",
+        "activities": [
+          "Preparación del área",
+          "Ejecución conforme al procedimiento aprobado",
+          "Inspección y registro"
+        ]
+      },
+      {
+        "description": "Servicio demostrativo 15",
+        "unit": "servicio",
+        "quantity": 1,
+        "resources": [
+          {
+            "name": "Material demostrativo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Consumibles demostrativos",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Servicio de preparación",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Herramientas de apoyo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Inspección de referencia",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Documentación de prueba",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          }
+        ],
+        "indirectPct": 0,
+        "marginPct": 0,
+        "contingencyPct": 0,
+        "priceMode": "manual",
+        "saleUnitPrice": 1000000,
+        "system": "Sistema hidráulico",
+        "subsystem": "Circuito 2",
+        "activities": [
+          "Preparación del área",
+          "Ejecución conforme al procedimiento aprobado",
+          "Inspección y registro"
+        ]
+      },
+      {
+        "description": "Servicio demostrativo 16",
+        "unit": "servicio",
+        "quantity": 1,
+        "resources": [
+          {
+            "name": "Material demostrativo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Consumibles demostrativos",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Servicio de preparación",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Herramientas de apoyo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Inspección de referencia",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Documentación de prueba",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          }
+        ],
+        "indirectPct": 0,
+        "marginPct": 0,
+        "contingencyPct": 0,
+        "priceMode": "manual",
+        "saleUnitPrice": 1000000,
+        "system": "Sistema hidráulico",
+        "subsystem": "Circuito 2",
+        "activities": [
+          "Preparación del área",
+          "Ejecución conforme al procedimiento aprobado",
+          "Inspección y registro"
+        ]
+      },
+      {
+        "description": "Servicio demostrativo 17",
+        "unit": "servicio",
+        "quantity": 1,
+        "resources": [
+          {
+            "name": "Material demostrativo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Consumibles demostrativos",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Servicio de preparación",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Herramientas de apoyo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Inspección de referencia",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Documentación de prueba",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          }
+        ],
+        "indirectPct": 0,
+        "marginPct": 0,
+        "contingencyPct": 0,
+        "priceMode": "manual",
+        "saleUnitPrice": 1000000,
+        "system": "Sistema hidráulico",
+        "subsystem": "Circuito 2",
+        "activities": [
+          "Preparación del área",
+          "Ejecución conforme al procedimiento aprobado",
+          "Inspección y registro"
+        ]
+      },
+      {
+        "description": "Servicio demostrativo 18",
+        "unit": "servicio",
+        "quantity": 1,
+        "resources": [
+          {
+            "name": "Material demostrativo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Consumibles demostrativos",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Servicio de preparación",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Herramientas de apoyo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Inspección de referencia",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Documentación de prueba",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          }
+        ],
+        "indirectPct": 0,
+        "marginPct": 0,
+        "contingencyPct": 0,
+        "priceMode": "manual",
+        "saleUnitPrice": 1000000,
+        "system": "Sistema hidráulico",
+        "subsystem": "Circuito 2",
+        "activities": [
+          "Preparación del área",
+          "Ejecución conforme al procedimiento aprobado",
+          "Inspección y registro"
+        ]
+      },
+      {
+        "description": "Servicio demostrativo 19",
+        "unit": "servicio",
+        "quantity": 1,
+        "resources": [
+          {
+            "name": "Material demostrativo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Consumibles demostrativos",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Servicio de preparación",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Herramientas de apoyo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Inspección de referencia",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Documentación de prueba",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          }
+        ],
+        "indirectPct": 0,
+        "marginPct": 0,
+        "contingencyPct": 0,
+        "priceMode": "manual",
+        "saleUnitPrice": 1000000,
+        "system": "Sistema hidráulico",
+        "subsystem": "Circuito 2",
+        "activities": [
+          "Preparación del área",
+          "Ejecución conforme al procedimiento aprobado",
+          "Inspección y registro"
+        ]
+      },
+      {
+        "description": "Servicio demostrativo 20",
+        "unit": "servicio",
+        "quantity": 1,
+        "resources": [
+          {
+            "name": "Material demostrativo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Consumibles demostrativos",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Servicio de preparación",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Herramientas de apoyo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Inspección de referencia",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Documentación de prueba",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          }
+        ],
+        "indirectPct": 0,
+        "marginPct": 0,
+        "contingencyPct": 0,
+        "priceMode": "manual",
+        "saleUnitPrice": 1000000,
+        "system": "Sistema hidráulico",
+        "subsystem": "Circuito 2",
+        "activities": [
+          "Preparación del área",
+          "Ejecución conforme al procedimiento aprobado",
+          "Inspección y registro"
+        ]
+      },
+      {
+        "description": "Servicio demostrativo 21",
+        "unit": "servicio",
+        "quantity": 1,
+        "resources": [
+          {
+            "name": "Material demostrativo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Consumibles demostrativos",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Servicio de preparación",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Herramientas de apoyo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Inspección de referencia",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Documentación de prueba",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          }
+        ],
+        "indirectPct": 0,
+        "marginPct": 0,
+        "contingencyPct": 0,
+        "priceMode": "manual",
+        "saleUnitPrice": 1000000,
+        "system": "Sistema hidráulico",
+        "subsystem": "Circuito 2",
+        "activities": [
+          "Preparación del área",
+          "Ejecución conforme al procedimiento aprobado",
+          "Inspección y registro"
+        ]
+      },
+      {
+        "description": "Servicio demostrativo 22",
+        "unit": "servicio",
+        "quantity": 1,
+        "resources": [
+          {
+            "name": "Material demostrativo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Consumibles demostrativos",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Servicio de preparación",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Herramientas de apoyo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Inspección de referencia",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Documentación de prueba",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          }
+        ],
+        "indirectPct": 0,
+        "marginPct": 0,
+        "contingencyPct": 0,
+        "priceMode": "manual",
+        "saleUnitPrice": 1000000,
+        "system": "Sistema hidráulico",
+        "subsystem": "Circuito 2",
+        "activities": [
+          "Preparación del área",
+          "Ejecución conforme al procedimiento aprobado",
+          "Inspección y registro"
+        ]
+      },
+      {
+        "description": "Servicio demostrativo 23",
+        "unit": "servicio",
+        "quantity": 1,
+        "resources": [
+          {
+            "name": "Material demostrativo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Consumibles demostrativos",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Servicio de preparación",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Herramientas de apoyo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Inspección de referencia",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Documentación de prueba",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          }
+        ],
+        "indirectPct": 0,
+        "marginPct": 0,
+        "contingencyPct": 0,
+        "priceMode": "manual",
+        "saleUnitPrice": 1000000,
+        "system": "Sistema hidráulico",
+        "subsystem": "Circuito 3",
+        "activities": [
+          "Preparación del área",
+          "Ejecución conforme al procedimiento aprobado",
+          "Inspección y registro"
+        ]
+      },
+      {
+        "description": "Servicio demostrativo 24",
+        "unit": "servicio",
+        "quantity": 1,
+        "resources": [
+          {
+            "name": "Material demostrativo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Consumibles demostrativos",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Servicio de preparación",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Herramientas de apoyo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Inspección de referencia",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Documentación de prueba",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          }
+        ],
+        "indirectPct": 0,
+        "marginPct": 0,
+        "contingencyPct": 0,
+        "priceMode": "manual",
+        "saleUnitPrice": 1000000,
+        "system": "Sistema hidráulico",
+        "subsystem": "Circuito 3",
+        "activities": [
+          "Preparación del área",
+          "Ejecución conforme al procedimiento aprobado",
+          "Inspección y registro"
+        ]
+      },
+      {
+        "description": "Servicio demostrativo 25",
+        "unit": "servicio",
+        "quantity": 1,
+        "resources": [
+          {
+            "name": "Material demostrativo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Consumibles demostrativos",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Servicio de preparación",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Herramientas de apoyo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Inspección de referencia",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Documentación de prueba",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          }
+        ],
+        "indirectPct": 0,
+        "marginPct": 0,
+        "contingencyPct": 0,
+        "priceMode": "manual",
+        "saleUnitPrice": 1000000,
+        "system": "Sistema hidráulico",
+        "subsystem": "Circuito 3",
+        "activities": [
+          "Preparación del área",
+          "Ejecución conforme al procedimiento aprobado",
+          "Inspección y registro"
+        ]
+      },
+      {
+        "description": "Servicio demostrativo 26",
+        "unit": "servicio",
+        "quantity": 1,
+        "resources": [
+          {
+            "name": "Material demostrativo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Consumibles demostrativos",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Servicio de preparación",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Herramientas de apoyo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Inspección de referencia",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Documentación de prueba",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          }
+        ],
+        "indirectPct": 0,
+        "marginPct": 0,
+        "contingencyPct": 0,
+        "priceMode": "manual",
+        "saleUnitPrice": 1000000,
+        "system": "Sistema hidráulico",
+        "subsystem": "Circuito 3",
+        "activities": [
+          "Preparación del área",
+          "Ejecución conforme al procedimiento aprobado",
+          "Inspección y registro"
+        ]
+      },
+      {
+        "description": "Servicio demostrativo 27",
+        "unit": "servicio",
+        "quantity": 1,
+        "resources": [
+          {
+            "name": "Material demostrativo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Consumibles demostrativos",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Servicio de preparación",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Herramientas de apoyo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Inspección de referencia",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Documentación de prueba",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          }
+        ],
+        "indirectPct": 0,
+        "marginPct": 0,
+        "contingencyPct": 0,
+        "priceMode": "manual",
+        "saleUnitPrice": 1000000,
+        "system": "Sistema hidráulico",
+        "subsystem": "Circuito 3",
+        "activities": [
+          "Preparación del área",
+          "Ejecución conforme al procedimiento aprobado",
+          "Inspección y registro"
+        ]
+      },
+      {
+        "description": "Servicio demostrativo 28",
+        "unit": "servicio",
+        "quantity": 1,
+        "resources": [
+          {
+            "name": "Material demostrativo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Consumibles demostrativos",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Servicio de preparación",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Herramientas de apoyo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Inspección de referencia",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Documentación de prueba",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          }
+        ],
+        "indirectPct": 0,
+        "marginPct": 0,
+        "contingencyPct": 0,
+        "priceMode": "manual",
+        "saleUnitPrice": 1000000,
+        "system": "Sistema hidráulico",
+        "subsystem": "Circuito 3",
+        "activities": [
+          "Preparación del área",
+          "Ejecución conforme al procedimiento aprobado",
+          "Inspección y registro"
+        ]
+      },
+      {
+        "description": "Servicio demostrativo 29",
+        "unit": "servicio",
+        "quantity": 1,
+        "resources": [
+          {
+            "name": "Material demostrativo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Consumibles demostrativos",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Servicio de preparación",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Herramientas de apoyo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Inspección de referencia",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Documentación de prueba",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          }
+        ],
+        "indirectPct": 0,
+        "marginPct": 0,
+        "contingencyPct": 0,
+        "priceMode": "manual",
+        "saleUnitPrice": 1000000,
+        "system": "Sistema hidráulico",
+        "subsystem": "Circuito 3",
+        "activities": [
+          "Preparación del área",
+          "Ejecución conforme al procedimiento aprobado",
+          "Inspección y registro"
+        ]
+      },
+      {
+        "description": "Servicio demostrativo 30",
+        "unit": "servicio",
+        "quantity": 1,
+        "resources": [
+          {
+            "name": "Material demostrativo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Consumibles demostrativos",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Servicio de preparación",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Herramientas de apoyo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Inspección de referencia",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Documentación de prueba",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          }
+        ],
+        "indirectPct": 0,
+        "marginPct": 0,
+        "contingencyPct": 0,
+        "priceMode": "manual",
+        "saleUnitPrice": 1000000,
+        "system": "Sistema hidráulico",
+        "subsystem": "Circuito 3",
+        "activities": [
+          "Preparación del área",
+          "Ejecución conforme al procedimiento aprobado",
+          "Inspección y registro"
+        ]
+      },
+      {
+        "description": "Servicio demostrativo 31",
+        "unit": "servicio",
+        "quantity": 1,
+        "resources": [
+          {
+            "name": "Material demostrativo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Consumibles demostrativos",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Servicio de preparación",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Herramientas de apoyo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Inspección de referencia",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Documentación de prueba",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          }
+        ],
+        "indirectPct": 0,
+        "marginPct": 0,
+        "contingencyPct": 0,
+        "priceMode": "manual",
+        "saleUnitPrice": 1000000,
+        "system": "Sistema hidráulico",
+        "subsystem": "Circuito 3",
+        "activities": [
+          "Preparación del área",
+          "Ejecución conforme al procedimiento aprobado",
+          "Inspección y registro"
+        ]
+      },
+      {
+        "description": "Servicio demostrativo 32",
+        "unit": "servicio",
+        "quantity": 1,
+        "resources": [
+          {
+            "name": "Material demostrativo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Consumibles demostrativos",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Servicio de preparación",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Herramientas de apoyo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Inspección de referencia",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Documentación de prueba",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          }
+        ],
+        "indirectPct": 0,
+        "marginPct": 0,
+        "contingencyPct": 0,
+        "priceMode": "manual",
+        "saleUnitPrice": 1000000,
+        "system": "Sistema hidráulico",
+        "subsystem": "Circuito 3",
+        "activities": [
+          "Preparación del área",
+          "Ejecución conforme al procedimiento aprobado",
+          "Inspección y registro"
+        ]
+      },
+      {
+        "description": "Servicio demostrativo 33",
+        "unit": "servicio",
+        "quantity": 1,
+        "resources": [
+          {
+            "name": "Material demostrativo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Consumibles demostrativos",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Servicio de preparación",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Herramientas de apoyo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Inspección de referencia",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Documentación de prueba",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          }
+        ],
+        "indirectPct": 0,
+        "marginPct": 0,
+        "contingencyPct": 0,
+        "priceMode": "manual",
+        "saleUnitPrice": 1000000,
+        "system": "Sistema hidráulico",
+        "subsystem": "Circuito 3",
+        "activities": [
+          "Preparación del área",
+          "Ejecución conforme al procedimiento aprobado",
+          "Inspección y registro"
+        ]
+      },
+      {
+        "description": "Servicio demostrativo 34",
+        "unit": "servicio",
+        "quantity": 1,
+        "resources": [
+          {
+            "name": "Material demostrativo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Consumibles demostrativos",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Servicio de preparación",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Herramientas de apoyo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Inspección de referencia",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Documentación de prueba",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          }
+        ],
+        "indirectPct": 0,
+        "marginPct": 0,
+        "contingencyPct": 0,
+        "priceMode": "manual",
+        "saleUnitPrice": 1000000,
+        "system": "Sistema hidráulico",
+        "subsystem": "Circuito 4",
+        "activities": [
+          "Preparación del área",
+          "Ejecución conforme al procedimiento aprobado",
+          "Inspección y registro"
+        ]
+      },
+      {
+        "description": "Servicio demostrativo 35",
+        "unit": "servicio",
+        "quantity": 1,
+        "resources": [
+          {
+            "name": "Material demostrativo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Consumibles demostrativos",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Servicio de preparación",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Herramientas de apoyo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Inspección de referencia",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Documentación de prueba",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          }
+        ],
+        "indirectPct": 0,
+        "marginPct": 0,
+        "contingencyPct": 0,
+        "priceMode": "manual",
+        "saleUnitPrice": 1000000,
+        "system": "Sistema hidráulico",
+        "subsystem": "Circuito 4",
+        "activities": [
+          "Preparación del área",
+          "Ejecución conforme al procedimiento aprobado",
+          "Inspección y registro"
+        ]
+      },
+      {
+        "description": "Servicio demostrativo 36",
+        "unit": "servicio",
+        "quantity": 1,
+        "resources": [
+          {
+            "name": "Material demostrativo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Consumibles demostrativos",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Servicio de preparación",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Herramientas de apoyo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Inspección de referencia",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Documentación de prueba",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          }
+        ],
+        "indirectPct": 0,
+        "marginPct": 0,
+        "contingencyPct": 0,
+        "priceMode": "manual",
+        "saleUnitPrice": 1000000,
+        "system": "Sistema hidráulico",
+        "subsystem": "Circuito 4",
+        "activities": [
+          "Preparación del área",
+          "Ejecución conforme al procedimiento aprobado",
+          "Inspección y registro"
+        ]
+      },
+      {
+        "description": "Servicio demostrativo 37",
+        "unit": "servicio",
+        "quantity": 1,
+        "resources": [
+          {
+            "name": "Material demostrativo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Consumibles demostrativos",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Servicio de preparación",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Herramientas de apoyo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Inspección de referencia",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Documentación de prueba",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          }
+        ],
+        "indirectPct": 0,
+        "marginPct": 0,
+        "contingencyPct": 0,
+        "priceMode": "manual",
+        "saleUnitPrice": 1000000,
+        "system": "Sistema hidráulico",
+        "subsystem": "Circuito 4",
+        "activities": [
+          "Preparación del área",
+          "Ejecución conforme al procedimiento aprobado",
+          "Inspección y registro"
+        ]
+      },
+      {
+        "description": "Servicio demostrativo 38",
+        "unit": "servicio",
+        "quantity": 1,
+        "resources": [
+          {
+            "name": "Material demostrativo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Consumibles demostrativos",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Servicio de preparación",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Herramientas de apoyo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Inspección de referencia",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Documentación de prueba",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          }
+        ],
+        "indirectPct": 0,
+        "marginPct": 0,
+        "contingencyPct": 0,
+        "priceMode": "manual",
+        "saleUnitPrice": 1000000,
+        "system": "Sistema hidráulico",
+        "subsystem": "Circuito 4",
+        "activities": [
+          "Preparación del área",
+          "Ejecución conforme al procedimiento aprobado",
+          "Inspección y registro"
+        ]
+      },
+      {
+        "description": "Servicio demostrativo 39",
+        "unit": "servicio",
+        "quantity": 1,
+        "resources": [
+          {
+            "name": "Material demostrativo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Consumibles demostrativos",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Servicio de preparación",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Herramientas de apoyo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Inspección de referencia",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Documentación de prueba",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          }
+        ],
+        "indirectPct": 0,
+        "marginPct": 0,
+        "contingencyPct": 0,
+        "priceMode": "manual",
+        "saleUnitPrice": 1000000,
+        "system": "Sistema hidráulico",
+        "subsystem": "Circuito 4",
+        "activities": [
+          "Preparación del área",
+          "Ejecución conforme al procedimiento aprobado",
+          "Inspección y registro"
+        ]
+      },
+      {
+        "description": "Servicio demostrativo 40",
+        "unit": "servicio",
+        "quantity": 1,
+        "resources": [
+          {
+            "name": "Material demostrativo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Consumibles demostrativos",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Servicio de preparación",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Herramientas de apoyo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Inspección de referencia",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Documentación de prueba",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          }
+        ],
+        "indirectPct": 0,
+        "marginPct": 0,
+        "contingencyPct": 0,
+        "priceMode": "manual",
+        "saleUnitPrice": 1000000,
+        "system": "Sistema hidráulico",
+        "subsystem": "Circuito 4",
+        "activities": [
+          "Preparación del área",
+          "Ejecución conforme al procedimiento aprobado",
+          "Inspección y registro"
+        ]
+      },
+      {
+        "description": "Servicio demostrativo 41",
+        "unit": "servicio",
+        "quantity": 1,
+        "resources": [
+          {
+            "name": "Material demostrativo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Consumibles demostrativos",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Servicio de preparación",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Herramientas de apoyo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Inspección de referencia",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Documentación de prueba",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          }
+        ],
+        "indirectPct": 0,
+        "marginPct": 0,
+        "contingencyPct": 0,
+        "priceMode": "manual",
+        "saleUnitPrice": 1000000,
+        "system": "Sistema hidráulico",
+        "subsystem": "Circuito 4",
+        "activities": [
+          "Preparación del área",
+          "Ejecución conforme al procedimiento aprobado",
+          "Inspección y registro"
+        ]
+      },
+      {
+        "description": "Servicio demostrativo 42",
+        "unit": "servicio",
+        "quantity": 1,
+        "resources": [
+          {
+            "name": "Material demostrativo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Consumibles demostrativos",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Servicio de preparación",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Herramientas de apoyo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Inspección de referencia",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Documentación de prueba",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          }
+        ],
+        "indirectPct": 0,
+        "marginPct": 0,
+        "contingencyPct": 0,
+        "priceMode": "manual",
+        "saleUnitPrice": 1000000,
+        "system": "Sistema hidráulico",
+        "subsystem": "Circuito 4",
+        "activities": [
+          "Preparación del área",
+          "Ejecución conforme al procedimiento aprobado",
+          "Inspección y registro"
+        ]
+      },
+      {
+        "description": "Servicio demostrativo 43",
+        "unit": "servicio",
+        "quantity": 1,
+        "resources": [
+          {
+            "name": "Material demostrativo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Consumibles demostrativos",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Servicio de preparación",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Herramientas de apoyo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Inspección de referencia",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Documentación de prueba",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          }
+        ],
+        "indirectPct": 0,
+        "marginPct": 0,
+        "contingencyPct": 0,
+        "priceMode": "manual",
+        "saleUnitPrice": 307155.87,
+        "system": "Sistema hidráulico",
+        "subsystem": "Circuito 4",
+        "activities": [
+          "Preparación del área",
+          "Ejecución conforme al procedimiento aprobado",
+          "Inspección y registro"
+        ]
+      },
+      {
+        "description": "Servicio demostrativo 44",
+        "unit": "servicio",
+        "quantity": 1,
+        "resources": [
+          {
+            "name": "Material demostrativo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Consumibles demostrativos",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Servicio de preparación",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Herramientas de apoyo",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Inspección de referencia",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          },
+          {
+            "name": "Documentación de prueba",
+            "category": "Material",
+            "unit": "lote",
+            "quantity": 1,
+            "unitCost": 100,
+            "basis": "concept"
+          }
+        ],
+        "indirectPct": 0,
+        "marginPct": 0,
+        "contingencyPct": 0,
+        "priceMode": "manual",
+        "saleUnitPrice": 307155.88,
+        "system": "Sistema hidráulico",
+        "subsystem": "Circuito 4",
+        "activities": [
+          "Preparación del área",
+          "Ejecución conforme al procedimiento aprobado",
+          "Inspección y registro"
+        ]
+      }
+    ],
+    "presentation": {
+      "sections": [
+        {
+          "title": "Alcance de demostración STI-2333",
+          "body": "REPINDSA proporciona los servicios descritos para ilustrar el funcionamiento de la plataforma.",
+          "image": "/quote-reference/piping-outline.svg",
+          "fit": "contain"
+        }
+      ],
+      "annexes": [
+        {
+          "name": "Referencia de demostración",
+          "url": "/quote-reference/registro-prueba.pdf"
+        }
+      ]
+    }
+  }
+}
