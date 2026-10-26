@@ -2,6 +2,7 @@ import http from 'node:http';
 import {fileURLToPath} from 'node:url';
 import {serverConfig} from './server/config.mjs';
 import next from 'next';
+import {initializeFreshDatabase, bootstrapAdministrator} from './server/fresh-install.mjs';
 import {migrate} from './scripts/migrate.mjs';
 import {importEncryptedMigration} from './scripts/import-encrypted.mjs';
 
@@ -16,9 +17,8 @@ try {
   const {port, origin} = serverConfig(process.env, dev);
   stage = 'migraciones y conexión a la base de datos';
   console.log('[REPINDSA] Comprobando base de datos y migraciones.');
-  // Keep the selected data-restoration policy; never silently start an empty DB.
-  const autoImport = process.env.MIGRATION_AUTO_IMPORT === '1' ||
-    (!dev && process.env.MIGRATION_AUTO_IMPORT !== '0');
+  // Fresh installations are the default; restoration requires explicit opt-in.
+  const autoImport = process.env.MIGRATION_AUTO_IMPORT === '1';
   if (autoImport) {
     stage = 'restauración del respaldo';
     console.log('[REPINDSA] Comprobando restauración del respaldo.');
@@ -29,6 +29,8 @@ try {
     if (state && await db.prepare("SELECT id FROM app_import_state WHERE status!='complete'").first()) {
       throw Error('La importación está pendiente. Ejecuta npm run migration:import antes de iniciar.');
     }
+    if (await initializeFreshDatabase(db)) console.log('[REPINDSA] Base nueva inicializada sin datos históricos ni ejemplos.');
+    if (await bootstrapAdministrator(db)) console.log('[REPINDSA] Primer administrador creado; debe cambiar su contraseña al ingresar.');
   }
   stage = 'preparación de Next.js';
   console.log('[REPINDSA] Preparando Next.js.');

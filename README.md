@@ -39,7 +39,7 @@ Estos valores son privados del servidor. No uses prefijos `NEXT_PUBLIC_` para el
 
 `migration/backup-info.json` indica la fecha exacta del corte y los conteos. No se transfieren las sesiones abiertas ni los contadores temporales de intentos. Los usuarios ingresan nuevamente con sus contraseñas actuales.
 
-El primer inicio restaura y verifica automáticamente cada fila y cada adjunto en los servicios configurados. No ejecutes `admin:create` durante esta migración. Tras finalizar, los reinicios reconocen la restauración y **conservan las operaciones nuevas sin volver a importar ni sobrescribirlas**. La clave puede retirarse del panel de GoDaddy tras verificar la instalación.
+La instalación nueva es ahora el modo predeterminado: no restaura el respaldo ni necesita su clave. Sólo si configuras explícitamente `MIGRATION_AUTO_IMPORT=1`, el inicio restaura y verifica cada fila y cada adjunto en los servicios configurados. No ejecutes `admin:create` durante esta migración. Tras finalizar, los reinicios reconocen la restauración y **conservan las operaciones nuevas sin volver a importar ni sobrescribirlas**. La clave puede retirarse del panel de GoDaddy tras verificar la instalación.
 
 Si la base de destino ya contiene información, el importador la rechaza: no sobrescribe datos existentes. Si la restauración se interrumpe, se reanuda con el mismo respaldo y verifica su contenido antes de iniciar la aplicación.
 
@@ -97,11 +97,30 @@ almacenamiento S3 privado y la clave original del respaldo. No se puede generar
 otra clave para descifrarlo. No configures `MIGRATION_AUTO_IMPORT=0` si tu objetivo
 es recuperar ese respaldo. No ejecutes `admin:create` sobre esa restauración.
 
-Para una instalación **nueva y vacía**, configura `MIGRATION_AUTO_IMPORT=0` y
-los servicios remotos; aplica `npm run db:migrate` y crea tu primer administrador
-con `npm run admin:create`, proporcionando `ADMIN_USERNAME`, `ADMIN_NAME` y
-`ADMIN_PASSWORD` de forma privada (contraseña de 12 a 128 caracteres). Después
-retira esas variables. Los comandos de importación no son necesarios en este modo.
+Para una instalación **nueva y vacía**, crea primero una base libSQL/Turso nueva
+ y configura en **Secretos → Vista previa** (y en Publicar cuando corresponda):
+
+- `APP_ORIGIN`: URL HTTPS exacta de ese entorno.
+- `DATABASE_URL` y `DATABASE_AUTH_TOKEN`: conexión y token reales de la base nueva.
+- `MIGRATION_AUTO_IMPORT=0`: modo vacío, también predeterminado si se omite.
+- `ADMIN_USERNAME`, `ADMIN_NAME` y `ADMIN_PASSWORD`: primer administrador;
+  contraseña privada de 12 a 128 caracteres. No hay credenciales predeterminadas.
+- Las variables `S3_*` anteriores para almacenar adjuntos de forma persistente.
+
+Al iniciar, se crean las tablas y el primer administrador automáticamente.
+No se restauran el respaldo, los proyectos del CRM ni los registros de ejemplo.
+Los catálogos de trabajo pueden inicializarse al usar los módulos. No se borra
+información de bases existentes. El administrador debe cambiar la contraseña
+al entrar; después retira `ADMIN_PASSWORD` de Secretos. Los reinicios no cambian
+la contraseña ni crean administradores adicionales aunque esas variables sigan
+configuradas. Si no defines el administrador, también puedes crearlo con
+`npm run admin:create` desde una terminal privada.
+
+`DB_HOST`, `DB_PORT` y `DB_NAME` no configuran esta aplicación: requiere
+libSQL/Turso, no una conexión MySQL. El repositorio no crea el servicio remoto
+ni sus credenciales. No habilites almacenamiento local en GoDaddy sin un volumen
+persistente confirmado. Conserva el respaldo cifrado por separado para una
+posible recuperación posterior.
 
 En desarrollo, `npm run dev` usa la base local y los adjuntos locales por defecto
 y no importa el respaldo automáticamente. No requiere copiar `.env.example`.
