@@ -1,3 +1,4 @@
+import {cleanRichText,richTextLimit} from '../../rich-text';
 import {warehouseCatalog,saveWarehouseArticle} from '../../warehouse-catalog';
 import {suppressRequestNotifications,requestNotificationParticipation} from '../../notification-policy';
 import {pendingReceipts,receiptOverdue,receiptIsOwner,receiptResponsible,receiptToday} from '../../material-receipt';
@@ -91,10 +92,11 @@ export async function POST(req:Request){const c=await cashContext(req);if(!c)ret
  }
  if(b.action==='saveDocument'||b.action==='publishDocument'){
  if(!editor||c.profile.rights&&!hasAccess(c.profile,'editRecords'))return reply({error:'Sólo usuarios con permiso de edición elaboran documentos.'},403);const d=b.data||{},old=c.rows.find((r:any)=>r.id===b.id&&r.kind==='controlledDocument');if(b.id&&!old)return reply({error:'Documento no encontrado.'},404);if(old&&b.revision!==old.revision)return reply({error:'El documento cambió; actualiza.'},409);
- if(b.action==='publishDocument'&&(!old||!String(d.body||'').replace(/<[^>]*>/g,'').trim()))return reply({error:'Guarda y completa el documento antes de publicarlo.'},400);
+ if(b.action==='publishDocument'&&(!old||!cleanRichText(d.body||'').replace(/<[^>]*>/g,'').trim()&&!/<img\b/.test(cleanRichText(d.body||''))))return reply({error:'Guarda y completa el documento antes de publicarlo.'},400);
  if(!d.name?.trim()||!['Procedimiento','Política','Descripción de puesto','Documento'].includes(d.type))return reply({error:'Completa nombre y tipo.'},400);
+ if(String(d.body||'').length>richTextLimit)return reply({error:'El documento es demasiado grande. Reduce las imágenes o divide el contenido.'},400);
  const history=old?.versions||[],newVersion=old?.status==='Vigente'?Number(old.version||1)+1:Number(old?.version||1);
- const r={id:old?.id||crypto.randomUUID(),kind:'controlledDocument',name:String(d.name).slice(0,250),type:d.type,body:String(d.body||'').slice(0,100000),owner:String(d.owner||'').slice(0,150),folio:old?.folio||await cashFolio(c.db,'DO'),status:b.action==='publishDocument'?'Vigente':'Borrador',version:newVersion,attachments:old?.attachments||[],versions:old?.status==='Vigente'?[...history,{version:old.version,body:old.body,name:old.name,date:old.publishedAt,attachments:old.attachments||[]}]:history,publishedAt:b.action==='publishDocument'?new Date().toISOString():old?.publishedAt,createdBy:old?.createdBy||c.email,author:old?.author||c.profile.name||c.email,publishedBy:b.action==='publishDocument'?(c.profile.name||c.email):old?.publishedBy};return reply({record:await storeCash(c.db,r,old,c.email,b.action==='publishDocument'?'Documento publicado':'Borrador guardado')});
+ const r={id:old?.id||crypto.randomUUID(),kind:'controlledDocument',name:String(d.name).slice(0,250),type:d.type,body:cleanRichText(d.body||''),owner:String(d.owner||'').slice(0,150),folio:old?.folio||await cashFolio(c.db,'DO'),status:b.action==='publishDocument'?'Vigente':'Borrador',version:newVersion,attachments:old?.attachments||[],versions:old?.status==='Vigente'?[...history,{version:old.version,body:old.body,name:old.name,date:old.publishedAt,attachments:old.attachments||[]}]:history,publishedAt:b.action==='publishDocument'?new Date().toISOString():old?.publishedAt,createdBy:old?.createdBy||c.email,author:old?.author||c.profile.name||c.email,publishedBy:b.action==='publishDocument'?(c.profile.name||c.email):old?.publishedBy};return reply({record:await storeCash(c.db,r,old,c.email,b.action==='publishDocument'?'Documento publicado':'Borrador guardado')});
  }
  return reply({error:'Acción no disponible.'},400);
  }catch(e:any){return reply({error:/UNIQUE|constraint/i.test(e.message)?'La operación ya se procesó. Actualiza la vista.':e.message||'No fue posible guardar.'},400);}}
