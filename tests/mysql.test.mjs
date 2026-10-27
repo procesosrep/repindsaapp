@@ -56,6 +56,31 @@ test('MySQL real: lotes atómicos, folios concurrentes, auditoría y adjuntos pe
   const reconnected=new MySQLBucket(new MySQLDatabase(pool));assert.deepEqual(Buffer.from((await reconnected.get('files/test.bin')).body),bytes);
   await bucket.put('files/test.bin',new Uint8Array([1,2,3]));assert.deepEqual(Array.from((await bucket.get('files/test.bin')).body),[1,2,3]);
   await bucket.delete('files/test.bin');assert.equal(await bucket.get('files/test.bin'),null);
+  await bucket.put('files/damaged.bin',bytes);
+  await pool.execute('DELETE FROM app_file_chunks WHERE file_key=? AND chunk_no=1',['files/damaged.bin']);
+  await assert.rejects(bucket.get('files/damaged.bin'),{code:'ATTACHMENT_INCOMPLETE'});
+  await bucket.put('files/damaged.bin',bytes);
+  await pool.execute('UPDATE app_files SET byte_length=byte_length+1 WHERE file_key=?',['files/damaged.bin']);
+  await assert.rejects(bucket.get('files/damaged.bin'),{code:'ATTACHMENT_INCOMPLETE'});
+  // Inject a deadlock after a real write and audit event. The rollback/retry must
+  // commit one record and one event, not duplicate work from the lost attempt.
+  const execute=db.execute.bind(db);let deadlocks=0;
+  db.execute=async(connection,sql,args,internal)=>{
+    if(sql==="SELECT 'retry-test'"&&deadlocks++===0)throw Object.assign(new Error('simulated deadlock'),{code:'ER_LOCK_DEADLOCK'});
+    return execute(connection,sql,args,internal);
+  };
+  await db.batch([insert('retry-once'),db.prepare("SELECT 'retry-test'")]);
+  assert.equal(deadlocks,2);
+  assert.equal(Number(await db.prepare("SELECT COUNT(*) AS n FROM records WHERE id='retry-once'").first('n')),1);
+  assert.equal(Number(await db.prepare("SELECT COUNT(*) AS n FROM operation_audit WHERE record_id='retry-once'").first('n')),1);
+  let failures=0;
+  db.execute=async(connection,sql,args,internal)=>{
+    if(sql==="SELECT 'network-test'"){failures++;throw Object.assign(new Error('simulated disconnect'),{code:'PROTOCOL_CONNECTION_LOST'});}
+    return execute(connection,sql,args,internal);
+  };
+  await assert.rejects(db.batch([insert('not-retried'),db.prepare("SELECT 'network-test'")]),{code:'PROTOCOL_CONNECTION_LOST'});
+  assert.equal(failures,1);assert.equal(await db.prepare("SELECT id FROM records WHERE id='not-retried'").first(),null);
+  db.execute=execute;
   // Retain old database triggers without creating duplicate application events.
   await pool.query("CREATE TRIGGER legacy_insert AFTER INSERT ON records FOR EACH ROW INSERT INTO operation_audit(record_id,kind,actor,occurred_at,action) VALUES(NEW.id,NEW.kind,'legacy','today','Legacy insert')");
   await initializeMySQLAudit(db);

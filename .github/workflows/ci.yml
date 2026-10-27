@@ -3,6 +3,24 @@ on: [push, pull_request]
 jobs:
   validar:
     runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: ci-test-only-password
+          MYSQL_ROOT_HOST: '%'
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 --silent"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=30
+    env:
+      MYSQL_TEST_HOST: 127.0.0.1
+      MYSQL_TEST_PORT: '3306'
+      MYSQL_TEST_USER: root
+      MYSQL_TEST_PASSWORD: ci-test-only-password
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -14,3 +32,4 @@ jobs:
       - run: npm run typecheck
       - run: npm run test:flows
       - run: npm run build
+      - run: npm run test:mysql:startup

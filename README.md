@@ -5,6 +5,15 @@ los registros, las sesiones y los adjuntos privados. No requiere cuentas de Turs
 S3 ni otro proveedor. El código conserva el adaptador SQLite/libSQL para desarrollo
 local y pruebas, pero selecciona MySQL automáticamente cuando existe `DB_HOST`.
 
+## Primera etapa: solicitudes de materiales
+
+La prioridad de salida es Materiales. Se pueden configurar el autorizador,
+alterno y Almacén sin completar rutas de Caja o Tesorería. El alterno de
+Materiales puede tener sólo autorización de materiales. Cada solicitud debe
+contener partidas válidas y ser autorizada por otra persona, incluso cuando
+quien la creó es administrador. Consulta la arquitectura, correcciones y lista
+de verificación de publicación en [Revisión y primera etapa](docs/revision-materiales.md).
+
 ## Configuración en GoDaddy
 
 | Campo | Valor |

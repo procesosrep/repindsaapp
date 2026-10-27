@@ -1,6 +1,6 @@
 import fs from 'node:fs';import ts from 'typescript';
 const text=ts.transpile(fs.readFileSync('app/access-policy.ts','utf8').replace(/export /g,''),{target:ts.ScriptTarget.ES2022});
-export const policy=new Function(text+';return {accessBaseRoles,accessPermissionGroups,accessPermissionKeys,defaultAccess,accessRights,hasAccess,checkedRights,accessSystems,isOwnRecord,canReviewBox,canReviewMaterial,requestApprover,accessKind}')();Object.assign(globalThis,policy);
+export const policy=new Function(text+';return {accessBaseRoles,accessPermissionGroups,accessPermissionKeys,defaultAccess,togglePermission,permissionError,accessRights,hasAccess,checkedRights,accessSystems,isOwnRecord,canReviewBox,canReviewMaterial,requestApprover,accessKind}')();Object.assign(globalThis,policy);
 globalThis.provisionUsers=async()=>{};
 
 const featureText=ts.transpile(fs.readFileSync('app/feature-policy.ts','utf8').replace(/^import .*;$/gm,'').replace(/export /g,''),{target:ts.ScriptTarget.ES2022});Object.assign(globalThis,new Function(featureText+';return {featureGroups,featureOpen,featureAllowed,featureProfile,workspaceVisible}')());globalThis.readFeatures=async()=>({revision:0,public:{workspaceCaja:true,workspacePanel:true}});globalThis.featureGuard=async()=>null;

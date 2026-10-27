@@ -28,6 +28,17 @@ export class MySQLDatabase {
     // MySQL DDL implicitly commits. Run schema setup explicitly outside DML batches.
     const schema=statements.some(s=>/^\s*(CREATE|ALTER|DROP)\b/i.test(s.sql));
     if(schema && statements.some(s=>!/^\s*(CREATE|ALTER|DROP)\b/i.test(s.sql)))throw Error('No mezcles DDL y cambios de datos en un lote MySQL.');
+    for(let attempt=0;;attempt++) {
+      try {return await this.runBatch(statements,schema);}
+      catch(error) {
+        // Only retry a deadlock victim: MySQL guarantees that transaction lost.
+        // Network/commit errors have an uncertain outcome and must not be retried.
+        if(schema||error.code!=='ER_LOCK_DEADLOCK'||attempt>=2)throw error;
+        await new Promise(resolve=>setTimeout(resolve,10*(attempt+1)));
+      }
+    }
+  }
+  async runBatch(statements,schema) {
     const connection=await this.pool.getConnection();
     try {
       if(!schema)await connection.beginTransaction();
@@ -133,10 +144,15 @@ export class MySQLBucket {
   async get(key) {
     const results=await this.db.batch([
       this.db.prepare('SELECT byte_length FROM app_files WHERE file_key=?').bind(key),
-      this.db.prepare('SELECT content FROM app_file_chunks WHERE file_key=? ORDER BY chunk_no').bind(key),
+      this.db.prepare('SELECT chunk_no,content FROM app_file_chunks WHERE file_key=? ORDER BY chunk_no').bind(key),
     ]);
     if(!results[0].results.length)return null;
-    return {body:new Uint8Array(Buffer.concat(results[1].results.map(row=>row.content)))};
+    const chunks=results[1].results;
+    const body=Buffer.concat(chunks.map(row=>row.content));
+    if(!chunks.length||chunks.some((row,index)=>Number(row.chunk_no)!==index)||body.length!==Number(results[0].results[0].byte_length)) {
+      throw Object.assign(new Error('El archivo está incompleto. No se entregará una descarga parcial.'),{code:'ATTACHMENT_INCOMPLETE'});
+    }
+    return {body:new Uint8Array(body)};
   }
   async delete(key) {await this.db.batch([this.db.prepare('DELETE FROM app_files WHERE file_key=?').bind(key),this.db.prepare('DELETE FROM app_file_chunks WHERE file_key=?').bind(key)]);}
 }

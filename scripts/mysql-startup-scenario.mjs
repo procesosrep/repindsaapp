@@ -1,3 +1,4 @@
+import {exerciseMaterials} from './materials-startup-scenario.mjs';
 import {fileURLToPath} from 'node:url';
 import {tmpdir} from 'node:os';
 import net from 'node:net';
@@ -40,6 +41,7 @@ try{
  assert.ok(Array.isArray(rows));assert.equal(rows.filter(r=>r.kind==='project').length,27);assert.equal(rows.filter(r=>['employee','quote','opportunity'].includes(r.kind)).length,0);
  const material=await request('/api/material-workspace?catalogOnly=1',{headers:{Cookie:cookie}});assert.equal(material.status,200);const materialData=await material.json();assert.equal(materialData.projects.length,27);assert.equal(materialData.catalog.length,4338);
  const repeated=await request('/api/material-workspace?catalogOnly=1',{headers:{Cookie:cookie}});assert.equal(repeated.status,200);assert.equal((await repeated.json()).projects.length,27);
+ await exerciseMaterials(request,cookie,username,origin,materialData);
  const audit=await request('/api/audit?from=2020-01-01&to=2099-01-01&q=prueba',{headers:{Cookie:cookie}});assert.equal(audit.status,200);assert.ok(Array.isArray((await audit.json()).entries));
  const form=new FormData();const bytes=new Uint8Array([255,216,255,217]);form.set('quoteId','smoke-draft');form.set('file',new File([bytes],'test.jpg',{type:'image/jpeg'}));
  const upload=await request('/api/quote-assets',{method:'POST',headers:{Cookie:cookie,Origin:origin},body:form});assert.equal(upload.status,200);const asset=await upload.json();

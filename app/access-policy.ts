@@ -6,6 +6,16 @@ export function defaultAccess(role:string):R{const admin=role==='Administrador',
 export function accessRights(profile:R):R{if(profile.role==='Administrador')return defaultAccess('Administrador');const rights={...defaultAccess(profile.role||'Usuario'),...(profile.rights||{})};if(rights.warehouse){if(profile.role!=='Administrador')rights.requestMaterials=false;if(profile.rights?.requestPurchase===undefined)rights.requestPurchase=true;}return rights;}
 export function hasAccess(profile:R,key:string){return !!accessRights(profile)[key];}
 export function checkedRights(value:any):R{if(!value||typeof value!=='object'||Array.isArray(value))throw Error('Revisa los permisos del usuario.');return Object.fromEntries(accessPermissionKeys.map(k=>[k,value[k]===true]));}
+export const permissionDependencies:Record<string,string>={requestBox:'box',approveBox:'box',requestMaterials:'materials',requestPurchase:'materials',purchaseTracking:'materials',approveMaterials:'materials',warehouse:'materials',configuration:'panel',editRecords:'panel',payments:'cycle5',overrideApproval:'viewAll'};
+export function togglePermission(value:R,key:string,enabled:boolean):R{const next={...value,[key]:enabled};if(enabled&&permissionDependencies[key])next[permissionDependencies[key]]=true;if(!enabled)for(const [action,space] of Object.entries(permissionDependencies))if(space===key)next[action]=false;return next;}
+export function permissionError(rights:R,role:string):string{
+ const label=(key:string)=>accessPermissionGroups.flatMap(g=>g.items).find(i=>i[0]===key)?.[1]||key;
+ for(const [action,space] of Object.entries(permissionDependencies))if(rights[action]&&!rights[space])return `Para activar «${label(action)}», activa también «${label(space)}».`;
+ if(rights.warehouse&&rights.requestMaterials&&role!=='Administrador')return 'Almacén crea solicitudes de compra. Quita el permiso de solicitar materiales.';
+ if(rights.configuration&&role!=='Administrador')return 'Para administrar usuarios, selecciona el perfil funcional Administrador.';
+ if(!accessSystems({role,rights}).length)return 'Selecciona al menos un espacio de acceso.';
+ return '';
+}
 export function accessSystems(profile:R){const r=accessRights(profile);return [...(r.panel?['operaciones']:[]),...(r.materials?['materiales']:[]),...(r.box?['caja']:[]),...(r.documentsView&&!r.panel?['documentos']:[])];}
 export function isOwnRecord(r:R,c:R){return r.createdBy===c.email||r.createdById===c.userId||r.requesterId===c.userId;}
 export function canReviewBox(r:R,c:R){if(!['cashAdvance','cashProof'].includes(r.kind)||isOwnRecord(r,c)||!hasAccess(c.profile,'approveBox'))return false;if(!c.profile.rights)return c.profile.role==='Administrador'||c.actualRole==='Gerente'&&r.authorizationRole==='Gerente'||c.profile.role==='Dirección'&&r.authorizationRole!=='Gerente';if(hasAccess(c.profile,'overrideApproval'))return true;const assigned=r.assignedApprover|| (r.authorizationRole==='Gerente'?c.routing?.boxApprover:c.routing?.fallbackApprover);return assigned?assigned===c.username:hasAccess(c.profile,'configuration')||c.actualRole==='Gerente'&&r.authorizationRole==='Gerente';}
