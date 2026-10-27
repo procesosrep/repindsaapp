@@ -63,11 +63,12 @@ export class MySQLDatabase {
       return output(rows);
     }
     if (/FROM json_each\(\?\)/i.test(source)) {
-      // The warehouse seed is inserted as bound JSON strings, without JSON_TABLE.
-      let changes=0;
-      for(const row of JSON.parse(args[0])) {
-        const result=await this.execute(connection,'INSERT OR IGNORE INTO material_catalog_v2(id,payload) VALUES(?,?)',[row.id,JSON.stringify(row)]);
-        changes+=result.meta.changes;
+      // Import bounded groups in one round trip; preserve already edited rows.
+      const input=JSON.parse(args[0]);let changes=0;
+      for(let offset=0;offset<input.length;offset+=100) {
+        const rows=input.slice(offset,offset+100);
+        const [result]=await connection.execute('INSERT INTO material_catalog_v2(id,payload) VALUES '+rows.map(()=>'(?,?)').join(',')+' ON DUPLICATE KEY UPDATE id=id',rows.flatMap(row=>[row.id,JSON.stringify(row)]));
+        changes+=Number(result.affectedRows||0);
       }
       return output([],changes);
     }

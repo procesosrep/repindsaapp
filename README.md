@@ -42,8 +42,12 @@ activa. No se habilita TLS ni se selecciona una CA por adivinación.
 
 Guarda los secretos y actualiza la vista previa. El arranque aplica el esquema,
 prepara las tablas de adjuntos y crea el primer administrador si la base aún no
-tiene usuarios ni propietario. No se restaura el respaldo cifrado, ni se cargan
-proyectos del CRM o registros comerciales de demostración. No se borra una base
+tiene usuarios ni propietario. No se restaura el respaldo cifrado ni los registros comerciales de demostración.
+Por solicitud del usuario, se recuperan los 27 proyectos incluidos del CRM y sus
+clientes al abrir los espacios de trabajo. Los 4,338 artículos de Almacén se
+cargan al consultar el catálogo para una solicitud de materiales. Esta recuperación
+es aditiva y se ejecuta una vez, incluso en la instalación inicialmente vacía;
+conserva los proyectos existentes por RP y sus datos operativos, usuarios y permisos. No se borra una base
 existente. Algunos catálogos de trabajo se inicializan al usar sus módulos.
 
 Al ingresar debes cambiar la contraseña. Después retira `ADMIN_PASSWORD` del

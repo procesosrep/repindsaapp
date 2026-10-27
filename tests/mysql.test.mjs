@@ -30,6 +30,9 @@ test('MySQL real: lotes atómicos, folios concurrentes, auditoría y adjuntos pe
   await db.prepare('CREATE TABLE material_catalog_v2(id TEXT PRIMARY KEY,payload TEXT NOT NULL)').run();
   await db.prepare("INSERT OR IGNORE INTO material_catalog_v2(id,payload) SELECT json_extract(value,'$.id'),value FROM json_each(?)").bind(JSON.stringify([{id:'one',name:'Artículo de prueba'}])).run();
   assert.equal(JSON.parse((await db.prepare("SELECT payload FROM material_catalog_v2 WHERE id='one'").first()).payload).name,'Artículo de prueba');
+  await db.prepare("INSERT OR IGNORE INTO material_catalog_v2(id,payload) SELECT json_extract(value,'$.id'),value FROM json_each(?)").bind(JSON.stringify([{id:'one',name:'Replacement must not overwrite'},{id:'two',name:'Second'}])).run();
+  assert.equal(JSON.parse((await db.prepare("SELECT payload FROM material_catalog_v2 WHERE id='one'").first()).payload).name,'Artículo de prueba');
+  assert.equal(Number(await db.prepare('SELECT COUNT(*) AS n FROM material_catalog_v2').first('n')),2);
   await db.prepare('CREATE TABLE app_files(file_key VARCHAR(191) PRIMARY KEY,byte_length BIGINT NOT NULL)').run();
   await db.prepare('CREATE TABLE app_file_chunks(file_key VARCHAR(191),chunk_no INT,content MEDIUMBLOB,PRIMARY KEY(file_key,chunk_no))').run();
   await initializeMySQLAudit(db);await initializeMySQLAudit(db);

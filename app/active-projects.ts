@@ -1,7 +1,8 @@
 import projectSeed from './active-project-seed.json';
 import {projectRP} from './active-projects-view';
 type R=Record<string,any>;
-const marker='seed-crm-won-projects-2026-only-20261023';
+// New recovery version bypasses the opt-out marker used for the empty install.
+const marker='seed-crm-won-projects-2026-materials-recovery-v2';
 const clean=(v:any)=>String(v||'').trim();
 export async function ensureActiveProjects(db:any){if(await db.prepare('SELECT id FROM records WHERE id=?').bind(marker).first())return;const raw=await db.prepare("SELECT payload,revision FROM records WHERE kind IN ('project','client')").all();const rows:R[]=raw.results.map((x:R)=>({...JSON.parse(x.payload),revision:x.revision}));const commands=[],now=new Date().toISOString();const normalize=(v:any)=>clean(v).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
 for(const seed of projectSeed){const existing=rows.find(p=>p.kind==='project'&&projectRP(p).toUpperCase()===seed.rp);if(existing){const next:R={...existing,serviceReference:projectRP(existing)||seed.rp,crmSourceDeals:seed.sourceDeals,crmServiceTypes:seed.serviceTypes,crmImportSource:'DEAL_20261023_d22f8718_6adba1076cb47.xls'};delete next.revision;commands.push(db.prepare('UPDATE records SET payload=?,revision=revision+1,updated=? WHERE id=? AND revision=?').bind(JSON.stringify(next),now,existing.id,existing.revision));continue;}

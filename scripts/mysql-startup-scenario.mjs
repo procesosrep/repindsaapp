@@ -37,7 +37,9 @@ try{
  const changed=await request('/api/material-access',{method:'POST',headers:{'Content-Type':'application/json',Origin:origin,Cookie:cookie},body:JSON.stringify({action:'password',password:nextPassword})});assert.equal(changed.status,200);
  cookie=await login(nextPassword);
  const records=await request('/api/records',{headers:{Cookie:cookie}});assert.equal(records.status,200);const data=await records.json();const rows=Array.isArray(data)?data:data.records;
- assert.ok(Array.isArray(rows));assert.equal(rows.filter(r=>['project','client','employee','quote','opportunity'].includes(r.kind)).length,0);
+ assert.ok(Array.isArray(rows));assert.equal(rows.filter(r=>r.kind==='project').length,27);assert.equal(rows.filter(r=>['employee','quote','opportunity'].includes(r.kind)).length,0);
+ const material=await request('/api/material-workspace?catalogOnly=1',{headers:{Cookie:cookie}});assert.equal(material.status,200);const materialData=await material.json();assert.equal(materialData.projects.length,27);assert.equal(materialData.catalog.length,4338);
+ const repeated=await request('/api/material-workspace?catalogOnly=1',{headers:{Cookie:cookie}});assert.equal(repeated.status,200);assert.equal((await repeated.json()).projects.length,27);
  const audit=await request('/api/audit?from=2020-01-01&to=2099-01-01&q=prueba',{headers:{Cookie:cookie}});assert.equal(audit.status,200);assert.ok(Array.isArray((await audit.json()).entries));
  const form=new FormData();const bytes=new Uint8Array([255,216,255,217]);form.set('quoteId','smoke-draft');form.set('file',new File([bytes],'test.jpg',{type:'image/jpeg'}));
  const upload=await request('/api/quote-assets',{method:'POST',headers:{Cookie:cookie,Origin:origin},body:form});assert.equal(upload.status,200);const asset=await upload.json();
@@ -45,5 +47,5 @@ try{
  assert.equal((await request(asset.url)).status,401);
  await stop();await start();cookie=await login(nextPassword);
  const retained=await request(asset.url,{headers:{Cookie:cookie}});assert.equal(retained.status,200);assert.deepEqual(new Uint8Array(await retained.arrayBuffer()),bytes);
- console.log('Production HTTP passed: preview origin through proxy, cross-site rejection, health, homepage, login, password change, empty records, audit query, private uploads/downloads, denial without login, and persistence after restart.');
+ console.log('Production HTTP passed: preview origin through proxy, cross-site rejection, health, homepage, login, password change, recovered projects and articles for materials, audit query, private uploads/downloads, denial without login, and persistence after restart.');
 }finally{await stop();}
