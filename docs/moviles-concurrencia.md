@@ -19,3 +19,11 @@ Los accesos correctos dejan de consumir el presupuesto de intentos fallidos. Se 
 - `npm run test:flows`, `npm test`, `npm run typecheck` y `npm run build` completan las comprobaciones de flujos y código.
 
 Después de actualizar la vista previa, revisar en los teléfonos de uso habitual y publicar la versión probada. La capacidad del hosting debe medirse con una carga representativa en un entorno de pruebas del mismo plan, sin enviar pruebas masivas a la base compartida con producción.
+
+## Selección y vista previa de Materiales
+
+En teléfono, el catálogo de una categoría muestra tarjetas sin desplazamiento horizontal. El nombre y el checkbox permanecen en la misma fila. Al marcar un artículo se muestran inmediatamente su cantidad y la sección Más detalles dentro de esa tarjeta. La búsqueda no activa automáticamente el teclado al abrir una categoría. Las categorías sin selección muestran una flecha de apertura en lugar de un cuadro que pudiera confundirse con un checkbox.
+
+Las instrucciones se consultan en Ayuda o Cómo seleccionar, cerradas inicialmente. Las sugerencias y el control de guardado automático se muestran en el paso de datos generales; el paso de artículos conserva un estado breve del borrador.
+
+Vista previa abre una pantalla de lectura dentro de la aplicación, sin abrir pestañas ni generar un PDF. En móvil utiliza tarjetas legibles por partida; en escritorio muestra el formato imprimible. Volver a la solicitud, Escape y Atrás del navegador cierran la vista y conservan los artículos y cantidades capturados. La vista no guarda, envía ni modifica la solicitud. Imprimir / PDF es una acción independiente, y el formato abierto para impresión incluye Cerrar y volver a la solicitud.
