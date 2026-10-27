@@ -15,3 +15,5 @@ test('pasted active content and remote image tracking cannot survive document sa
 test('Excel tab-separated clipboard creates escaped, bounded editable table cells',()=>{
  const result=textTable('Artículo\tCantidad\r\n<bomba>\t2');assert.match(result,/<td>Artículo<\/td><td>Cantidad<\/td>/);assert.match(result,/&lt;bomba&gt;/);assert.equal(cleanRichText(result),result);assert.throws(()=>textTable(Array(150).fill('a\tb').join('\n')),/100 filas/);
 });
+
+test('resized image dimensions persist while unsafe dimensions are stripped',()=>{const img='<img src="data:image/png;base64,iVBORw0KGgo="';assert.match(cleanRichText(img+' width="240">'),/width="240"/);assert.doesNotMatch(cleanRichText(img+' width="9999999" style="width:expression(evil())">'),/width|style/)});

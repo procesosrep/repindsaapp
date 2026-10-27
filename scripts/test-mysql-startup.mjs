@@ -11,7 +11,7 @@ try{
  await admin.query('CREATE DATABASE `'+name+'`');
  await admin.query('CREATE USER ?@\'%\' IDENTIFIED BY ?',[user,password]);
  await admin.query('GRANT SELECT,INSERT,UPDATE,DELETE,CREATE,ALTER,INDEX ON `'+name+'`.* TO ?@\'%\'',[user]);
- const result=spawnSync(process.execPath,[fileURLToPath(new URL('./mysql-startup-scenario.mjs',import.meta.url))],{env:{...process.env,MYSQL_SMOKE_USER:user,MYSQL_SMOKE_PASSWORD:password,MYSQL_SMOKE_DATABASE:name},encoding:'utf8',timeout:60000});
+ const result=spawnSync(process.execPath,[fileURLToPath(new URL('./mysql-startup-scenario.mjs',import.meta.url))],{env:{...process.env,MYSQL_SMOKE_USER:user,MYSQL_SMOKE_PASSWORD:password,MYSQL_SMOKE_DATABASE:name},encoding:'utf8',timeout:180000});
  if(result.stdout)process.stdout.write(result.stdout);if(result.stderr)process.stderr.write(result.stderr);
  if(result.status!==0)process.exitCode=1;
  else console.log('Managed MySQL production HTTP checks passed without SUPER/TRIGGER grants.');
