@@ -84,3 +84,14 @@ Las pruebas locales no verifican el plan, cuotas, DNS, respaldos automáticos ni
 configuración efectiva de la cuenta GoDaddy. La auditoría de aplicación registra
 las operaciones hechas mediante el adaptador; cambios directos desde clientes SQL
 externos no pasan por esa auditoría si no existen triggers heredados.
+
+## Revisión de carga inicial
+
+Se redujo el trabajo de entrada a Materiales:
+
+- Las comprobaciones de sesión comparten una consulta por objeto de petición; ninguna sesión ni permiso se reutiliza entre peticiones. Una revocación se vuelve a comprobar en la siguiente petición.
+- La recuperación inicial de proyectos comparte una promesa por conexión de aplicación. Una vez confirmado el marcador o terminada la recuperación, las cargas siguientes hacen cero consultas de recuperación. Los proyectos operativos se siguen leyendo de la base; un fallo permite reintentar.
+- La bitácora del administrador consulta sus movimientos sólo al desplegar su sección.
+- El panel de Compras se descarga sólo al abrirlo, separado de la entrada a Materiales.
+
+Las pruebas verifican la deduplicación, la revocación posterior y las consultas de recuperación en caliente. Los tiempos de la vista previa dependen también del arranque de GoDaddy, su proxy y la latencia de MySQL; no se han medido desde la cuenta del hosting.
