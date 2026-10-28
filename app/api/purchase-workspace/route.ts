@@ -12,11 +12,11 @@ import {materialTypes,materialUnits,materialToday} from '../../material-model';
 import {featureGuard} from '../../feature-server';
 const reply=(v:any,status=200)=>Response.json(v,{status,headers:{'Cache-Control':'no-store'}});
 export async function GET(req:Request){const unavailable=await featureGuard(req);if(unavailable)return unavailable;const c=await cashContext(req,'materials');if(!c)return reply({error:'Inicia sesión.'},401);if(!hasAccess(c.profile,'materials')||!hasAccess(c.profile,'requestPurchase'))return reply({error:'No tienes permiso para crear solicitudes de compra.'},403);return reply({projects:activeProjectOptions(c.rows,p=>inScope(p,c.profile,c.rows)).filter(p=>p.rp),catalog:await materialCatalog(c.db,c.rows),types:materialTypes,units:materialUnits});}
-export async function POST(req:Request){const unavailable=await featureGuard(req);if(unavailable)return unavailable;const c=await cashContext(req,'materials');if(!c)return reply({error:'Inicia sesión.'},401);if(!hasAccess(c.profile,'materials')||(!hasAccess(c.profile,'requestPurchase')&&!hasAccess(c.profile,'purchaseTracking')))return reply({error:'No tienes permiso para crear solicitudes de compra.'},403);if(req.headers.get('Origin')&&req.headers.get('Origin')!==new URL(process.env.APP_ORIGIN||req.url).origin)return reply({error:'Origen no permitido.'},403);
+export async function POST(req:Request){const unavailable=await featureGuard(req);if(unavailable)return unavailable;const c=await cashContext(req,'materials');if(!c)return reply({error:'Inicia sesión.'},401);if(!hasAccess(c.profile,'materials')||(!hasAccess(c.profile,'requestPurchase')&&!hasAccess(c.profile,'purchaseTracking')&&!hasAccess(c.profile,'warehouse')))return reply({error:'No tienes permiso para crear solicitudes de compra.'},403);if(req.headers.get('Origin')&&req.headers.get('Origin')!==new URL(process.env.APP_ORIGIN||req.url).origin)return reply({error:'Origen no permitido.'},403);
 try{const b:any=await req.json(),d=b.record||{},old=b.id?c.rows.find(r=>r.id===b.id&&r.kind==='materialPurchase'&&(r.standalone||['updateStatus','receive'].includes(b.action))):undefined;if(b.id&&!old)return reply({error:'Compra no disponible.'},404);if(old&&!canAccessMaterial(old,c.profile,c.rows))return reply({error:'Fuera de tu alcance.'},403);if(old&&b.revision!==old.revision)return reply({error:'La compra cambió. Actualiza antes de continuar.'},409);
 if(b.action==='updateStatus'){
  if(!hasAccess(c.profile,'purchaseTracking')||!old)return reply({error:'Sólo el responsable de Compras puede actualizar este seguimiento.'},403);
- let next={...updatePurchaseTracking(old,d,c.email),assignedBuyer:old.assignedBuyer||c.routing.purchaseOperator||'pedro'},extra:any[]=[];
+ let next={...updatePurchaseTracking(old,d,c.email),assignedBuyer:old.assignedBuyer||c.routing.purchaseOperator||c.username},extra:any[]=[];
  const source=old.sourceId?c.rows.find(r=>r.id===old.sourceId&&r.kind==='materialRequest'):undefined;
  if(old.sourceId&&(!source||!inScope(source,c.profile,c.rows)))return reply({error:'Solicitud de origen no disponible.'},403);
  if(next.procurementStatus==='Enviado a sitio'&&!source)return reply({error:'Para enviar a sitio se requiere una solicitud de materiales de origen y su responsable de recepción. Las compras directas se reciben en Almacén.'},400);
@@ -31,7 +31,7 @@ if(b.action==='updateStatus'){
  }
  return reply({record:await storeCash(c.db,next,old,c.email,'Seguimiento de compra: '+next.procurementStatus+(next.expectedDeliveryDate?' · Entrega estimada '+next.expectedDeliveryDate:'')+(next.procurementNotes?' · '+next.procurementNotes:''),extra)});
  }
- if(!hasAccess(c.profile,'requestPurchase')||['confirm','receive'].includes(b.action)&&!hasAccess(c.profile,'warehouse'))return reply({error:'Compras sólo puede actualizar estados; no crear, editar partidas ni registrar recepciones.'},403);
+ if(['confirm','receive'].includes(b.action)?!hasAccess(c.profile,'warehouse'):!hasAccess(c.profile,'requestPurchase'))return reply({error:'Compras sólo puede actualizar estados; no crear, editar partidas ni registrar recepciones.'},403);
  if(d.neededBy&&!validCashDate(d.neededBy))return reply({error:'Revisa la fecha requerida.'},400);
 const clean=(v:any,n:number)=>String(v||'').trim().slice(0,n);
 if(b.action==='confirm')return reply({error:'La compra la confirma Compras. Espera Entregado a almacén para registrar la recepción física.'},403);

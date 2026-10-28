@@ -11,5 +11,5 @@ export function updatePurchaseTracking(old:R,data:R,actor:string){
  if(status==='Comprado'&&(!validCashDate(expected)||expected<materialToday()))throw Error('Indica una fecha de entrega aproximada válida, de hoy en adelante.');
  const notes=String(data.procurementNotes||'').trim().slice(0,1200);
  if(previous===status&&expected===old.expectedDeliveryDate&&notes===(old.procurementNotes||''))throw Error('No hay cambios de seguimiento para guardar.');
- return {...old,...(status==='Comprado'?{lines:old.lines.map((l:R)=>({...l,purchasedQuantity:Math.max(Number(l.purchasedQuantity||0),Number(l.quantity))}))}:{}),procurementStatus:status,expectedDeliveryDate:expected,procurementNotes:notes,procurementUpdatedAt:new Date().toISOString(),procurementUpdatedBy:actor,assignedBuyer:old.assignedBuyer||'pedro'};
+ return {...old,...(status==='Comprado'?{lines:old.lines.map((l:R)=>({...l,purchasedQuantity:Math.max(Number(l.purchasedQuantity||0),Number(l.quantity))}))}:{}),procurementStatus:status,expectedDeliveryDate:expected,procurementNotes:notes,procurementUpdatedAt:new Date().toISOString(),procurementUpdatedBy:actor,assignedBuyer:old.assignedBuyer||actor.replace(/^usuario:/,'')};
 }

@@ -9,7 +9,7 @@ export function requestNotificationParticipation(r:R,c:R){if(suppressRequestNoti
  const approvalPermission=material?hasAccess(c.profile,'approveMaterials'):cash?hasAccess(c.profile,'approveBox'):false;
  const approver=approvalPermission&&matches([primary,r.managerApprovedBy,r.managerReviewedBy,r.approvedBy,r.reviewedBy]);
  const handlerPermission=material?(hasAccess(c.profile,'warehouse')||r.kind==='materialPurchase'&&hasAccess(c.profile,'purchaseTracking')):hasAccess(c.profile,'payments');
- const assigned=material?(r.kind==='materialPurchase'?(r.assignedBuyer||c.routing?.purchaseOperator||'pedro'):(r.assignedWarehouse||r.assignedHandler||c.routing?.warehouseOperator)):(r.assignedTreasury||r.assignedHandler||c.routing?.treasuryOperator);
+ const assigned=material?(r.kind==='materialPurchase'?(r.assignedBuyer||c.routing?.purchaseOperator||''):(r.assignedWarehouse||r.assignedHandler||c.routing?.warehouseOperator)):(r.assignedTreasury||r.assignedHandler||c.routing?.treasuryOperator);
  const actualHandlers=[r.handledBy,r.attendedBy,r.fulfilledBy,r.purchaseConfirmation?.actor,...(r.lines||[]).flatMap((l:R)=>[l.lastSuppliedBy,l.purchaseConfirmedBy])];
  for(const h of r.history||[])if(/almac[eé]n|compra|surtido|entrega|recepci[oó]n|pago|reembolso|gesti[oó]n/i.test(h.action||''))actualHandlers.push(h.actor);
  if(cash)for(const movement of c.rows||[])if(movement.kind==='cashMovement'&&(movement.advanceId===r.id||movement.proofId===r.id))actualHandlers.push(movement.createdBy,movement.createdById);
