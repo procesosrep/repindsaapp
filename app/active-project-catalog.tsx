@@ -1,5 +1,3 @@
 'use client';
-import {useState} from 'react';
-import {activeProjectOptions} from './active-projects-view';
-type R=Record<string,any>;
-export function ActiveProjectCatalog({rows,onEdit}:{rows:R[],onEdit:(r:R)=>void}){const [query,setQuery]=useState('');const projects=activeProjectOptions(rows).filter(p=>p.label.toLowerCase().includes(query.toLowerCase()));return <details><summary>Catálogo de proyectos activos · RP</summary><p>Proyecto y RP se seleccionan juntos en solicitudes. Los proyectos importados del CRM conservan sus negociaciones de origen.</p><input aria-label="Buscar proyecto activo" placeholder="RP, proyecto o cliente" value={query} onChange={e=>setQuery(e.target.value)}/><p>{projects.length} proyectos activos</p><div className="tablewrap"><table><thead><tr><th>RP</th><th>Proyecto</th><th>Cliente</th><th>Responsable</th><th>Acción</th></tr></thead><tbody>{projects.map(p=><tr key={p.id}><td>{p.rp||'RP pendiente'}</td><td>{p.name}</td><td>{p.clientName}</td><td>{p.responsible}</td><td><button onClick={()=>onEdit(rows.find(r=>r.id===p.id)!)}>Modificar proyecto</button></td></tr>)}</tbody></table></div></details>}
+import {AdminCatalogs} from './admin-catalogs';
+export function ActiveProjectCatalog(_props:any){return <AdminCatalogs/>}

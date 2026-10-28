@@ -1,4 +1,5 @@
 'use client';
+import {isActiveProject} from './active-projects-view';
 import {MovementButton} from './movement-view';
 
 import {useState} from 'react';
@@ -10,7 +11,7 @@ export function TicketWorkspace({rows,role,onReload,treasury=false,permissions}:
  const tickets=rows.filter(x=>x.kind==='ticketRequest'&&(!search||[x.name,x.folio,x.projectName,x.status].join(' ').toLowerCase().includes(search.toLowerCase())));
  const people=rows.filter(x=>x.kind==='employee'&&!['Baja','Inactivo','Dado de baja'].includes(x.status)||x.kind==='candidate'&&['Contratación','Apto','Traslado','Seleccionado','Contratado','Incorporado'].includes(x.status));
  const [personQuery,setPersonQuery]=useState('');
- const projects=rows.filter(x=>x.kind==='project'&&x.status!=='Cerrado');
+ const projects=rows.filter(x=>isActiveProject(x));
  function fresh(){setError('');setEdit({tripType:'Sencillo',transport:'Autobús',reason:'Traslado a proyecto',projectId:'',baggage:'Sin equipaje documentado',preferredTime:'Flexible',contact:''});}
  function field(k:string,label:string,type='text',options?:string[],required=false){return <label key={k}>{label}{required?' *':''}{options?<select value={edit?.[k]||''} onChange={e=>setEdit({...edit,[k]:e.target.value})} required={required}><option value="">Seleccionar…</option>{options.map(v=><option key={v}>{v}</option>)}</select>:<input type={type} value={edit?.[k]||''} onChange={e=>setEdit({...edit,[k]:e.target.value})} required={required}/>}</label>}
  async function action(a:string,extra:R={}){if(busy)return;setBusy(true);setError('');try{const res=await fetch('/api/tickets',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:a,id:edit?.id,revision:edit?.revision,data:edit,...extra})});const d:any=await res.json();if(!res.ok)throw Error(d.error);await onReload();setEdit(d.record);}catch(e:any){setError(e.message)}finally{setBusy(false)}}

@@ -1,4 +1,5 @@
 'use client';
+import {isActiveProject} from './active-projects-view';
 import {featureAllowed} from './feature-policy';
 
 import {openInstitutionalDocument,documentEscape} from './institutional-document';
@@ -19,7 +20,7 @@ export function CashWorkspace({mode,rows,allRows,role,permissions,identity,onRel
  const admin=permissions?!!permissions.configuration:['Administrador','Dirección'].includes(role),treasury=permissions?!!permissions.payments:['Administrador','Tesorería'].includes(role);const [tab,setTab]=useState('Requisición'),[edit,setEdit]=useState<R|null>(null),[search,setSearch]=useState(''),[error,setError]=useState(''),[busy,setBusy]=useState(false),[origin,setOrigin]=useState(''),[linkProject,setLinkProject]=useState(''),[message,setMessage]=useState(''),[warehouseFilter,setWarehouseFilter]=useState('Todas');
  useEffect(()=>{if(role!=='Administrador'||mode!=='cash')return;fetch('/api/cash').then(r=>r.json()).then((d:any)=>setOrigin(d.publicOrigin||'')).catch(()=>{});},[]);useEffect(()=>{if(initialRecord){setEdit({...initialRecord});onClear();}},[initialRecord?.id]);
  useEffect(()=>{if(tab==='Requisición'&&!isOpen('cashAdvance')&&isOpen('cashProof'))setTab('Comprobación');},[permissions?.featureState,tab]);
- const projects=allRows.filter(r=>r.kind==='project'&&!['Cerrado','Cancelado'].includes(r.status));
+ const projects=allRows.filter(r=>isActiveProject(r));
  async function act(action:string,record:R,extra:R={}){if(action==='receiptRefresh'){await onReload();return record;}setBusy(true);setError('');try{const res=await fetch('/api/cash',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action,record,...extra})});const data:any=await res.json();if(!res.ok)throw Error(data.error);await onReload();setMessage('Movimiento guardado');return {...data.record,...(data.purchase?{_purchase:data.purchase}:{})};}catch(e:any){setError(e.message);throw e;}finally{setBusy(false)}}
  const advances=rows.filter(r=>r.kind==='cashAdvance'),proofs=rows.filter(r=>r.kind==='cashProof'),movements=rows.filter(r=>r.kind==='cashMovement');const matches=(r:R)=>(r.name+' '+r.folio+' '+(allRows.find(p=>p.id===r.projectId)?.name||r.projectName||'')+' '+(r.serviceReference||'')).toLowerCase().includes(search.toLowerCase());
  const header=mode==='treasury'?'Tesorería y pagos':mode==='warehouse'?'Almacén · Solicitudes de materiales':'Sistema caja';

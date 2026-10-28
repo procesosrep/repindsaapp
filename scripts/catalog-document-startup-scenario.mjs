@@ -1,0 +1,48 @@
+import assert from 'node:assert/strict';
+import {randomBytes,randomUUID} from 'node:crypto';
+export async function exerciseCatalogDocuments(request,adminCookie,origin){
+ const send=(path,body,cookie=adminCookie)=>request(path,{method:'POST',headers:{'Content-Type':'application/json',Origin:origin,Cookie:cookie},body:JSON.stringify(body)});
+ const ok=async r=>{const b=await r.json();assert.equal(r.status,200,b.error);return b};
+ const users=[['doc-author','Operaciones',{documentsView:true,documentsEdit:true}],['doc-process','Operaciones',{documentsView:true}],['doc-director','Dirección',{documentsView:true}],['doc-reader','Visor',{documentsView:true}]];const sessions={};
+ for(const [username,role,rights]of users){const temporary=randomBytes(24).toString('hex'),password=randomBytes(24).toString('hex');await ok(await send('/api/support',{action:'saveUser',data:{username,name:username,role,rights,password:temporary,active:true}}));let r=await send('/api/material-access',{action:'login',username,password:temporary});await ok(r);let cookie=r.headers.get('set-cookie').split(';')[0];await ok(await send('/api/material-access',{action:'password',password},cookie));r=await send('/api/material-access',{action:'login',username,password});await ok(r);sessions[username]=r.headers.get('set-cookie').split(';')[0]}
+ const configuredUsers=await ok(await send('/api/support',{action:'users'}));assert(configuredUsers.levels.some(l=>l.name==='Procesos'));assert(configuredUsers.levels.some(l=>l.name==='Director general'));
+ const author=sessions['doc-author'],process=sessions['doc-process'],director=sessions['doc-director'],reader=sessions['doc-reader'];
+ assert.equal((await send('/api/admin-catalogs',{action:'saveProject',data:{}},author)).status,403);
+ assert.equal((await send('/api/admin-catalogs',{action:'saveProject',data:{rp:'RP-TEST-26',description:'Sin lugar'}})).status,400);
+ const projectInput={rp:'RP-TEST-26',description:'Proyecto de catálogo HTTP',location:'Monterrey',clientName:'Cliente de prueba',status:'Activo'};
+ let project=(await ok(await send('/api/admin-catalogs',{action:'saveProject',data:projectInput}))).project;
+ assert.equal((await send('/api/admin-catalogs',{action:'saveProject',data:projectInput})).status,409);
+ const racingProjects=await Promise.all([0,1].map(()=>send('/api/admin-catalogs',{action:'saveProject',data:{...projectInput,rp:'RP-RACE-26'}})));assert.deepEqual(racingProjects.map(r=>r.status).sort(),[200,409]);
+ let material=await ok(await request('/api/material-workspace?catalogOnly=1',{headers:{Cookie:adminCookie}}));assert(material.projects.some(r=>r.id===project.id));
+ const stale={...project};project=(await ok(await send('/api/admin-catalogs',{action:'saveProject',data:{...project,description:project.name,status:'Inactivo'}}))).project;
+ assert.equal((await send('/api/admin-catalogs',{action:'saveProject',data:{...stale,description:stale.name,status:'Activo'}})).status,409);
+ material=await ok(await request('/api/material-workspace?catalogOnly=1',{headers:{Cookie:adminCookie}}));assert(!material.projects.some(r=>r.id===project.id));
+ project=(await ok(await send('/api/admin-catalogs',{action:'saveProject',data:{...project,description:project.name,status:'Activo'}}))).project;
+ material=await ok(await request('/api/material-workspace?catalogOnly=1',{headers:{Cookie:adminCookie}}));assert(material.projects.some(r=>r.id===project.id));
+ project=(await ok(await send('/api/admin-catalogs',{action:'saveProject',data:{...project,description:project.name,rp:'RP-TEST-EDIT-26',status:'Activo'}}))).project;assert.equal(project.folio,'RP-TEST-EDIT-26');assert.equal((await send('/api/admin-catalogs',{action:'saveProject',data:projectInput})).status,409);
+ let article=(await ok(await send('/api/admin-catalogs',{action:'saveArticle',data:{description:'Artículo editable HTTP',category:'Pruebas',unit:'Pieza',status:'Activo'}}))).article;
+ assert((await ok(await request('/api/material-workspace?catalogOnly=1',{headers:{Cookie:adminCookie}}))).catalog.some(r=>r.id===article.id));
+ const oldArticle={...article};article=(await ok(await send('/api/admin-catalogs',{action:'saveArticle',data:{...article,status:'Inactivo'}}))).article;
+ assert.equal((await send('/api/admin-catalogs',{action:'saveArticle',data:oldArticle})).status,409);
+ assert(!(await ok(await request('/api/material-workspace?catalogOnly=1',{headers:{Cookie:adminCookie}}))).catalog.some(r=>r.id===article.id));
+ assert.equal((await send('/api/document-flow',{action:'configure',data:{reviewer:'doc-process',approver:'doc-director'}},author)).status,403);
+ let routing=(await ok(await send('/api/document-flow',{action:'configure',data:{reviewer:'doc-process',approver:'doc-director'}}))).routing;
+ let doc=(await ok(await send('/api/document-flow',{action:'saveDocument',data:{name:'Procedimiento de prueba',type:'Procedimiento',body:'<p>Versión inicial</p>',owner:'Calidad'}},author))).record;
+ const act=async(action,cookie,extra={})=>{doc=(await ok(await send('/api/document-flow',{action,id:doc.id,revision:doc.revision,...extra},cookie))).record;return doc};
+ assert(!(await ok(await request('/api/document-flow',{headers:{Cookie:process}}))).records.some(r=>r.id===doc.id));
+ assert.equal((await send('/api/support',{action:'publishDocument',id:doc.id,revision:doc.revision,data:doc},author)).status,403);
+ await act('submitDocument',author);assert.equal(doc.status,'En revisión de Procesos');assert(!(await ok(await request('/api/document-flow',{headers:{Cookie:director}}))).records.some(r=>r.id===doc.id));
+ assert.equal((await send('/api/document-flow',{action:'publishDocument',id:doc.id,revision:doc.revision},director)).status,403);
+ assert.equal((await send('/api/document-flow',{action:'saveDocument',id:doc.id,revision:doc.revision,data:doc},author)).status,409);
+ assert.equal((await send('/api/document-flow',{action:'configure',revision:routing.revision,data:{reviewer:'doc-author',approver:'doc-director'}})).status,409);
+ assert.equal((await send('/api/support',{action:'saveUser',data:{username:'doc-process',name:'doc-process',role:'Operaciones',active:false,rights:{documentsView:true}}})).status,400);
+ assert.equal((await send('/api/document-flow',{action:'returnDocument',id:doc.id,revision:doc.revision,comment:''},process)).status,400);
+ await act('returnDocument',process,{comment:'Aclarar el alcance'});assert.equal(doc.reviewComment,'Aclarar el alcance');
+ await act('saveDocument',author,{data:{...doc,body:'<p>Alcance corregido</p>'}});await act('submitDocument',author);await act('reviewDocument',process);assert.equal(doc.status,'En autorización de Dirección');
+ await act('returnDocument',director,{comment:'Incluir responsables'});await act('saveDocument',author,{data:{...doc,body:'<p>Alcance y responsables</p>'}});await act('submitDocument',author);await act('reviewDocument',process);await act('publishDocument',director);assert.equal(doc.status,'Vigente');
+ const publicDoc=(await ok(await request('/api/document-flow',{headers:{Cookie:reader}}))).records.find(r=>r.id===doc.id);assert.equal(publicDoc.version,1);
+ await act('saveDocument',author,{data:{...doc,body:'<p>Segunda versión en elaboración</p>'}});assert.equal(doc.version,2);assert.equal(doc.status,'Borrador');
+ const retained=(await ok(await request('/api/documents-workspace',{headers:{Cookie:reader}}))).records.find(r=>r.id===doc.id);assert.equal(retained.version,1);assert.equal(retained.body,'<p>Alcance y responsables</p>');
+ assert.equal((await send('/api/document-flow',{action:'saveDocument',id:doc.id,revision:doc.revision,data:doc},process)).status,403);
+ console.log('Catalog/document HTTP passed: admin project fields, unique RP, activation in Materials, stale-write denial, editable articles, four distinct users, mandatory Process/Director sequence, returns and re-review, protected pending reviewers, private drafts and retained published version.');
+}

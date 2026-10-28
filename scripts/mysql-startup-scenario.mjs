@@ -1,3 +1,4 @@
+import {exerciseCatalogDocuments} from './catalog-document-startup-scenario.mjs';
 import {exerciseConcurrency} from './concurrency-startup-scenario.mjs';
 import {exerciseResponsiveUI} from './responsive-browser-scenario.mjs';
 import {exerciseMaterials} from './materials-startup-scenario.mjs';
@@ -45,6 +46,7 @@ try{
  const repeated=await request('/api/material-workspace?catalogOnly=1',{headers:{Cookie:cookie}});assert.equal(repeated.status,200);assert.equal((await repeated.json()).projects.length,27);
  await exerciseMaterials(request,cookie,username,origin,materialData);
  await exerciseConcurrency(request,cookie,origin,materialData);
+ await exerciseCatalogDocuments(request,cookie,origin);
  if(process.env.RUN_BROWSER_TESTS==='1')await exerciseResponsiveUI('http://127.0.0.1:'+port);
  const audit=await request('/api/audit?from=2020-01-01&to=2099-01-01&q=prueba',{headers:{Cookie:cookie}});assert.equal(audit.status,200);assert.ok(Array.isArray((await audit.json()).entries));
  const form=new FormData();const bytes=new Uint8Array([255,216,255,217]);form.set('quoteId','smoke-draft');form.set('file',new File([bytes],'test.jpg',{type:'image/jpeg'}));

@@ -13,7 +13,7 @@ const notificationText=ts.transpile(fs.readFileSync('app/notification-policy.ts'
 const warehouseSeed=JSON.parse(fs.readFileSync('app/warehouse-catalog-seed.json','utf8'));const warehouseText=ts.transpile(fs.readFileSync('app/warehouse-catalog.ts','utf8').replace(/^import .*;$/gm,'').replace(/export /g,''),{target:ts.ScriptTarget.ES2022});Object.assign(globalThis,new Function('warehouseSeed',warehouseText+';return {warehouseCatalog,selectedCatalogLines,saveWarehouseArticle}')(warehouseSeed));
 const salaryText=ts.transpile(fs.readFileSync('app/hr-salary.ts','utf8').replace(/export /g,''),{target:ts.ScriptTarget.ES2022});Object.assign(globalThis,new Function(salaryText+';return {integratedSalary}')());
 
-const projectSeed=JSON.parse(fs.readFileSync('app/active-project-seed.json','utf8'));const projectViewText=ts.transpile(fs.readFileSync('app/active-projects-view.ts','utf8').replace(/export /g,''),{target:ts.ScriptTarget.ES2022});Object.assign(globalThis,new Function(projectViewText+';return {projectRP,activeProjectOptions,resolveRequestProject}')());globalThis.ensureActiveProjects=async()=>{};
+const projectSeed=JSON.parse(fs.readFileSync('app/active-project-seed.json','utf8'));const projectViewText=ts.transpile(fs.readFileSync('app/active-projects-view.ts','utf8').replace(/export /g,''),{target:ts.ScriptTarget.ES2022});Object.assign(globalThis,new Function(projectViewText+';return {projectRP,isActiveProject,activeProjectOptions,resolveRequestProject}')());globalThis.ensureActiveProjects=async()=>{};
 globalThis.ensureAudit=async()=>{};
 globalThis.provisionPurchaseManager=async()=>{};
 const cycleModel=ts.transpile(fs.readFileSync('app/material-model.ts','utf8').replace(/^import .*;$/gm,'').replace(/export /g,''),{target:ts.ScriptTarget.ES2022});Object.assign(globalThis,new Function(cycleModel+';return {materialStatus}')());
@@ -22,3 +22,5 @@ const trackingCode=ts.transpile(fs.readFileSync('app/purchase-tracking.ts','utf8
 globalThis.validCashDate=new Function(ts.transpile(fs.readFileSync('app/cash-model.ts','utf8').replace(/^import .*;$/gm,'').replace(/export /g,''),{target:ts.ScriptTarget.ES2022})+';return validCashDate')();globalThis.materialToday=()=>new Date().toLocaleDateString('en-CA',{timeZone:'America/Mexico_City'});
 
 const richTextCode=ts.transpile(fs.readFileSync('app/rich-text.ts','utf8').replace(/export /g,''),{target:ts.ScriptTarget.ES2022});Object.assign(globalThis,new Function(richTextCode+';return {cleanRichText,richTextLimit}')());
+
+const documentPolicyText=ts.transpile(fs.readFileSync('app/document-policy.ts','utf8').replace(/^import .*;$/gm,'').replace(/export /g,''),{target:ts.ScriptTarget.ES2022});Object.assign(globalThis,new Function(documentPolicyText+';return {canAuthorDocument,documentParticipant,officialDocument,documentPending}')());

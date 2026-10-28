@@ -1,0 +1,15 @@
+import {storeCash} from './cash-server';
+import {projectRP} from './active-projects-view';
+type R=Record<string,any>;
+const ready=new WeakMap<object,Promise<void>>();
+async function reserveExisting(db:any,rows:R[]){let pending=ready.get(db);if(!pending){pending=db.batch(rows.filter(r=>r.kind==='project'&&projectRP(r)).map(r=>db.prepare('INSERT OR IGNORE INTO workflow_links(root,project_id) VALUES(?,?)').bind('project-rp:'+projectRP(r).toUpperCase(),r.id))).then(()=>{}).catch((e:any)=>{ready.delete(db);throw e});ready.set(db,pending!)}await pending;}
+export async function saveCatalogProject(c:R,data:R){
+ if(data.status&&!['Activo','Inactivo'].includes(data.status))throw Error('Selecciona Activo o Inactivo.');const old=data.id?c.rows.find((r:R)=>r.kind==='project'&&r.id===data.id):undefined;if(data.id&&!old)throw Error('Proyecto no encontrado.');if(old&&old.revision!==data.revision)throw Object.assign(Error('El proyecto cambió. Actualiza antes de guardar.'),{status:409});
+ if(old&&!['Activo','Inactivo'].includes(data.status))throw Error('Selecciona Activo o Inactivo.');if(old&&data.status==='Activo'&&['Cerrado','Cancelado','Eliminado'].includes(old.status))throw Error('Reabre el proyecto cerrado o cancelado en su expediente antes de activarlo en el catálogo.');
+ const rp=String(data.rp||data.serviceReference||'').trim().toUpperCase(),name=String(data.description||data.name||'').trim(),location=String(data.location||'').trim(),clientName=String(data.clientName||'').trim();
+ if(!/^RP-[A-Z0-9]+(?:-[A-Z0-9]+)*$/.test(rp)||rp.length>60)throw Error('Indica un RP válido, por ejemplo RP-123-26.');if(!name||name.length>300||!location||location.length>200||!clientName||clientName.length>150)throw Error('Completa descripción (hasta 300), lugar (hasta 200) y cliente (hasta 150 caracteres).');
+ await reserveExisting(c.db,c.rows);const id=old?.id||crypto.randomUUID(),reservation:any=await c.db.prepare('SELECT project_id FROM workflow_links WHERE root=?').bind('project-rp:'+rp).first();if(reservation&&reservation.project_id!==id)throw Object.assign(Error('Ese RP ya pertenece a otro proyecto. Cada RP es único.'),{status:409});
+ const extra=[];if(!reservation)extra.push(c.db.prepare('INSERT INTO workflow_links(root,project_id) VALUES(?,?)').bind('project-rp:'+rp,id));
+ const client=c.rows.find((r:R)=>r.kind==='client'&&r.name?.trim().toLocaleLowerCase('es')===clientName.toLocaleLowerCase('es'));let clientId=client?.id;if(!clientId){clientId=crypto.randomUUID();const record={id:clientId,kind:'client',name:clientName,status:'Activo'};extra.push(c.db.prepare('INSERT INTO records(id,kind,payload,revision,updated) VALUES(?,?,?,1,?)').bind(clientId,'client',JSON.stringify(record),new Date().toISOString()));}
+ return storeCash(c.db,{...old,id,kind:'project',catalogManaged:true,name,description:name,serviceReference:rp,rp,folio:old?.folio&&old.folio!==projectRP(old)?old.folio:rp,location,clientName,clientId,catalogStatus:data.status==='Inactivo'?'Inactivo':'Activo',status:old?.status&&old.status!=='Inactivo'?old.status:'En ejecución'},old,c.email,old?'Catálogo de proyectos actualizado':'Proyecto dado de alta',extra);
+}
