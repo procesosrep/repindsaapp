@@ -33,3 +33,15 @@ export function resolveReceipt(old:R,id:string,reason:string,actor:string,now=ne
 }
 export function receiptSubmissionError(rows:R[],c:R,draft?:R,today=receiptToday()){return receiptTasks(rows,c,today).length&&draft?.receiptException?.status!=='Autorizada'?'Tienes recepciones vencidas. Confirma o reporta diferencias antes de enviar otra solicitud. Puedes guardar borradores o solicitar una excepción urgente al gerente.':'';}
 export function receiptDemoRecord(){const old:R={id:'demo-material-receipt',kind:'materialRequest',folio:'DEMO-RECEPCIÓN-001',projectName:'Proyecto de demostración',requester:'Solicitante de prueba',requesterId:'local:demo-supervisor',createdBy:'usuario:demo-supervisor',assignedApprover:'demo-gerente',approvalFlow:2,managerApprovedAt:'2026-10-19T14:00:00Z',status:'En almacén',lines:[{id:'demo-tubo',description:'Tubo de prueba',quantity:10,requestedQuantity:10,unit:'Pieza',available:10,delivered:0}]};return {...recordMaterialDelivery({...old,lines:[{...old.lines[0],delivered:6}],status:'Entrega parcial'},old,'usuario:demo-almacen',new Date('2026-10-19T16:00:00Z')),revision:1,canConfirmReceipt:true,canResolveReceipt:true,receiptResponsibleName:'Solicitante de prueba'};}
+
+// Quantities are grouped separately: one partially fulfilled article can appear in several groups.
+export function receiptProgress(r:R){
+ const groups:{key:string,title:string,items:R[]}[]=[{key:'pending',title:'Por confirmar',items:[]},{key:'missing',title:'Falta por recibir',items:[]},{key:'received',title:'Ya recibidos',items:[]}];
+ (r.lines||[]).forEach((l:R,index:number)=>{
+  const quantity=Number(l.quantity||0);if(quantity<=0||l.status==='Rechazada')return;
+  const received=Math.min(quantity,Math.max(0,receiptConfirmed(r,index)));
+  const pending=Math.min(quantity-received,(r.deliveries||[]).filter((d:R)=>d.status==='Pendiente').reduce((n:number,d:R)=>n+(d.lines||[]).filter((x:R)=>x.index===index).reduce((sum:number,x:R)=>sum+Number(x.quantity||0),0),0));
+  const missing=Math.max(0,quantity-received-pending);
+  [pending,missing,received].forEach((amount,i)=>{if(amount>.000001)groups[i].items.push({id:l.id||String(index),description:l.description,unit:l.unit,quantity:Number(amount.toFixed(6))})});
+ });return groups;
+}
