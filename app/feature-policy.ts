@@ -1,4 +1,4 @@
-import {accessKind} from './access-policy';
+import {accessKind,isDirector} from './access-policy';
 export const featureGroups=[
  {key:'workspaces',name:'Acceso a espacios',items:[['workspaceCaja','Botón Sistema caja'],['workspacePanel','Botón Panel completo']]},
  {key:'cycle1',name:'Comercial',items:[['opportunity','Oportunidades'],['quote','Cotizaciones'],['client','Clientes'],['concept','Conceptos'],['commercial','Contratos y seguimiento']]},
@@ -10,7 +10,7 @@ export const featureGroups=[
 ];
 export type FeatureState={revision:number,public:Record<string,boolean>};
 export function featureOpen(state:FeatureState|undefined,key:string){return ['workspaceCaja','workspacePanel'].includes(key)?state?.public?.[key]===true:state?.public?.[key]!==false;}
-export function featureAllowed(profile:any,kind:string){if(profile.role==='Administrador')return true;const key=accessKind(kind);return featureOpen(profile.features,key)&&featureOpen(profile.features,kind);}
+export function featureAllowed(profile:any,kind:string){if(profile.role==='Administrador'||isDirector(profile))return true;const key=accessKind(kind);return featureOpen(profile.features,key)&&featureOpen(profile.features,kind);}
 export function featureProfile(profile:any,state:FeatureState){return {...profile,features:state};}
 
-export function workspaceVisible(profile:any,system:string){if(profile.role==='Administrador'||profile.actualRole==='Administrador')return true;const state=profile.features;if(system==='caja')return featureOpen(state,'workspaces')&&featureOpen(state,'workspaceCaja')&&(featureAllowed(profile,'cashAdvance')||featureAllowed(profile,'cashProof'));if(system==='operaciones')return featureOpen(state,'workspaces')&&featureOpen(state,'workspacePanel');return true;}
+export function workspaceVisible(profile:any,system:string){if(profile.role==='Administrador'||profile.actualRole==='Administrador'||isDirector(profile))return true;const state=profile.features;if(system==='caja')return featureOpen(state,'workspaces')&&featureOpen(state,'workspaceCaja')&&(featureAllowed(profile,'cashAdvance')||featureAllowed(profile,'cashProof'));if(system==='operaciones')return featureOpen(state,'workspaces')&&featureOpen(state,'workspacePanel');return true;}

@@ -1,12 +1,12 @@
 import {canAuthorDocument,documentPending} from './document-policy';
 import {featureAllowed} from './feature-policy';
-import {hasAccess} from './access-policy';
+import {hasAccess,normalizedAccessProfile} from './access-policy';
 import {accessTables} from './material-access';
 import {storeCash,cashFolio} from './cash-server';
 import {cleanRichText,richTextLimit} from './rich-text';
 type R=Record<string,any>;
 function fail(message:string,status=400):never{throw Object.assign(Error(message),{status})}
-export async function documentUsers():Promise<R[]>{const db=await accessTables();const rows=(await db.prepare('SELECT u.username,u.name,u.role,u.active,p.rights FROM material_users u LEFT JOIN material_user_profiles p ON p.username=u.username').all()).results;return rows.filter((u:R)=>u.active).map((u:R)=>({...u,rights:u.rights?JSON.parse(u.rights):undefined})).filter((u:R)=>hasAccess(u,'documentsView')||hasAccess(u,'transversal'));}
+export async function documentUsers():Promise<R[]>{const db=await accessTables();const rows=(await db.prepare('SELECT u.username,u.name,u.role,u.active,p.rights FROM material_users u LEFT JOIN material_user_profiles p ON p.username=u.username').all()).results;return rows.filter((u:R)=>u.active).map((u:R)=>normalizedAccessProfile({...u,rights:u.rights?JSON.parse(u.rights):undefined})).filter((u:R)=>hasAccess(u,'documentsView')||hasAccess(u,'transversal'));}
 export async function documentAction(c:R,b:R){
  if(c.system==='caja'||!featureAllowed(c.profile,'controlledDocument'))fail('Este espacio no permite administrar documentos.',403);const routing=c.rows.find((r:R)=>r.id==='document-routing')||{},users=await documentUsers(),who=c.username,admin=c.actualRole==='Administrador';
  if(b.action==='configure'){if(!admin)fail('Sólo el administrador configura el flujo.',403);const d=b.data||{},reviewer=users.find((u:R)=>u.username===d.reviewer),approver=users.find((u:R)=>u.username===d.approver&&['Dirección','Administrador'].includes(u.role));if(!reviewer||!approver||reviewer.username===approver.username)fail('Selecciona un usuario activo de Procesos y otro de Dirección General (perfil Dirección o Administrador), ambos con acceso a documentos.');if(routing.revision!==b.revision&&routing.id)fail('La configuración cambió. Actualiza.',409);if(c.rows.some((r:R)=>r.kind==='controlledDocument'&&documentPending.includes(r.status))&&(routing.reviewer!==d.reviewer||routing.approver!==d.approver))fail('Termina los documentos pendientes antes de cambiar los responsables.',409);return {routing:await storeCash(c.db,{id:'document-routing',kind:'config',reviewer:d.reviewer,approver:d.approver,reviewerName:reviewer.name,approverName:approver.name},routing.id?routing:undefined,c.email,'Flujo documental configurado')};}
