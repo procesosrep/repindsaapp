@@ -1,4 +1,4 @@
-import {accessKind,isDirector} from './access-policy';
+import {accessKind,isDirector,accessRights} from './access-policy';
 export const featureGroups=[
  {key:'workspaces',name:'Acceso a espacios',items:[['workspaceCaja','Botón Viáticos'],['workspacePanel','Botón Panel completo']]},
  {key:'cycle1',name:'Comercial',items:[['opportunity','Oportunidades'],['quote','Cotizaciones'],['client','Clientes'],['concept','Conceptos'],['commercial','Contratos y seguimiento']]},
@@ -13,4 +13,6 @@ export function featureOpen(state:FeatureState|undefined,key:string){return ['wo
 export function featureAllowed(profile:any,kind:string){if(profile.role==='Administrador'||isDirector(profile))return true;const key=accessKind(kind);return featureOpen(profile.features,key)&&featureOpen(profile.features,kind);}
 export function featureProfile(profile:any,state:FeatureState){return {...profile,features:state};}
 
-export function workspaceVisible(profile:any,system:string){if(profile.role==='Administrador'||profile.actualRole==='Administrador'||isDirector(profile))return true;const state=profile.features;if(system==='caja')return featureOpen(state,'workspaces')&&featureOpen(state,'workspaceCaja')&&(featureAllowed(profile,'cashAdvance')||featureAllowed(profile,'cashProof'));if(system==='operaciones')return featureOpen(state,'workspaces')&&featureOpen(state,'workspacePanel');return true;}
+// Workspace navigation follows assigned permissions. Legacy button-publication flags
+// must not strand a valid session; module/function publication remains enforced.
+export function workspaceVisible(profile:any,system:string){if(profile.role==='Administrador'||profile.actualRole==='Administrador'||isDirector(profile))return true;const rights=accessRights(profile);if(system==='operaciones')return !!rights.panel;if(system==='caja')return !!(rights.box||rights.payments)&&(featureAllowed(profile,'cashAdvance')||featureAllowed(profile,'cashProof'));if(system==='materiales')return !!rights.materials&&featureAllowed(profile,'materialRequest');if(system==='documentos')return !!rights.documentsView&&featureAllowed(profile,'controlledDocument');return false;}
