@@ -1,6 +1,6 @@
 import {today} from './workflow-utils';
 export type CashRow=Record<string,any>;
-export const cashAccounts=['Alimentación','Hospedaje','Combustible','Casetas y peajes','Estacionamiento','Transporte terrestre','Pasajes aéreos','Renta de vehículos','Gastos de viaje','Materiales y consumibles menores','Herramientas menores','Mensajería y paquetería','Telefonía y datos','Mantenimiento menor','Otros gastos autorizados'];
+export const cashAccounts=['Alimentación','Hospedaje','Combustible','Casetas y peajes','Estacionamiento','Transporte terrestre','Pasajes de autobús','Pasajes aéreos','Renta de vehículos','Gastos de viaje','Materiales y consumibles menores','Herramientas menores','Mensajería y paquetería','Telefonía y datos','Mantenimiento menor','Otros gastos autorizados'];
 export const cashMethods=['Transferencia','Tarjeta de débito','Tarjeta de crédito','Tarjeta de servicios','Monedero autorizado','Cheque nominativo','Efectivo'];
 export const cashPeriods=['Diario','Semanal','Quincenal','Mensual'];
 export const cents=(v:any)=>Math.round((Number(v)||0)*100)/100;
