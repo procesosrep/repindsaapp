@@ -11,8 +11,12 @@ try{
  await admin.query('CREATE DATABASE `'+name+'`');
  await admin.query('CREATE USER ?@\'%\' IDENTIFIED BY ?',[user,password]);
  await admin.query('GRANT SELECT,INSERT,UPDATE,DELETE,CREATE,ALTER,INDEX ON `'+name+'`.* TO ?@\'%\'',[user]);
- const result=spawnSync(process.execPath,[fileURLToPath(new URL('./mysql-startup-scenario.mjs',import.meta.url))],{env:{...process.env,MYSQL_SMOKE_USER:user,MYSQL_SMOKE_PASSWORD:password,MYSQL_SMOKE_DATABASE:name},encoding:'utf8',timeout:180000});
+ const timeout=process.env.RUN_BROWSER_TESTS==='1'?600000:180000;
+ console.log('Validando MySQL'+(process.env.RUN_BROWSER_TESTS==='1'?' y navegadores':'')+' (límite '+timeout/1000+' segundos).');
+ const result=spawnSync(process.execPath,[fileURLToPath(new URL('./mysql-startup-scenario.mjs',import.meta.url))],{env:{...process.env,MYSQL_SMOKE_USER:user,MYSQL_SMOKE_PASSWORD:password,MYSQL_SMOKE_DATABASE:name},encoding:'utf8',timeout,maxBuffer:16*1024*1024});
  if(result.stdout)process.stdout.write(result.stdout);if(result.stderr)process.stderr.write(result.stderr);
+ if(result.error)throw Error(result.error.code==='ETIMEDOUT'?'Las pruebas excedieron '+timeout/1000+' segundos. Revisa la última suite registrada.':'No se pudo completar el proceso de pruebas: '+(result.error.code||result.error.message));
+ if(result.signal)console.error('Las pruebas terminaron por la señal '+result.signal+'.');
  if(result.status!==0)process.exitCode=1;
  else console.log('Managed MySQL production HTTP checks passed without SUPER/TRIGGER grants.');
 }finally{

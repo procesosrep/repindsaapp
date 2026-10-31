@@ -2,7 +2,8 @@ name: Validar REPINDSA
 on: [push, pull_request]
 jobs:
   validar:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
     services:
       mysql:
         image: mysql:8.4
@@ -18,21 +19,38 @@ jobs:
           --health-retries=30
     env:
       RUN_BROWSER_TESTS: '1'
+      RESPONSIVE_SCREENSHOT_DIR: ${{ github.workspace }}/.test-artifacts/screenshots
       MYSQL_TEST_HOST: 127.0.0.1
       MYSQL_TEST_PORT: '3306'
       MYSQL_TEST_USER: root
       MYSQL_TEST_PASSWORD: ci-test-only-password
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: '22'
           cache: npm
-      - run: npm ci
-      - run: npm test
-      - run: npm run typecheck
-      - run: npm run test:flows
-      - run: npx playwright-core install --with-deps chromium
-      - run: npm run test:editor
-      - run: npm run build
-      - run: npm run test:mysql:startup
+      - name: Instalar dependencias
+        run: npm ci
+      - name: Pruebas unitarias
+        run: npm test
+      - name: Comprobar tipos
+        run: npm run typecheck
+      - name: Validar flujos
+        run: npm run test:flows
+      - name: Instalar Chromium
+        run: npx playwright-core install --with-deps chromium
+      - name: Validar editor
+        run: npm run test:editor
+      - name: Compilar aplicación
+        run: npm run build
+      - name: Validar arranque, MySQL y vistas móviles
+        run: npm run test:mysql:startup
+      - name: Guardar capturas de las pruebas
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: capturas-pruebas
+          path: .test-artifacts/screenshots/
+          if-no-files-found: ignore
+          retention-days: 7
