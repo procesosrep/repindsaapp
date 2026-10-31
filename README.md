@@ -155,3 +155,9 @@ privado de la clave fuera de GitHub; no publiques credenciales.
 `app/data/frisa-example.json` y `template-examples.json` contienen demostraciones
 nuevas, no cotizaciones originales recuperadas. Se cargan únicamente por solicitud
 explícita del administrador, no durante el inicio.
+
+## Viáticos y Control de combustible
+
+El flujo de Viáticos separa visto bueno del jefe directo, autorización de Administración y Finanzas y aplicación. Basta que autorice uno de los directores habilitados. Antes de enviar, configura el jefe directo de cada usuario y los autorizadores equivalentes en Configuración → Usuarios, niveles y permisos.
+
+Consulta [la configuración y continuidad de Viáticos](docs/viaticos.md) y [los campos, permisos y reportes de combustible por placa](docs/combustible.md). Las capturas de combustible alimentan la bitácora directamente, sin duplicar el consumo de anticipos y comprobaciones.

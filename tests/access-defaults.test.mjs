@@ -17,7 +17,7 @@ test('Edición de permisos mantiene dependencias sin habilitar acciones adiciona
  let rights=togglePermission({},'requestMaterials',true);
  assert.equal(rights.materials,true);assert.equal(rights.requestMaterials,true);assert.equal(rights.approveMaterials,undefined);
  rights=togglePermission(rights,'materials',false);assert.equal(rights.requestMaterials,false);
- assert.match(permissionError({requestBox:true,box:false},'Supervisor'),/Sistema caja/);
+ assert.match(permissionError({requestBox:true,box:false},'Supervisor'),/Viáticos/);
  assert.equal(permissionError(defaultAccess('Supervisor'),'Supervisor'),'');
  assert.match(permissionError({...defaultAccess('Supervisor'),configuration:true,panel:true},'Supervisor'),/Administrador/);
 });
