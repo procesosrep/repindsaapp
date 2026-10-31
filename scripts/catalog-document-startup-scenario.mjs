@@ -28,6 +28,7 @@ export async function exerciseCatalogDocuments(request,adminCookie,origin){
  assert.equal((await send('/api/document-flow',{action:'configure',data:{reviewer:'doc-process',approver:'doc-director'}},author)).status,403);
  let routing=(await ok(await send('/api/document-flow',{action:'configure',data:{reviewer:'doc-process',approver:'doc-director'}}))).routing;
  let doc=(await ok(await send('/api/document-flow',{action:'saveDocument',data:{name:'Procedimiento de prueba',type:'Procedimiento',body:'<p>Versión inicial</p>',owner:'Calidad'}},author))).record;
+ assert.match(doc.folio,/^PR-TRA-\d{5,}$/);const policy=(await ok(await send('/api/document-flow',{action:'saveDocument',data:{name:'Política financiera de prueba',type:'Política',cycleCode:'FIN',body:'<p>Política</p>'}},author))).record;assert.match(policy.folio,/^PO-FIN-\d{5,}$/);const changedCycle=(await ok(await send('/api/document-flow',{action:'saveDocument',id:policy.id,revision:policy.revision,data:{...policy,cycleCode:'COM'}} ,author))).record;assert.equal(changedCycle.cycleCode,'FIN');assert.equal(changedCycle.folio,policy.folio);
  const act=async(action,cookie,extra={})=>{doc=(await ok(await send('/api/document-flow',{action,id:doc.id,revision:doc.revision,...extra},cookie))).record;return doc};
  assert(!(await ok(await request('/api/document-flow',{headers:{Cookie:process}}))).records.some(r=>r.id===doc.id));
  assert.equal((await send('/api/support',{action:'publishDocument',id:doc.id,revision:doc.revision,data:doc},author)).status,403);

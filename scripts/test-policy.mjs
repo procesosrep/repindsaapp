@@ -1,3 +1,6 @@
+import {nextFolio} from '../server/folios.mjs';
+import {folioSpec} from '../server/folio-policy.mjs';
+Object.assign(globalThis,{nextFolio,folioSpec});
 import fs from 'node:fs';import ts from 'typescript';
 const text=ts.transpile(fs.readFileSync('app/access-policy.ts','utf8').replace(/export /g,''),{target:ts.ScriptTarget.ES2022});
 export const policy=new Function(text+';return {isDirector,normalizedAccessProfile,accessBaseRoles,accessPermissionGroups,accessPermissionKeys,defaultAccess,togglePermission,permissionError,accessRights,hasAccess,checkedRights,accessSystems,isOwnRecord,canReviewBox,canReviewMaterial,requestApprover,accessKind}')();Object.assign(globalThis,policy);
@@ -25,4 +28,4 @@ const richTextCode=ts.transpile(fs.readFileSync('app/rich-text.ts','utf8').repla
 
 const documentPolicyText=ts.transpile(fs.readFileSync('app/document-policy.ts','utf8').replace(/^import .*;$/gm,'').replace(/export /g,''),{target:ts.ScriptTarget.ES2022});Object.assign(globalThis,new Function(documentPolicyText+';return {canAuthorDocument,documentParticipant,officialDocument,documentPending}')());
 
-const viaticosText=ts.transpile(fs.readFileSync('app/viaticos-policy.ts','utf8').replace(/^import .*;$/gm,'').replace(/export /g,''),{target:ts.ScriptTarget.ES2022});Object.assign(globalThis,new Function(viaticosText+';return {viaticosVisible,viaticosCanDecide,invoiceKeys,viaticosTaxLabel,expenseDeclaration}')());
+const viaticosText=ts.transpile(fs.readFileSync('app/viaticos-policy.ts','utf8').replace(/^import .*;$/gm,'').replace(/export /g,''),{target:ts.ScriptTarget.ES2022});Object.assign(globalThis,new Function(viaticosText+';return {recoveredViaticosRouting,viaticosVisible,viaticosCanDecide,invoiceKeys,viaticosTaxLabel,expenseDeclaration}')());

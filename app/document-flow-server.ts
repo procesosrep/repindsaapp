@@ -1,3 +1,5 @@
+import {nextFolio} from '../server/folios.mjs';
+import {folioSpec} from '../server/folio-policy.mjs';
 import {canAuthorDocument,documentPending} from './document-policy';
 import {featureAllowed} from './feature-policy';
 import {hasAccess,normalizedAccessProfile} from './access-policy';
@@ -14,8 +16,9 @@ export async function documentAction(c:R,b:R){
  if(b.action==='saveDocument'){
   if(!canAuthorDocument(c.profile))fail('No tienes permiso para elaborar documentos.',403);if(old&&!admin&&old.createdBy!==c.email)fail('Sólo el autor puede editar este documento.',403);if(old&&documentPending.includes(old.status))fail('El documento está en revisión. Debe devolverse antes de editar.',409);
   const d=b.data||{},body=String(d.body||'');if(body.length>richTextLimit)fail('El documento es demasiado grande. Reduce las imágenes.');if(!d.name?.trim()||d.name.length>250||!['Procedimiento','Política','Descripción de puesto','Documento'].includes(d.type))fail('Completa nombre y tipo del documento.');
+  const cycleCode=folioSpec('controlledDocument',old||d)!.cycle;
   const published=old?.status==='Vigente',snapshot=published?{...old,versions:undefined,publishedSnapshot:undefined,history:undefined,revision:undefined}:old?.publishedSnapshot;
-  const r={...old,id:old?.id||crypto.randomUUID(),kind:'controlledDocument',name:d.name.trim(),type:old?.type||d.type,body:cleanRichText(body),owner:String(d.owner||'').slice(0,150),folio:old?.folio||await cashFolio(c.db,'DO'),status:'Borrador',version:published?Number(old.version||1)+1:old?.version||1,attachments:old?.attachments||[],versions:published?[...(old.versions||[]),{...snapshot,date:old.publishedAt}]:old?.versions||[],publishedSnapshot:snapshot,createdBy:old?.createdBy||c.email,author:old?.author||c.profile.name||c.email};return {record:await storeCash(c.db,r,old,c.email,'Borrador documental guardado')};
+  const r={...old,id:old?.id||crypto.randomUUID(),kind:'controlledDocument',name:d.name.trim(),type:old?.type||d.type,cycleCode,body:cleanRichText(body),owner:String(d.owner||'').slice(0,150),folio:old?.folio||await nextFolio(c.db,'controlledDocument',{...d,cycleCode}),status:'Borrador',version:published?Number(old.version||1)+1:old?.version||1,attachments:old?.attachments||[],versions:published?[...(old.versions||[]),{...snapshot,date:old.publishedAt}]:old?.versions||[],publishedSnapshot:snapshot,createdBy:old?.createdBy||c.email,author:old?.author||c.profile.name||c.email};return {record:await storeCash(c.db,r,old,c.email,'Borrador documental guardado')};
  }
  if(!old)fail('Guarda primero el documento.');let r={...old};
  if(b.action==='submitDocument'){

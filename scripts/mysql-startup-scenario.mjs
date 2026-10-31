@@ -1,3 +1,4 @@
+import {createMySQLDatabase} from '../server/mysql.mjs';
 import {exerciseWorkspaceAccess} from './workspace-access-startup-scenario.mjs';
 import {exerciseWorkspacePicker} from './workspace-access-browser-scenario.mjs';
 import {exerciseFuelUI} from './fuel-browser-scenario.mjs';
@@ -68,7 +69,9 @@ try{
  const upload=await request('/api/quote-assets',{method:'POST',headers:{Cookie:cookie,Origin:origin},body:form});assert.equal(upload.status,200);const asset=await upload.json();
  const download=await request(asset.url,{headers:{Cookie:cookie}});assert.equal(download.status,200);assert.deepEqual(new Uint8Array(await download.arrayBuffer()),bytes);
  assert.equal((await request(asset.url)).status,401);
- await stop();await start();cookie=await login(nextPassword);
+ await stop();
+ const migrationDB=createMySQLDatabase(env);try{const now=new Date().toISOString(),fixtures=[{id:'migration-old-advance',kind:'cashAdvance',folio:'RP-AC-2026-99998',beneficiary:'Persona histórica',status:'Aprobada'},{id:'migration-old-proof',kind:'cashProof',folio:'RP-CP-2026-99998',advanceId:'migration-old-advance',sourceFolio:'RP-AC-2026-99998',status:'Aprobada'},{id:'migration-old-procedure',kind:'controlledDocument',type:'Procedimiento',cycleCode:'SUM',folio:'RP-DO-2026-99998',status:'Vigente'}];await migrationDB.batch(fixtures.map(r=>migrationDB.prepare('INSERT INTO records(id,kind,payload,revision,updated) VALUES(?,?,?,1,?)').bind(r.id,r.kind,JSON.stringify(r),now)));await migrationDB.prepare('DELETE FROM app_migrations WHERE name=?').bind('folio-nomenclature-v2').run();await start();const get=async id=>JSON.parse((await migrationDB.prepare('SELECT payload FROM records WHERE id=?').bind(id).first()).payload),a=await get('migration-old-advance'),p=await get('migration-old-proof');assert.match(a.folio,/^FR-FIN-\d{5,}$/);assert.equal(p.advanceId,a.id);assert.equal(p.sourceFolio,a.folio);assert.deepEqual(a.previousFolios,['RP-AC-2026-99998']);assert.match((await get('migration-old-procedure')).folio,/^PR-SUM-/);assert((await migrationDB.prepare('SELECT id FROM folio_rename_backups WHERE id=?').bind(a.id).first()));console.log('MySQL folio migration passed: old records renamed before serving, linked IDs and references retained, original payloads backed up.');}finally{await migrationDB.client.close();}
+ cookie=await login(nextPassword);
  const retained=await request(asset.url,{headers:{Cookie:cookie}});assert.equal(retained.status,200);assert.deepEqual(new Uint8Array(await retained.arrayBuffer()),bytes);
  console.log('Production HTTP passed: preview origin through proxy, cross-site rejection, health, homepage, login, password change, recovered projects and articles for materials, audit query, private uploads/downloads, denial without login, and persistence after restart.');
 }finally{await stop();}

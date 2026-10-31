@@ -161,3 +161,15 @@ explícita del administrador, no durante el inicio.
 El flujo de Viáticos separa visto bueno del jefe directo, autorización de Administración y Finanzas y aplicación. Basta que autorice uno de los directores habilitados. Antes de enviar, configura el jefe directo de cada usuario y los autorizadores equivalentes en Configuración → Usuarios, niveles y permisos.
 
 Consulta [la configuración y continuidad de Viáticos](docs/viaticos.md) y [los campos, permisos y reportes de combustible por placa](docs/combustible.md). Las capturas de combustible alimentan la bitácora directamente, sin duplicar el consumo de anticipos y comprobaciones.
+
+### Viáticos: transferencia y beneficiarios
+
+Las nuevas solicitudes se entregan por transferencia. Para el propio solicitante no se pide un destino adicional. Al marcar **Solicito para otra persona**, se captura nombre, titular, banco y CLABE de 18 dígitos; el envío valida el dígito de control. Los beneficiarios con datos completos quedan disponibles para que el mismo solicitante los seleccione en futuras solicitudes. Cada expediente conserva sus datos bancarios como referencia para Tesorería; la aplicación registra el pago y su comprobante, sin ejecutar transferencias bancarias.
+
+El jefe directo y los autorizadores financieros son personas distintas del solicitante. Los autorizadores son alternativas: basta la decisión de uno. Guardar los responsables generales conserva la selección de Viáticos. Si una versión anterior perdió esa selección, se recuperan sólo los nombres de la última asignación guardada en expedientes (o el alterno financiero previamente configurado); se siguen validando estado y permisos actuales. La pantalla informa el problema específico cuando no existe una ruta válida.
+
+### Nomenclatura de folios
+
+Procedimientos: `PR-CIC-00001`. Políticas: `PO-CIC-00001`. Registros: `FR-CIC-00001`. Los ciclos son `COM` (Comercial), `OPE` (Operaciones), `SUM` (Suministros), `RHU` (Recursos Humanos), `FIN` (Finanzas) y `TRA` (Transversal). El consecutivo es compartido por prefijo y ciclo, sin reiniciarse cada año. Los documentos nuevos permiten elegir su ciclo antes del primer guardado. Sólo los proyectos conservan `RP`.
+
+Al iniciar la versión actualizada, el servidor convierte los folios existentes antes de aceptar solicitudes. Conserva los IDs, relaciones, folios externos de facturas, historial y proyectos. Guarda los folios anteriores en `previousFolios`, los payloads originales en `folio_rename_backups` y el marcador `folio-nomenclature-v2` en `app_migrations`. La conversión de registros se confirma en una sola transacción y no se repite en los siguientes reinicios. Los respaldos completos de la base de datos deben incluir esas tablas. La búsqueda autenticada de Materiales también acepta el folio anterior.
