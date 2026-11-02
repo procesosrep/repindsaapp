@@ -1,3 +1,4 @@
+import {ensureProductionBuild} from './server/build-integrity.mjs';
 import {migrateFolios} from './server/folios.mjs';
 import http from 'node:http';
 import {fileURLToPath} from 'node:url';
@@ -22,6 +23,9 @@ try {
   const missing=required.filter(name=>!process.env[name]&&!(name==='DB_USER'&&process.env.DB_USERNAME)&&!(name==='DB_NAME'&&process.env.DB_DATABASE)&&name!=='DB_PORT');
   if(!dev&&missing.length&&!process.env.DATABASE_URL)console.log('[REPINDSA] Variables no definidas: '+missing.join(', ')+'. Se muestran sólo nombres, nunca valores.');
   const {port, origin} = serverConfig(process.env, dev);
+  stage = 'verificación de compilación';
+  const release=dev?null:await ensureProductionBuild();
+  if(release)console.log('[REPINDSA] Versión activa: '+release.version+' · '+release.fingerprint.slice(0,12));
   stage = 'migraciones y conexión a la base de datos';
   console.log('[REPINDSA] Comprobando base de datos y migraciones.');
   // Fresh installations are the default; restoration requires explicit opt-in.
@@ -55,6 +59,7 @@ try {
   const handle = app.getRequestHandler();
   const server = http.createServer(async (req, res) => {
     try {
+      if(release)res.setHeader('X-REPINDSA-Build',release.fingerprint.slice(0,12));
       for (const key of Object.keys(req.headers)) {
         if (key.startsWith('oai-') || key === 'cf-connecting-ip') delete req.headers[key];
       }
@@ -70,7 +75,7 @@ try {
       }
       if (req.url === '/healthz') {
         res.writeHead(200, {'Content-Type':'application/json', 'Cache-Control':'no-store'});
-        res.end(JSON.stringify({status:'ok'}));
+        res.end(JSON.stringify({status:'ok',...(release?{release}: {})}));
         return;
       }
       await handle(req, res);

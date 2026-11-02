@@ -1,3 +1,4 @@
+import {readFile,writeFile} from 'node:fs/promises';
 import {exerciseRoutingSettingsUI} from './routing-settings-browser-scenario.mjs';
 import {createMySQLDatabase} from '../server/mysql.mjs';
 import {exerciseWorkspaceAccess} from './workspace-access-startup-scenario.mjs';
@@ -30,7 +31,7 @@ const request=(path,options={})=>fetch('http://127.0.0.1:'+port+path,{...options
 async function start(){
  server=spawn(process.execPath,[fileURLToPath(new URL('../server.js',import.meta.url))],{cwd:tmpdir(),env,stdio:['ignore','pipe','pipe']});
  server.stdout.on('data',b=>logs+=b);server.stderr.on('data',b=>logs+=b);
- for(let i=0;i<120;i++){
+ for(let i=0;i<480;i++){
   if(server.exitCode!==null)throw Error('Server exited: '+logs);
   try{if((await request('/healthz')).ok)return;}catch{}
   await new Promise(resolve=>setTimeout(resolve,250));
@@ -43,10 +44,13 @@ const login=async(pass)=>{
  assert.equal(r.status,200);assert.equal((await r.json()).user.role,'Administrador');return r.headers.get('set-cookie').split(';')[0];
 };
 try{
- await start();
+ // Exercise an actual stale-artifact startup, not just a fresh build.
+ const releasePath=new URL('../.next/repindsa-release.json',import.meta.url),previousRelease=JSON.parse(await readFile(releasePath,'utf8'));await writeFile(releasePath,JSON.stringify({...previousRelease,fingerprint:'0'.repeat(64)}));
+ await start();assert(logs.includes('Compilando la versión actual.'));
+
  const hostile=await request('/api/material-access',{method:'POST',headers:{'Content-Type':'application/json',Origin:'https://external.example','Sec-Fetch-Site':'cross-site'},body:JSON.stringify({action:'login',username,password})});assert.equal(hostile.status,403);
  const unknown=await request('/api/material-access',{method:'POST',headers:{'Content-Type':'application/json',Origin:previewOrigin},body:JSON.stringify({action:'login',username,password})});assert.equal(unknown.status,403);
- assert.deepEqual(await (await request('/healthz')).json(),{status:'ok'});
+ const healthResponse=await request('/healthz'),health=await healthResponse.json();assert.equal(health.status,'ok');assert.match(health.release.fingerprint,/^[a-f0-9]{64}$/);assert.equal(healthResponse.headers.get('X-REPINDSA-Build'),health.release.fingerprint.slice(0,12));
  const home=await request('/');assert.equal(home.status,200);assert.match(await home.text(),/<html/);
  assert.deepEqual(await (await request('/api/material-access')).json(),{user:null});
  let cookie=await login(password);

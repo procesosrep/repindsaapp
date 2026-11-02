@@ -1,13 +1,13 @@
 {
   "name": "repindsa-control",
-  "version": "1.2.0",
+  "version": "1.1.0",
   "private": true,
   "engines": {
     "node": ">=22.13.0 <25"
   },
   "scripts": {
     "dev": "node --env-file-if-exists=.env server.js --dev",
-    "build": "next build --webpack",
+    "build": "node scripts/build.mjs",
     "start": "node --env-file-if-exists=.env server.js",
     "db:migrate": "node --env-file-if-exists=.env scripts/migrate.mjs",
     "admin:create": "node --env-file-if-exists=.env scripts/create-admin.mjs",

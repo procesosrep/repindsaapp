@@ -190,3 +190,5 @@ dialog.customMaterialDialog{width:min(760px,96vw);max-height:92dvh;overflow:auto
 
 #main-sidebar .mobileConfigNav{display:none}
 @media(max-width:700px){#main-sidebar nav .mobileConfigNav{display:flex}}
+
+.applicationVersion{font-size:12px;font-weight:500;color:#718097;white-space:nowrap}

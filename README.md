@@ -173,3 +173,11 @@ El jefe directo y los autorizadores financieros son personas distintas del solic
 Procedimientos: `PR-CIC-00001`. Políticas: `PO-CIC-00001`. Registros: `FR-CIC-00001`. Los ciclos son `COM` (Comercial), `OPE` (Operaciones), `SUM` (Suministros), `RHU` (Recursos Humanos), `FIN` (Finanzas) y `TRA` (Transversal). El consecutivo es compartido por prefijo y ciclo, sin reiniciarse cada año. Los documentos nuevos permiten elegir su ciclo antes del primer guardado. Sólo los proyectos conservan `RP`.
 
 Al iniciar la versión actualizada, el servidor convierte los folios existentes antes de aceptar solicitudes. Conserva los IDs, relaciones, folios externos de facturas, historial y proyectos. Guarda los folios anteriores en `previousFolios`, los payloads originales en `folio_rename_backups` y el marcador `folio-nomenclature-v2` en `app_migrations`. La conversión de registros se confirma en una sola transacción y no se repite en los siguientes reinicios. Los respaldos completos de la base de datos deben incluir esas tablas. La búsqueda autenticada de Materiales también acepta el folio anterior.
+
+### Versión 1.1 y comprobación del despliegue
+
+El menú y la cabecera de Viáticos muestran **V1.1** (paquete `1.1.0`). La versión del commit en el panel de hosting identifica el código recibido; no demuestra por sí sola que la carpeta compilada `.next` corresponda a ese código.
+
+`npm run build` ahora guarda una huella de los archivos de la aplicación junto con el identificador de Next.js en `.next/repindsa-release.json`. `server.js` verifica esa correspondencia antes de iniciar. Si falta la constancia o pertenece a otro código/compilación, compila la versión recibida; si la compilación falla, no sirve silenciosamente el resultado anterior. Los arranques simultáneos comparten un bloqueo de compilación. El proceso normal de despliegue debe seguir ejecutando `npm run build` para que la compilación no retrase el arranque.
+
+`GET /healthz` informa `status`, `release.version`, `release.fingerprint`, `release.buildId` y `release.builtAt`; las respuestas del servidor incluyen `X-REPINDSA-Build` con la huella abreviada. Estas referencias permiten comparar la versión realmente ejecutada con la compilación verificada, sin exponer secretos. Los datos persistentes y los secretos no forman parte de la huella.

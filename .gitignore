@@ -21,3 +21,6 @@ migration-data/
 
 # Evidencias generadas por las pruebas de navegador
 .test-artifacts/
+
+# Bloqueo temporal de compilación
+.repindsa-build.lock
