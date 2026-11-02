@@ -31,3 +31,18 @@ export async function migrateFolios(db){
  try{await db.batch(statements)}catch(e){if(await db.prepare('SELECT name FROM app_migrations WHERE name=?').bind(marker).first())return {renamed:0};throw e;}
  return {renamed:replacement.size};
 }
+
+export async function alignPurchaseFolios(db){
+ const marker='linked-purchase-source-folio-v1';
+ if(await db.prepare('SELECT name FROM app_migrations WHERE name=?').bind(marker).first())return;
+ const rows=(await db.prepare("SELECT id,payload,revision FROM records WHERE kind IN ('materialRequest','materialPurchase')").all()).results.map(row=>({...row,record:JSON.parse(row.payload)})),byId=new Map(rows.map(row=>[row.id,row])),changed=new Map(),now=new Date().toISOString();
+ for(const row of rows){const p=row.record,source=byId.get(p.sourceId);if(p.kind!=='materialPurchase'||p.standalone||source?.record.kind!=='materialRequest'||!source.record.folio)continue;
+  const folio=source.record.folio;
+  if(p.folio!==folio||p.sourceFolio!==folio)changed.set(row.id,{...p,folio,sourceFolio:folio,previousFolios:[...new Set([...(p.previousFolios||[]),p.folio].filter(f=>f&&f!==folio))],history:[...(p.history||[]),{id:randomUUID(),date:now,actor:'sistema',action:'Folio unificado con solicitud de materiales '+folio+'; folio anterior: '+p.folio,status:p.status}]});
+  if(source.record.purchaseId===p.id&&source.record.purchaseFolio!==folio)changed.set(source.id,{...source.record,purchaseFolio:folio});
+ }
+ const statements=[];
+ for(const [id,record] of changed){const row=byId.get(id);statements.push(db.prepare('INSERT OR IGNORE INTO folio_rename_backups(id,payload,revision,updated) VALUES(?,?,?,?)').bind('linked-purchase:'+id,JSON.stringify(row.record),row.revision,now),db.prepare('INSERT INTO workflow_links(root,project_id) VALUES(?,?)').bind('edit:'+id+':'+row.revision,id),db.prepare('UPDATE records SET payload=?,revision=revision+1,updated=? WHERE id=? AND revision=?').bind(JSON.stringify(record),now,id,row.revision));}
+ statements.push(db.prepare('INSERT INTO app_migrations(name,applied_at) VALUES(?,?)').bind(marker,now));
+ try{await db.batch(statements)}catch(e){if(await db.prepare('SELECT name FROM app_migrations WHERE name=?').bind(marker).first())return;throw e;}
+}

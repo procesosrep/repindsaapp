@@ -1,5 +1,5 @@
 import {ensureProductionBuild} from './server/build-integrity.mjs';
-import {migrateFolios} from './server/folios.mjs';
+import {migrateFolios,alignPurchaseFolios} from './server/folios.mjs';
 import http from 'node:http';
 import {fileURLToPath} from 'node:url';
 import {serverConfig} from './server/config.mjs';
@@ -51,6 +51,7 @@ try {
   }
   stage = 'actualización de nomenclatura de folios';
   const folios=await migrateFolios((await import('./server/runtime.mjs')).env.DB);
+  await alignPurchaseFolios((await import('./server/runtime.mjs')).env.DB);
   console.log('[REPINDSA] Nomenclatura revisada. Folios actualizados: '+folios.renamed+'.');
   stage = 'preparación de Next.js';
   console.log('[REPINDSA] Preparando Next.js.');
