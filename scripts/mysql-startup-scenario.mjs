@@ -1,3 +1,4 @@
+import {exerciseVariableRouting} from './variable-routing-startup-scenario.mjs';
 import {readFile,writeFile} from 'node:fs/promises';
 import {exerciseRoutingSettingsUI} from './routing-settings-browser-scenario.mjs';
 import {createMySQLDatabase} from '../server/mysql.mjs';
@@ -67,6 +68,7 @@ try{
  await exerciseDirectorAccess(request,cookie,origin);
  await exerciseViaticos(request,cookie,origin);
  await exerciseFuel(request,cookie,origin);
+ await exerciseVariableRouting(request,cookie,origin,materialData);
  await exerciseWorkspaceAccess(request,cookie,origin);
  if(process.env.RUN_BROWSER_TESTS==='1'){await exerciseRoutingSettingsUI('http://127.0.0.1:'+port);await exerciseWorkspacePicker('http://127.0.0.1:'+port);await exerciseFuelUI('http://127.0.0.1:'+port);await exerciseViaticosUI('http://127.0.0.1:'+port);await exerciseDirectorPanelUI('http://127.0.0.1:'+port);await exerciseResponsiveUI('http://127.0.0.1:'+port);await exercisePurchaseReceiptUI('http://127.0.0.1:'+port);}
  const audit=await request('/api/audit?from=2020-01-01&to=2099-01-01&q=prueba',{headers:{Cookie:cookie}});assert.equal(audit.status,200);assert.ok(Array.isArray((await audit.json()).entries));

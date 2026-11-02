@@ -4,12 +4,12 @@
 
 En Configuración → Usuarios, niveles y permisos:
 
-1. En cada solicitante, elige «Jefe directo · Visto bueno de Viáticos». Debe ser otro usuario activo con acceso a Viáticos y permiso de visto bueno o autorización.
+1. Configura la ruta de cada solicitante en «Rutas de solicitudes de este usuario». Si incluye visto bueno, elige «Jefe directo · Visto bueno de Viáticos»: otro usuario activo con acceso y permiso de visto bueno o autorización. Consulta [rutas por usuario](rutas-solicitudes.md).
 2. En Responsables de flujos, elige al Director de Administración y Finanzas y los alternos en «Viáticos · Autorización de Administración y Finanzas».
 3. Concede al aplicador el permiso de registrar pagos en Tesorería. Los permisos de administración de usuarios y configuración siguen reservados al Administrador.
 4. Pulsa **Guardar flujo de Viáticos y responsables** al final. Este botón guarda también los autorizadores marcados; el aviso de cambios pendientes desaparece sólo después de confirmar el guardado. Al volver a abrir la configuración, las selecciones deben mantenerse.
 
-El jefe directo y el autorizador final deben ser personas distintas del solicitante y entre sí. Los alternos son equivalentes: la primera autorización válida cierra la etapa, no se requieren todas las firmas. El solicitante no elige autorizador. Los responsables se asignan desde la configuración y cualquiera de los autorizadores habilitados puede resolver la etapa. Los pendientes de visto bueno y autorización usan los autorizadores financieros explícitamente configurados y sus permisos vigentes. Al actuar se guarda esa asignación y su revisión de configuración en el historial; las aprobaciones y pagos anteriores conservan sus responsables. El jefe directo que dio visto bueno no se cambia. No se permite retirar facultades o desactivar a un responsable mientras tenga pendientes asignados.
+Cuando la ruta incluye visto bueno y autorización, el jefe directo y el autorizador final deben ser personas distintas del solicitante y entre sí. Las rutas directas registran las etapas exentas por configuración, conservando la revisión fiscal de las comprobaciones en aplicación. Los alternos son equivalentes: la primera autorización válida cierra la etapa, no se requieren todas las firmas. El solicitante no elige autorizador. Los responsables se asignan desde la configuración y cualquiera de los autorizadores habilitados puede resolver la etapa. Los pendientes de visto bueno y autorización usan los autorizadores financieros explícitamente configurados y sus permisos vigentes. Al actuar se guarda esa asignación y su revisión de configuración en el historial; las aprobaciones y pagos anteriores conservan sus responsables. El jefe directo que dio visto bueno no se cambia. No se permite retirar facultades o desactivar a un responsable mientras tenga pendientes asignados.
 
 ## Flujo y bandejas
 
