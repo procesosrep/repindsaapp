@@ -17,3 +17,5 @@ La aplicación corresponde al usuario con permiso de pagos. Todo movimiento mone
 Materiales directo permite que Almacén reciba la solicitud, sin registrar una autorización ficticia de Gerencia. Las cantidades, compras, existencias, entregas parciales, confirmación del solicitante y bloqueo por recepciones vencidas conservan sus validaciones.
 
 Las opciones se toman del usuario autenticado al enviar una solicitud nueva o un borrador. No se toman del beneficiario ni de campos enviados por el cliente. Cada solicitud conserva su ruta y el origen de configuración. Cambiar la ruta de un usuario no salta etapas de solicitudes ya enviadas ni modifica registros finalizados.
+
+El seguimiento de Materiales muestra la etapa actual. Una ruta directa registra la solicitud, indica que no requiere autorización y activa el paso 3, «Entrega de Almacén». La entrega sólo queda completada al registrar todas las cantidades y la recepción sólo al confirmarla el solicitante. No se simulan firmas ni recepciones por el nivel del usuario.
