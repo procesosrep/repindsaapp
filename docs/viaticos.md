@@ -7,6 +7,7 @@ En Configuración → Usuarios, niveles y permisos:
 1. En cada solicitante, elige «Jefe directo · Visto bueno de Viáticos». Debe ser otro usuario activo con acceso a Viáticos y permiso de visto bueno o autorización.
 2. En Responsables de flujos, elige al Director de Administración y Finanzas y los alternos en «Viáticos · Autorización de Administración y Finanzas».
 3. Concede al aplicador el permiso de registrar pagos en Tesorería. Los permisos de administración de usuarios y configuración siguen reservados al Administrador.
+4. Pulsa **Guardar flujo de Viáticos y responsables** al final. Este botón guarda también los autorizadores marcados; el aviso de cambios pendientes desaparece sólo después de confirmar el guardado. Al volver a abrir la configuración, las selecciones deben mantenerse.
 
 El jefe directo y el autorizador final deben ser personas distintas del solicitante y entre sí. Los alternos son equivalentes: la primera autorización válida cierra la etapa, no se requieren todas las firmas. El solicitante puede indicar un autorizador preferente, pero cualquiera de los autorizadores configurados puede resolver; esa preferencia no limita la facultad de los demás. El expediente conserva los responsables asignados al enviarse; cambiar la configuración no reescribe su historial. No se permite retirar facultades o desactivar a un responsable mientras tenga pendientes asignados.
 
@@ -35,3 +36,5 @@ Se conservan las rutas técnicas `/caja`, el identificador de permiso `box` y lo
 ## Verificación
 
 Pruebas HTTP con MySQL aislado para secuencia, permisos, alternos concurrentes, esperas, decisiones masivas, declaración sin soporte, comprobación parcial, excedentes, devoluciones, cierre, folios/UUID repetidos y reintentos de pago. Navegador a 320, 390, 667 horizontal, 768 y 1440 px para bandejas, acciones masivas, carga de pago, captura y protección de revisiones. Los datos de navegador son simulados; las transacciones se verifican por separado con MySQL.
+
+La configuración habitual no muestra los controles de pruebas de recepción ni el autorizador del flujo antiguo. Las asignaciones históricas se conservan internamente. Los perfiles y niveles personalizados de Dirección se validan con los mismos permisos efectivos al configurar y al enviar. La API identifica esta revisión con la cabecera `X-REPINDSA-Viaticos-Flow: 4`; el antiguo aviso «Configura al Director de Administración y Finanzas y sus autorizadores alternos en el flujo de Viáticos» pertenece a una versión anterior y requiere actualizar el entorno que atiende la solicitud. Vista previa y publicado se actualizan por separado.

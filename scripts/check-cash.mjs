@@ -242,3 +242,20 @@ console.log('Warehouse purchase creation passed: materials denied, migrated perm
 
 // A receipt linked to an advance and proof follows either authorized source, including a different reviewer.
 const fuelParent={id:'receipt-parent',kind:'cashAdvance',viaticosVersion:3,status:'Aprobada',createdBy:'usuario:owner',viaticosReviewer:'previous-chief',viaticosAuthorizers:['finance']},fuelChild={id:'receipt-child',kind:'cashProof',viaticosVersion:3,status:'Aprobada',createdBy:'usuario:owner',viaticosReviewer:'current-chief',viaticosAuthorizers:['finance']};eq(server.cashOwned({kind:'cashMovement',viaticosVersion:3,advanceId:fuelParent.id,proofId:fuelChild.id},{username:'current-chief',email:'usuario:current-chief',userId:'local:current-chief',profile:{role:'Gerente',rights:defaultAccess('Gerente')},rows:[fuelParent,fuelChild]}),true);
+
+// Saving the whole routing form must persist the financial checkboxes too.
+localSession=null;
+for(const [username,role,level]of [['settings-finance','Dirección','Dirección'],['settings-director','Operaciones','Director general']]){
+ const response=await supportCall('saveUser',{data:{username,name:username,role,level,password:'Temporary.Test.2026!',active:true}});assert.equal(response.status,200,(await response.json()).error);
+}
+const legacyRouting=await get('access-routing');if(legacyRouting){await db.prepare('UPDATE records SET payload=? WHERE id=?').bind(JSON.stringify({...legacyRouting,boxApprover:'obsolete-hidden-legacy-user'}),'access-routing').run();}
+let routingSettings=(await(await supportCall('users')).json()).routing;
+let combinedSave=await supportCall('saveRouting',{data:{...routingSettings,viaticosAuthorizers:['settings-finance','settings-director']}});eq(combinedSave.status,200);
+routingSettings=(await(await supportCall('users')).json()).routing;eq(routingSettings.viaticosAuthorizers,['settings-finance','settings-director']);eq(routingSettings.boxApprover,legacyRouting?'obsolete-hidden-legacy-user':undefined);
+eq((await supportCall('saveViaticosRouting',{authorizers:['settings-director'],revision:routingSettings.revision})).status,200);
+const beforeInvalid=(await(await supportCall('users')).json()).routing;
+eq((await supportCall('saveRouting',{data:{...beforeInvalid,viaticosAuthorizers:['nonexistent-authorizer']}})).status,400);
+eq((await(await supportCall('users')).json()).routing.viaticosAuthorizers,['settings-director']);
+eq((await supportCall('saveRouting',{data:{...beforeInvalid,viaticosAuthorizers:[]}})).status,400);
+eq((await supportCall('saveRouting',{data:{...beforeInvalid,revision:beforeInvalid.revision-1,viaticosAuthorizers:['settings-finance']}})).status,409);
+console.log('Unified financial routing passed: one save persists all authorizers, custom Director levels use the same permissions, invalid choices roll back and stale settings cannot overwrite newer selections.');
