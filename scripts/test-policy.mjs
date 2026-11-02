@@ -28,4 +28,4 @@ const richTextCode=ts.transpile(fs.readFileSync('app/rich-text.ts','utf8').repla
 
 const documentPolicyText=ts.transpile(fs.readFileSync('app/document-policy.ts','utf8').replace(/^import .*;$/gm,'').replace(/export /g,''),{target:ts.ScriptTarget.ES2022});Object.assign(globalThis,new Function(documentPolicyText+';return {canAuthorDocument,documentParticipant,officialDocument,documentPending}')());
 
-const viaticosText=ts.transpile(fs.readFileSync('app/viaticos-policy.ts','utf8').replace(/^import .*;$/gm,'').replace(/export /g,''),{target:ts.ScriptTarget.ES2022});Object.assign(globalThis,new Function(viaticosText+';return {checkedViaticosAuthorizers,recoveredViaticosRouting,viaticosVisible,viaticosCanDecide,invoiceKeys,viaticosTaxLabel,expenseDeclaration}')());
+const viaticosText=ts.transpile(fs.readFileSync('app/viaticos-policy.ts','utf8').replace(/^import .*;$/gm,'').replace(/export /g,''),{target:ts.ScriptTarget.ES2022});Object.assign(globalThis,new Function(viaticosText+';return {currentViaticosAssignment,checkedViaticosAuthorizers,recoveredViaticosRouting,viaticosVisible,viaticosCanDecide,invoiceKeys,viaticosTaxLabel,expenseDeclaration}')());
