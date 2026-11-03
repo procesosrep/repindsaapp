@@ -1,3 +1,4 @@
+import {exercisePartialPurchases} from './partial-purchase-startup-scenario.mjs';
 import assert from 'node:assert/strict';import {randomBytes,randomUUID} from 'node:crypto';import mysql from 'mysql2/promise';
 export async function exerciseSimplePurchases(request,adminCookie,origin,catalog){
  const send=(path,body,cookie=adminCookie)=>request(path,{method:'POST',headers:{'Content-Type':'application/json',Origin:origin,Cookie:cookie},body:JSON.stringify(body)});
@@ -26,5 +27,6 @@ export async function exerciseSimplePurchases(request,adminCookie,origin,catalog
  linked=(await ok(await send('/api/purchase-workspace',{action:'receive',id:linked.id,revision:linked.revision,record:{lines:linked.lines.map(l=>({...l,received:2}))}},cookies['stock-receiver']))).record;
  material=(await ok(await request('/api/material-workspace?catalog=0',{headers:{Cookie:cookies['simple-warehouse']}}))).records.find(r=>r.id===material.id);material=(await ok(await send('/api/cash',{action:'materialSupply',supplyAll:true,record:material},cookies['simple-warehouse']))).record;const delivery=material.deliveries.find(d=>d.status==='Pendiente');assert(delivery);material=(await ok(await send('/api/material-receipts',{action:'confirm',id:material.id,revision:material.revision,deliveryId:delivery.id},cookies['simple-requester']))).record;assert.equal(material.status,'Completada y confirmada');assert.equal(material.lines[0].delivered,2);
  console.log('Buyer complete MySQL cycle passed: repaired legacy workspace entry → material request → authorization → same-folio purchase → quotation → buying → warehouse delivery/receipt → project delivery → requester confirmation.');
+ await exercisePartialPurchases(request,adminCookie,origin,catalog,cookies);
  console.log('Simple purchases HTTP passed: existing buyer flags normalize without password changes, default profile works, purchase-only queue, all three buyer stages, buyer cannot receive, and warehouse can receive without creation permission.');
 }

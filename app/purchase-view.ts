@@ -2,6 +2,7 @@ type R=Record<string,any>;
 export function purchaseTrackingOptions(r:R):string[]{
  const state=r.procurementStatus||'Emitida';if(r.status==='Borrador'||r.status==='Recibida')return [];
  if(r.standalone&&state==='Enviado a sitio')return ['Entregado a almacén'];
+ if(['Entregado a almacén','Enviado a sitio'].includes(state)&&(r.lines||[]).some((l:R)=>Number(l.purchasedQuantity||0)<Number(l.quantity)))return ['Comprado'];
  if(state==='Emitida')return ['Cotizado'];if(state==='Cotizado')return ['Comprado'];
  if(state==='Comprado')return [...(!(r.lines||[]).some((l:R)=>Number(l.siteDispatchedQuantity||0)>0)?['Entregado a almacén']:[]),...(!r.standalone?['Enviado a sitio']:[]),'Comprado'];
  return [];

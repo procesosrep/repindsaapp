@@ -50,3 +50,5 @@ La captura de la comprobación solicita el folio de factura y no requiere captur
 El control de saldos por tarjeta se explica en [Combustible con Intelyvale](intelyvale.md).
 
 Al enviar una comprobación se exige folio de factura por partida, tanto deducible como no deducible, con la única excepción de Combustible. Las comprobaciones históricas ya enviadas conservan sus datos. La revisión masiva presenta cada solicitud en un desplegable con folio, persona, importe y número de partidas; los soportes y las verificaciones fiscales se consultan dentro de esa solicitud. Los datos y revisiones seleccionados se conservan mientras se confirma la decisión.
+
+Las listas de Viáticos muestran veinte solicitudes por página y permiten ordenar desde los encabezados, incluidas fechas e importes, sin usar filtros. La selección masiva se limita a la página visible y se limpia al cambiar de página, orden o búsqueda; la confirmación mantiene la copia de los datos seleccionados para evitar autorizar una revisión distinta.

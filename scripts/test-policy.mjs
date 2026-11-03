@@ -20,6 +20,7 @@ const projectSeed=JSON.parse(fs.readFileSync('app/active-project-seed.json','utf
 globalThis.ensureAudit=async()=>{};
 globalThis.provisionPurchaseManager=async()=>{};
 const cycleModel=ts.transpile(fs.readFileSync('app/material-model.ts','utf8').replace(/^import .*;$/gm,'').replace(/export /g,''),{target:ts.ScriptTarget.ES2022});Object.assign(globalThis,new Function(cycleModel+';return {materialStatus}')());
+const progressCode=ts.transpile(fs.readFileSync('app/purchase-progress.ts','utf8').replace(/export /g,''),{target:ts.ScriptTarget.ES2022});Object.assign(globalThis,new Function(progressCode+';return {purchaseLineProgress,purchaseProgress,purchaseFollowup}')());
 const cycleCode=ts.transpile(fs.readFileSync('app/purchase-cycle.ts','utf8').replace(/^import .*;$/gm,'').replace(/export /g,''),{target:ts.ScriptTarget.ES2022});Object.assign(globalThis,new Function(cycleCode+';return {purchaseReceiptReady,receivePurchase,dispatchPurchaseToSite,purchaseCycleStatus}')());
 const trackingCode=ts.transpile(fs.readFileSync('app/purchase-tracking.ts','utf8').replace(/^import .*;$/gm,'').replace(/export /g,''),{target:ts.ScriptTarget.ES2022});Object.assign(globalThis,new Function(trackingCode+';return {updatePurchaseTracking}')());
 globalThis.validCashDate=new Function(ts.transpile(fs.readFileSync('app/cash-model.ts','utf8').replace(/^import .*;$/gm,'').replace(/export /g,''),{target:ts.ScriptTarget.ES2022})+';return validCashDate')();globalThis.materialToday=()=>new Date().toLocaleDateString('en-CA',{timeZone:'America/Mexico_City'});

@@ -1,3 +1,4 @@
+import {exerciseRequestTables} from './request-tables-browser-scenario.mjs';
 import {exerciseVariableRouting} from './variable-routing-startup-scenario.mjs';
 import {readFile,writeFile} from 'node:fs/promises';
 import {exerciseRoutingSettingsUI} from './routing-settings-browser-scenario.mjs';
@@ -70,7 +71,7 @@ try{
  await exerciseFuel(request,cookie,origin);
  await exerciseVariableRouting(request,cookie,origin,materialData);
  await exerciseWorkspaceAccess(request,cookie,origin);
- if(process.env.RUN_BROWSER_TESTS==='1'){await exerciseRoutingSettingsUI('http://127.0.0.1:'+port);await exerciseWorkspacePicker('http://127.0.0.1:'+port);await exerciseFuelUI('http://127.0.0.1:'+port);await exerciseViaticosUI('http://127.0.0.1:'+port);await exerciseDirectorPanelUI('http://127.0.0.1:'+port);await exerciseResponsiveUI('http://127.0.0.1:'+port);await exercisePurchaseReceiptUI('http://127.0.0.1:'+port);}
+ if(process.env.RUN_BROWSER_TESTS==='1'){await exerciseRoutingSettingsUI('http://127.0.0.1:'+port);await exerciseWorkspacePicker('http://127.0.0.1:'+port);await exerciseFuelUI('http://127.0.0.1:'+port);await exerciseViaticosUI('http://127.0.0.1:'+port);await exerciseDirectorPanelUI('http://127.0.0.1:'+port);await exerciseResponsiveUI('http://127.0.0.1:'+port);await exerciseRequestTables('http://127.0.0.1:'+port);await exercisePurchaseReceiptUI('http://127.0.0.1:'+port);}
  const audit=await request('/api/audit?from=2020-01-01&to=2099-01-01&q=prueba',{headers:{Cookie:cookie}});assert.equal(audit.status,200);assert.ok(Array.isArray((await audit.json()).entries));
  const form=new FormData();const bytes=new Uint8Array([255,216,255,217]);form.set('quoteId','smoke-draft');form.set('file',new File([bytes],'test.jpg',{type:'image/jpeg'}));
  const upload=await request('/api/quote-assets',{method:'POST',headers:{Cookie:cookie,Origin:origin},body:form});assert.equal(upload.status,200);const asset=await upload.json();
