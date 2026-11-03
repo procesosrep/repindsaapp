@@ -48,3 +48,5 @@ Los anticipos y comprobaciones utilizan un consecutivo anual compartido: `V-2026
 La captura de la comprobación solicita el folio de factura y no requiere capturar UUID ni los datos del viaje. El UUID que contenga un XML adjunto sigue sirviendo internamente para detectar facturas duplicadas. Se conserva la revisión fiscal; un folio capturado no convierte automáticamente el gasto en deducible. El campo «¿Quién pagó?» se retira de la captura; se conservan los datos históricos y se excluye el combustible Intelyvale de los reembolsos.
 
 El control de saldos por tarjeta se explica en [Combustible con Intelyvale](intelyvale.md).
+
+Al enviar una comprobación se exige folio de factura por partida, tanto deducible como no deducible, con la única excepción de Combustible. Las comprobaciones históricas ya enviadas conservan sus datos. La revisión masiva presenta cada solicitud en un desplegable con folio, persona, importe y número de partidas; los soportes y las verificaciones fiscales se consultan dentro de esa solicitud. Los datos y revisiones seleccionados se conservan mientras se confirma la decisión.
