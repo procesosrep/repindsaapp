@@ -1,0 +1,5 @@
+import {cents} from './cash-model';
+import {cashParentLock} from './cash-server';
+import {cardId} from './intelyvale';
+type R=Record<string,any>;
+export function changeIntelyvaleBalance(c:R,username:string,amount:number,actor:string,reason:string){const card=c.rows.find((x:R)=>x.id===cardId(username)&&x.configType==='intelyvaleCard');if(!card||!card.active)throw Error('El Administrador debe configurar una tarjeta Intelyvale activa para '+username+'.');const balance=cents(Number(card.balance||0)+amount);if(!Number.isFinite(balance)||balance<-.009)throw Error('Saldo Intelyvale insuficiente. Registra primero la transferencia de saldo.');const next={...card,balance:Math.max(0,balance),lastMovementAt:new Date().toISOString(),history:[...(card.history||[]),{date:new Date().toISOString(),actor,action:reason,amount,balance}]},lock=cashParentLock(c.db,card,actor,reason);lock[1]=c.db.prepare('UPDATE records SET payload=?,revision=revision+1,updated=? WHERE id=? AND revision=?').bind(JSON.stringify(next),next.lastMovementAt,card.id,card.revision);return lock;}

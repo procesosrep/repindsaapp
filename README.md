@@ -185,3 +185,5 @@ El menú y la cabecera de Viáticos muestran **V1.1** (paquete `1.1.0`). La vers
 Consulta [las rutas configurables por usuario de Materiales y Viáticos](docs/rutas-solicitudes.md). Sólo el Administrador puede modificarlas; se mantiene la identificación V1.1.
 
 La atención tabular de Compras, los detalles opcionales por partida y la continuidad del folio se describen en [Compras por partida](docs/compras-por-partida.md).
+
+El registro de cargas y consumos de combustible por usuario se documenta en [Intelyvale](docs/intelyvale.md).

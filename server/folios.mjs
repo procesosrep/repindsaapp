@@ -1,6 +1,8 @@
+import {isTravelKind,nextTravelFolio,travelYear} from './travel-folios.mjs';
 import {randomUUID} from 'node:crypto';
 import {folioSpec,folioKey,formatFolio} from './folio-policy.mjs';
 export async function nextFolio(db,kind,record={}){
+ if(isTravelKind(kind))return nextTravelFolio(db,travelYear(record));
  const spec=folioSpec(kind,record),year=new Date().toLocaleDateString('en-CA',{timeZone:'America/Mexico_City'}).slice(0,4);
  const key=spec?folioKey(spec):'project:'+year;
  for(let attempt=0;attempt<1000;attempt++){
@@ -19,7 +21,7 @@ export async function migrateFolios(db){
  // Reserve every existing new-style identifier before allocating replacements.
  for(const {record:r} of parsed){if(!/^(FR|PR|PO)-(COM|OPE|SUM|RHU|FIN|TRA)-\d{5,}$/.test(r.folio||''))continue;const [prefix,cycle,number]=r.folio.split('-'),key=folioKey({prefix,cycle}),n=Number(number);await db.prepare('INSERT OR IGNORE INTO workflow_links(root,project_id) VALUES(?,?)').bind('reserved-folio:'+r.folio,r.id).run();await db.prepare('INSERT INTO sequences(key,value) VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=CASE WHEN value<? THEN ? ELSE value END').bind(key,n,n,n).run();}
  const mapping=new Map(),replacement=new Map();
- for(const {record:r}of parsed){if(r.kind==='project'||!r.folio)continue;const spec=folioSpec(r.kind,r),pattern=new RegExp('^'+spec.prefix+'-'+spec.cycle+'-\\d{5,}$');if(pattern.test(r.folio))continue;const next=await nextFolio(db,r.kind,r);if(!mapping.has(r.folio))mapping.set(r.folio,next);replacement.set(r.id,next);}
+ for(const {record:r,updated}of parsed){if(r.kind==='project'||!r.folio||isTravelKind(r.kind)&&/^V-\d{4}-\d{5,}$/.test(r.folio))continue;const spec=folioSpec(r.kind,r),pattern=new RegExp('^'+spec.prefix+'-'+spec.cycle+'-\\d{5,}$');if(pattern.test(r.folio))continue;const next=await nextFolio(db,r.kind,{...r,updatedAt:updated});if(!mapping.has(r.folio))mapping.set(r.folio,next);replacement.set(r.id,next);}
  const skip=new Set(['body','documentHtml','history','previousFolios','invoiceFolio','uuid','reference','serviceReference','rp']);
  const replace=value=>Array.isArray(value)?value.map(replace):value&&typeof value==='object'?Object.fromEntries(Object.entries(value).map(([key,v])=>[key,skip.has(key)?v:replace(v)])):typeof value==='string'&&mapping.has(value)?mapping.get(value):value;
  const statements=[];
