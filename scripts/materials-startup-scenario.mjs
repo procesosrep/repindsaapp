@@ -8,7 +8,7 @@ export async function exerciseMaterials(request,adminCookie,adminUsername,origin
   ['phase-requester','Supervisor',{materials:true,requestMaterials:true}],
   ['phase-approver','Gerente',{materials:true,approveMaterials:true}],
   ['phase-alternate','Gerente',{materials:true,approveMaterials:true}],
-  ['phase-warehouse','Almacén',{materials:true,warehouse:true,requestPurchase:true}],
+  ['phase-warehouse','Almacén',{materials:true,warehouse:true,receiptResolve:true,deliveryPrint:true,deliveryEvidence:true,requestPurchase:true}],
  ];
  assert.equal((await send('/api/support',{action:'saveLevel',data:{name:'Invalid materials template',baseRole:'Supervisor',rights:{requestMaterials:true,materials:false}}},adminCookie)).status,400);
  await success(await send('/api/support',{action:'saveLevel',data:{name:'Admin template test',baseRole:'Administrador',rights:{}}},adminCookie));

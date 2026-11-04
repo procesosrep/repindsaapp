@@ -1,0 +1,5 @@
+import {cashContext} from '../../cash-server';
+import {hasAccess} from '../../access-policy';
+import {featureGuard} from '../../feature-server';
+import {saveWarehouseArticle} from '../../warehouse-catalog';
+export async function POST(req:Request){const guard=await featureGuard(req);if(guard)return guard;const c=await cashContext(req,'materials');if(!c||!hasAccess(c.profile,'requestMaterials')||!hasAccess(c.profile,'catalogCreate'))return Response.json({error:'Sin permiso para agregar artículos.'},{status:403});if(req.headers.get('Origin')&&req.headers.get('Origin')!==new URL(process.env.APP_ORIGIN||req.url).origin)return Response.json({error:'Origen no permitido.'},{status:403});try{const {article:d}=await req.json();const article=await saveWarehouseArticle(c.db,{description:d.description,category:d.category||'Otros',unit:d.unit,type:'Material',specification:d.specification,brand:d.brand,sku:d.sku,partNumber:d.partNumber},c.email);return Response.json({article});}catch(e:any){return Response.json({error:e.message,article:e.article},{status:e.status||(/duplicate|UNIQUE|constraint/i.test(e.message)?409:400)})}}

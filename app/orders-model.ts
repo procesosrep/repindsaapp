@@ -1,0 +1,25 @@
+type R=Record<string,any>;
+export const orderMoney=(n:any)=>Math.round(Number(n)*100)/100;
+export const orderToday=()=>new Date().toLocaleDateString('en-CA',{timeZone:'America/Mexico_City'});
+export function supplierValue(data:R){
+ const fields=['name','rfc','address','contact','email','phone','bank','account','clabe','beneficiary','country'];const value:R={};
+ for(const key of fields)value[key]=String(data[key]||'').trim().slice(0,key==='address'?600:160);
+ value.rfc=value.rfc.toUpperCase().replace(/[\s-]/g,'');value.clabe=value.clabe.replace(/\s/g,'');value.country=value.country||'México';
+ if(!value.name||!value.address)throw Error('Completa razón social y domicilio del proveedor.');
+ if(value.rfc&&value.country==='México'&&!/^[A-ZÑ&]{3,4}\d{6}[A-Z\d]{3}$/.test(value.rfc))throw Error('Revisa el RFC del proveedor.');
+ if(value.email&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.email))throw Error('Revisa el correo del proveedor.');
+ if(value.clabe&&!/^\d{18}$/.test(value.clabe))throw Error('La CLABE debe contener 18 dígitos.');
+ value.status=data.status==='Inactivo'?'Inactivo':'Activo';return value;
+}
+export function orderTotals(lines:R[]){let subtotal=0,tax=0;for(const l of lines){const net=orderMoney(Number(l.quantity)*Number(l.unitPrice));subtotal=orderMoney(subtotal+net);tax=orderMoney(tax+orderMoney(net*Number(l.taxRate??16)/100));}return {subtotal,tax,total:orderMoney(subtotal+tax)};}
+export function orderValue(data:R,submit=false){
+ const clean=(v:any,n=500)=>String(v||'').trim().slice(0,n);if(!Array.isArray(data.lines)||!data.lines.length||data.lines.length>100)throw Error('Agrega entre 1 y 100 partidas.');
+ const lines=data.lines.map((l:R,i:number)=>{const quantity=Number(l.quantity),unitPrice=Number(l.unitPrice),taxRate=Number(l.taxRate??16);if([l.quantity,l.unitPrice,l.taxRate].some(v=>typeof v==='boolean')||!clean(l.description)||!clean(l.unit)||!Number.isFinite(quantity)||quantity<=0||quantity>1e9||!Number.isFinite(unitPrice)||unitPrice<0||unitPrice>1e9||!Number.isFinite(taxRate)||taxRate<0||taxRate>100)throw Error('Revisa descripción, cantidad, unidad, precio e IVA de la partida '+(i+1)+'.');return {id:clean(l.id,100)||crypto.randomUUID(),description:clean(l.description,1500),requisition:clean(l.requisition,100),sku:clean(l.sku,120),quantity,unit:clean(l.unit,40),unitPrice:orderMoney(unitPrice),taxRate,category:clean(l.category,100),sourceLineId:clean(l.sourceLineId,100)};});
+ if(new Set(lines.map((l:R)=>l.id)).size!==lines.length)throw Error('Las partidas deben tener identificadores distintos.');
+ const totals=orderTotals(lines);if(totals.total>1e12||!Number.isFinite(totals.total)||submit&&totals.total<=0)throw Error('Revisa el importe total del pedido.');
+ const expectedDeliveryDate=clean(data.expectedDeliveryDate,10);if(expectedDeliveryDate&&(!/^\d{4}-\d{2}-\d{2}$/.test(expectedDeliveryDate)||!Number.isFinite(Date.parse(expectedDeliveryDate))||new Date(expectedDeliveryDate).toISOString().slice(0,10)!==expectedDeliveryDate))throw Error('Revisa la fecha de entrega.');
+ if(submit&&(!clean(data.paymentTerms)||!clean(data.use)))throw Error('Indica condiciones de pago y uso del pedido.');
+ return {sourcePurchaseId:clean(data.sourcePurchaseId,100),requestedBy:clean(data.requestedBy,150),supplierId:clean(data.supplierId,100),projectId:clean(data.projectId,100),use:clean(data.use,1200),costCenter:clean(data.costCenter,300),deliveryTo:clean(data.deliveryTo),deliveryTime:clean(data.deliveryTime,300),expectedDeliveryDate,paymentTerms:clean(data.paymentTerms),currency:data.currency==='USD'?'USD':'MXN',notes:clean(data.notes,2000),invoiceFolio:clean(data.invoiceFolio,100),lines,...totals};
+}
+export function orderBalance(order:R){return orderMoney(Number(order.total)-(order.payments||[]).reduce((n:number,p:R)=>n+Number(p.amount),0));}
+export function orderAmountWords(amount:number,currency='MXN'){const small=['CERO','UNO','DOS','TRES','CUATRO','CINCO','SEIS','SIETE','OCHO','NUEVE','DIEZ','ONCE','DOCE','TRECE','CATORCE','QUINCE','DIECISÉIS','DIECISIETE','DIECIOCHO','DIECINUEVE','VEINTE','VEINTIUNO','VEINTIDÓS','VEINTITRÉS','VEINTICUATRO','VEINTICINCO','VEINTISÉIS','VEINTISIETE','VEINTIOCHO','VEINTINUEVE'];const tens=['','','','TREINTA','CUARENTA','CINCUENTA','SESENTA','SETENTA','OCHENTA','NOVENTA'];const hundred=['','CIENTO','DOSCIENTOS','TRESCIENTOS','CUATROCIENTOS','QUINIENTOS','SEISCIENTOS','SETECIENTOS','OCHOCIENTOS','NOVECIENTOS'];const words=(n:number):string=>{if(n<30)return small[n];if(n<100)return tens[Math.floor(n/10)]+(n%10?' Y '+words(n%10):'');if(n===100)return 'CIEN';if(n<1000)return hundred[Math.floor(n/100)]+(n%100?' '+words(n%100):'');if(n<1e6)return (n<2000?'MIL':words(Math.floor(n/1000))+' MIL')+(n%1000?' '+words(n%1000):'');return (n<2e6?'UN MILLÓN':words(Math.floor(n/1e6))+' MILLONES')+(n%1e6?' '+words(n%1e6):'');};const cents=Math.round(amount*100);return words(Math.floor(cents/100)).replace(/UNO$/,'UN')+(currency==='USD'?' DÓLARES ':' PESOS ')+String(cents%100).padStart(2,'0')+'/100 '+(currency==='USD'?'USD':'M.N.');}

@@ -1,3 +1,7 @@
+import {exerciseOrdersUI} from './orders-browser-scenario.mjs';
+import {exerciseOrders} from './orders-startup-scenario.mjs';
+import {exerciseInventoryUI} from './inventory-browser-scenario.mjs';
+import {exerciseInventory} from './inventory-startup-scenario.mjs';
 import {exerciseRequestTables} from './request-tables-browser-scenario.mjs';
 import {exerciseVariableRouting} from './variable-routing-startup-scenario.mjs';
 import {readFile,writeFile} from 'node:fs/promises';
@@ -71,7 +75,8 @@ try{
  await exerciseFuel(request,cookie,origin);
  await exerciseVariableRouting(request,cookie,origin,materialData);
  await exerciseWorkspaceAccess(request,cookie,origin);
- if(process.env.RUN_BROWSER_TESTS==='1'){await exerciseRoutingSettingsUI('http://127.0.0.1:'+port);await exerciseWorkspacePicker('http://127.0.0.1:'+port);await exerciseFuelUI('http://127.0.0.1:'+port);await exerciseViaticosUI('http://127.0.0.1:'+port);await exerciseDirectorPanelUI('http://127.0.0.1:'+port);await exerciseResponsiveUI('http://127.0.0.1:'+port);await exerciseRequestTables('http://127.0.0.1:'+port);await exercisePurchaseReceiptUI('http://127.0.0.1:'+port);}
+ await exerciseInventory(request,cookie,origin);await exerciseOrders(request,cookie,origin);
+ if(process.env.RUN_BROWSER_TESTS==='1'){await exerciseRoutingSettingsUI('http://127.0.0.1:'+port);await exerciseWorkspacePicker('http://127.0.0.1:'+port);await exerciseFuelUI('http://127.0.0.1:'+port);await exerciseViaticosUI('http://127.0.0.1:'+port);await exerciseDirectorPanelUI('http://127.0.0.1:'+port);await exerciseResponsiveUI('http://127.0.0.1:'+port);await exerciseRequestTables('http://127.0.0.1:'+port);await exerciseInventoryUI('http://127.0.0.1:'+port);await exerciseOrdersUI('http://127.0.0.1:'+port);await exercisePurchaseReceiptUI('http://127.0.0.1:'+port);}
  const audit=await request('/api/audit?from=2020-01-01&to=2099-01-01&q=prueba',{headers:{Cookie:cookie}});assert.equal(audit.status,200);assert.ok(Array.isArray((await audit.json()).entries));
  const form=new FormData();const bytes=new Uint8Array([255,216,255,217]);form.set('quoteId','smoke-draft');form.set('file',new File([bytes],'test.jpg',{type:'image/jpeg'}));
  const upload=await request('/api/quote-assets',{method:'POST',headers:{Cookie:cookie,Origin:origin},body:form});assert.equal(upload.status,200);const asset=await upload.json();
@@ -80,6 +85,7 @@ try{
  await stop();
  const migrationDB=createMySQLDatabase(env);try{const now=new Date().toISOString(),fixtures=[{id:'migration-old-advance',kind:'cashAdvance',folio:'RP-AC-2026-99998',beneficiary:'Persona histórica',status:'Aprobada'},{id:'migration-old-proof',kind:'cashProof',folio:'RP-CP-2026-99998',advanceId:'migration-old-advance',sourceFolio:'RP-AC-2026-99998',status:'Aprobada'},{id:'migration-old-procedure',kind:'controlledDocument',type:'Procedimiento',cycleCode:'SUM',folio:'RP-DO-2026-99998',status:'Vigente'}];await migrationDB.batch(fixtures.map(r=>migrationDB.prepare('INSERT INTO records(id,kind,payload,revision,updated) VALUES(?,?,?,1,?)').bind(r.id,r.kind,JSON.stringify(r),now)));await migrationDB.prepare('DELETE FROM app_migrations WHERE name=?').bind('folio-nomenclature-v2').run();await migrationDB.prepare('DELETE FROM app_migrations WHERE name=?').bind('travel-folios-year-v1').run();await start();const get=async id=>JSON.parse((await migrationDB.prepare('SELECT payload FROM records WHERE id=?').bind(id).first()).payload),a=await get('migration-old-advance'),p=await get('migration-old-proof');assert.match(a.folio,/^V-\d{4}-\d{5,}$/);assert.equal(p.advanceId,a.id);assert.equal(p.sourceFolio,a.folio);assert.deepEqual(a.previousFolios,['RP-AC-2026-99998']);assert.match((await get('migration-old-procedure')).folio,/^PR-SUM-/);assert((await migrationDB.prepare('SELECT id FROM folio_rename_backups WHERE id=?').bind(a.id).first()));console.log('MySQL folio migration passed: old records renamed before serving, linked IDs and references retained, original payloads backed up.');}finally{await migrationDB.client.close();}
  cookie=await login(nextPassword);
+ const savedOrders=await (await request('/api/orders',{headers:{Cookie:cookie}})).json();assert(savedOrders.orders.some(r=>r.status==='Pagado'&&/^P-\d{4}-\d{5}$/.test(r.folio)));const inventoryAfterRestart=await (await request('/api/inventory',{headers:{Cookie:cookie}})).json();assert(inventoryAfterRestart.state.movements.length>0);console.log('V1.2 persistence passed: inventory movements, loan links, providers, paid orders and automatic order folios survive migrations and restart.');
  const retained=await request(asset.url,{headers:{Cookie:cookie}});assert.equal(retained.status,200);assert.deepEqual(new Uint8Array(await retained.arrayBuffer()),bytes);
  console.log('Production HTTP passed: preview origin through proxy, cross-site rejection, health, homepage, login, password change, recovered projects and articles for materials, audit query, private uploads/downloads, denial without login, and persistence after restart.');
 }finally{await stop();}

@@ -1,0 +1,2 @@
+import {receiptToday} from './material-receipt';
+export function materialDeadline(r:Record<string,any>,today=receiptToday()){if(!r.neededBy||['Borrador','Rechazada','Atendida','Completada y confirmada','Cancelada'].includes(r.status))return null;const date=String(r.neededBy).slice(0,10),days=Math.round((Date.parse(date+'T12:00:00Z')-Date.parse(today+'T12:00:00Z'))/86400000);if(!Number.isFinite(days)||days>2)return null;return {days,overdue:days<0,label:days<0?'Fecha requerida vencida':days===0?'Se requiere hoy':days===1?'Se requiere mañana':'Se requiere en 2 días'};}
