@@ -1,3 +1,4 @@
+import {compactNotifications} from '../../notification-summary';
 import {materialCommentScope} from '../../material-comments';
 import {materialDeadline} from '../../material-deadline';
 import {checkedRequestRouting,requestRoutes} from '../../request-routing';
@@ -54,7 +55,7 @@ export async function POST(req:Request){const c=await cashContext(req);if(!c)ret
  const partial=!!h.partial||/parcial/i.test(h.status||''),status=h.status==='Pendiente de visto bueno'?'Pendiente de autorización':h.status;
  notifications.push({id:h.id||r.id+':'+h.status+':'+h.date,recordId:r.id,date:h.date||'',partial,status,title:r.kind==='materialRequest'&&(h.action?.startsWith('Compras:')||h.action?.startsWith('Recepción física de compra'))?(partial?'Atención parcial de compra':'Avance de compra'):status==='Rechazada'?'Solicitud rechazada':partial?(status==='En almacén'?'Autorización parcial':'Atención parcial de tu solicitud'):'Cambio de estado de tu solicitud',message:(r.folio||'')+' · '+status+(h.summary?' · '+h.summary:'')});}}
  if(c.system!=='caja')for(const note of c.rows.filter(r=>r.kind==='materialFollowup'&&r.createdBy!==c.email)){const root=c.rows.find(r=>r.id===note.rootId);if(!root)continue;const candidates=[root,...c.rows.filter(r=>r.kind==='materialPurchase'&&r.sourceId===root.id)];const target=candidates.find(r=>materialCommentScope(c,r.id)?.canPost);if(!target)continue;notifications.push({id:note.id,recordId:root.id,date:note.createdAt,status:'Seguimiento',title:'Nuevo comentario de seguimiento',message:(root.folio||'')+' · '+note.authorName+': '+note.text.slice(0,300),href:'/materiales?followup='+encodeURIComponent(target.id)});}
- notifications.sort((a,b)=>b.date.localeCompare(a.date));const seen=new Set((await c.db.prepare('SELECT event_id FROM app_notifications_seen WHERE user_id=?').bind(c.userId).all()).results.map((r:any)=>r.event_id));return reply({notifications:notifications.filter(n=>!seen.has(n.id)).slice(0,10)});
+ const notificationRecords=new Map(c.rows.map(r=>[r.id,r]));const seen=new Set((await c.db.prepare('SELECT event_id FROM app_notifications_seen WHERE user_id=?').bind(c.userId).all()).results.map((r:any)=>r.event_id));return reply({notifications:compactNotifications(notifications.filter(n=>!seen.has(n.id)).map(n=>({...n,folio:notificationRecords.get(n.recordId)?.folio,requestStatus:notificationRecords.get(n.recordId)?.status}))) });
  }
  if(c.system==='caja')return reply({error:'En Caja sólo puedes solicitar y comprobar.'},403);
  if(b.action==='selectCandidate'){

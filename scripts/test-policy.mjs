@@ -39,3 +39,7 @@ Object.assign(globalThis,new Function(ts.transpile(fs.readFileSync('app/inventor
 Object.assign(globalThis,new Function(ts.transpile(fs.readFileSync('app/inventory-server.ts','utf8').replace(/^import .*;$/gm,'').replace(/export /g,''),{target:ts.ScriptTarget.ES2022})+';return {readInventory}')());
 
 Object.assign(globalThis,new Function(ts.transpile(fs.readFileSync('app/material-comments.ts','utf8').replace(/^import .*;$/gm,'').replace(/export /g,''),{target:ts.ScriptTarget.ES2022})+';return {materialCommentScope,materialCommentText}')());
+
+Object.assign(globalThis,new Function(ts.transpile(fs.readFileSync('app/notification-summary.ts','utf8').replace(/export /g,''),{target:ts.ScriptTarget.ES2022})+';return {compactNotifications}')());
+
+Object.assign(globalThis,new Function(ts.transpile(fs.readFileSync('app/viatico-purpose.ts','utf8').replace(/export /g,''),{target:ts.ScriptTarget.ES2022})+';return {viaticoLinePurpose}')());

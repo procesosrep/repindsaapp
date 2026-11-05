@@ -103,3 +103,11 @@ El detalle de Materiales muestra «Comentarios de seguimiento» antes de «Histo
 El solicitante o sustituto, el autorizador y los usuarios de Almacén o Compras con acceso a la solicitud pueden agregar comentarios. Los lectores sin intervención pueden consultarlos. Cada comentario conserva autor y fecha del servidor; no se edita ni borra desde la interfaz. Se admiten hasta 2000 caracteres y se muestran veinte comentarios por página, primero los recientes. Hay actualización manual y consulta automática cada treinta segundos mientras el detalle esté abierto.
 
 Los comentarios se guardan aparte del documento y sus revisiones. Publicar no modifica cantidades, etapas, fechas de entrega, autorizaciones, comprobaciones o datos sin guardar en la captura. Los avisos de comentarios respetan el alcance de acceso y la política existente de notificaciones; enlazan al detalle accesible de Materiales o Compras. Un comentario sobre una fecha no reemplaza la captura de la fecha estimada en el avance de compra.
+
+### Ventanas y avisos compactos
+
+Las ventanas de Materiales, Compras, Viáticos y Pedidos tienen un control de pantalla completa/restaurar. Si el navegador no admite pantalla completa, se amplía la ventana dentro de la aplicación. La captura de Pedidos utiliza todo el ancho disponible y mantiene encabezado y acciones visibles.
+
+Las notificaciones muestran sólo folio y estado, agrupando los eventos pendientes de un mismo folio. «Entendido» confirma también los eventos anteriores agrupados para evitar que reaparezca todo el historial. La historia completa se conserva dentro de cada solicitud. El detalle de Viáticos deja de mostrar los responsables configurados del flujo; la configuración y las reglas de autorización se conservan.
+
+Los módulos incrustados en Ciclo 3 comparten la navegación del panel; Pedidos/Proveedores no repite sus pestañas dentro de esa vista. Encabezados, buscadores, acciones, tablas y paginación siguen la misma alineación. Las etiquetas de paginación identifican pedidos, proveedores, inventario o movimientos según la pantalla.
