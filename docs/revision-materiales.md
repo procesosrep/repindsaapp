@@ -95,3 +95,11 @@ Se redujo el trabajo de entrada a Materiales:
 - El panel de Compras se descarga sólo al abrirlo, separado de la entrada a Materiales.
 
 Las pruebas verifican la deduplicación, la revocación posterior y las consultas de recuperación en caliente. Los tiempos de la vista previa dependen también del arranque de GoDaddy, su proxy y la latencia de MySQL; no se han medido desde la cuenta del hosting.
+
+## Comentarios de seguimiento · V1.2
+
+El detalle de Materiales muestra «Comentarios de seguimiento» antes de «Historial de la solicitud». Compras dispone del mismo seguimiento antes de su historial; ambas vistas comparten la conversación de la solicitud de origen. En compras directas, la conversación pertenece a esa compra.
+
+El solicitante o sustituto, el autorizador y los usuarios de Almacén o Compras con acceso a la solicitud pueden agregar comentarios. Los lectores sin intervención pueden consultarlos. Cada comentario conserva autor y fecha del servidor; no se edita ni borra desde la interfaz. Se admiten hasta 2000 caracteres y se muestran veinte comentarios por página, primero los recientes. Hay actualización manual y consulta automática cada treinta segundos mientras el detalle esté abierto.
+
+Los comentarios se guardan aparte del documento y sus revisiones. Publicar no modifica cantidades, etapas, fechas de entrega, autorizaciones, comprobaciones o datos sin guardar en la captura. Los avisos de comentarios respetan el alcance de acceso y la política existente de notificaciones; enlazan al detalle accesible de Materiales o Compras. Un comentario sobre una fecha no reemplaza la captura de la fecha estimada en el avance de compra.

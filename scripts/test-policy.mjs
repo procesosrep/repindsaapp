@@ -37,3 +37,5 @@ Object.assign(globalThis,new Function(ts.transpile(fs.readFileSync('app/material
 
 Object.assign(globalThis,new Function(ts.transpile(fs.readFileSync('app/inventory-model.ts','utf8').replace(/^import .*;$/gm,'').replace(/export /g,''),{target:ts.ScriptTarget.ES2022})+';return {materialLoanQueue}')());
 Object.assign(globalThis,new Function(ts.transpile(fs.readFileSync('app/inventory-server.ts','utf8').replace(/^import .*;$/gm,'').replace(/export /g,''),{target:ts.ScriptTarget.ES2022})+';return {readInventory}')());
+
+Object.assign(globalThis,new Function(ts.transpile(fs.readFileSync('app/material-comments.ts','utf8').replace(/^import .*;$/gm,'').replace(/export /g,''),{target:ts.ScriptTarget.ES2022})+';return {materialCommentScope,materialCommentText}')());
