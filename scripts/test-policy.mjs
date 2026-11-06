@@ -13,7 +13,8 @@ const receiptText=ts.transpile(fs.readFileSync('app/material-receipt.ts','utf8')
 globalThis.purchaseAccessUpgrade=async()=>{};
 const notificationText=ts.transpile(fs.readFileSync('app/notification-policy.ts','utf8').replace(/^import .*;$/gm,'').replace(/export /g,''),{target:ts.ScriptTarget.ES2022});Object.assign(globalThis,new Function(notificationText+';return {suppressRequestNotifications,notificationIdentity,requestNotificationParticipation}')());
 
-const warehouseSeed=JSON.parse(fs.readFileSync('app/warehouse-catalog-seed.json','utf8'));const warehouseText=ts.transpile(fs.readFileSync('app/warehouse-catalog.ts','utf8').replace(/^import .*;$/gm,'').replace(/export /g,''),{target:ts.ScriptTarget.ES2022});Object.assign(globalThis,new Function('warehouseSeed',warehouseText+';return {warehouseCatalog,selectedCatalogLines,saveWarehouseArticle,registerRequestedArticles}')(warehouseSeed));
+const warehouseSeed=JSON.parse(fs.readFileSync('app/warehouse-catalog-seed.json','utf8'));const warehouseText=ts.transpile(fs.readFileSync('app/warehouse-catalog.ts','utf8').replace(/^import .*;$/gm,'').replace(/export /g,''),{target:ts.ScriptTarget.ES2022});Object.assign(globalThis,new Function('warehouseSeed',warehouseText+';return {warehouseCatalog,selectedCatalogLines,saveWarehouseArticle,prepareWarehouseArticle,productName,productCode}')(warehouseSeed));
+const proposalText=ts.transpile(fs.readFileSync('app/catalog-proposals.ts','utf8').replace(/^import .*;$/gm,'').replace(/export /g,''),{target:ts.ScriptTarget.ES2022});Object.assign(globalThis,new Function(proposalText+';return {catalogUnit,proposalArticle,ensureCatalogProposals,catalogProposals,addCatalogProposal,correctCatalogProposal,proposalTargetError,reviewCatalogProposals,registerRequestedArticles,resolveCatalogReferences}')());
 const salaryText=ts.transpile(fs.readFileSync('app/hr-salary.ts','utf8').replace(/export /g,''),{target:ts.ScriptTarget.ES2022});Object.assign(globalThis,new Function(salaryText+';return {integratedSalary}')());
 
 const projectSeed=JSON.parse(fs.readFileSync('app/active-project-seed.json','utf8'));const projectViewText=ts.transpile(fs.readFileSync('app/active-projects-view.ts','utf8').replace(/export /g,''),{target:ts.ScriptTarget.ES2022});Object.assign(globalThis,new Function(projectViewText+';return {projectRP,isActiveProject,activeProjectOptions,resolveRequestProject}')());globalThis.ensureActiveProjects=async()=>{};
@@ -35,7 +36,7 @@ const requestRoutingCode=ts.transpile(fs.readFileSync('app/request-routing.ts','
 
 Object.assign(globalThis,new Function(ts.transpile(fs.readFileSync('app/material-deadline.ts','utf8').replace(/^import .*;$/gm,'').replace(/export /g,''),{target:ts.ScriptTarget.ES2022})+';return {materialDeadline}')());
 
-Object.assign(globalThis,new Function(ts.transpile(fs.readFileSync('app/inventory-model.ts','utf8').replace(/^import .*;$/gm,'').replace(/export /g,''),{target:ts.ScriptTarget.ES2022})+';return {materialLoanQueue}')());
+Object.assign(globalThis,new Function(ts.transpile(fs.readFileSync('app/inventory-model.ts','utf8').replace(/^import .*;$/gm,'').replace(/export /g,''),{target:ts.ScriptTarget.ES2022})+';return {materialLoanQueue,emptyInventory,normalizeInventoryStructure}')());
 Object.assign(globalThis,new Function(ts.transpile(fs.readFileSync('app/inventory-server.ts','utf8').replace(/^import .*;$/gm,'').replace(/export /g,''),{target:ts.ScriptTarget.ES2022})+';return {readInventory}')());
 
 Object.assign(globalThis,new Function(ts.transpile(fs.readFileSync('app/material-comments.ts','utf8').replace(/^import .*;$/gm,'').replace(/export /g,''),{target:ts.ScriptTarget.ES2022})+';return {materialCommentScope,materialCommentText}')());

@@ -1,3 +1,4 @@
+import {resolveCatalogReferences} from '../../catalog-proposals';
 import {nextFolio} from '../../../server/folios.mjs';
 import {isDirector,normalizedAccessProfile} from '../../access-policy';
 import {ensureAudit} from '../../audit-server';
@@ -35,7 +36,7 @@ export async function GET(req:Request){const unavailable=await featureGuard(req)
  if(initialized)rows=await db.prepare('SELECT * FROM records').all();let anyMigrated=false;
  for(const entry of rows.results as any[]){const r=JSON.parse(entry.payload);let changed=false;if(r.kind==='resource'&&['Personal','Equipo'].includes(r.category)){r.category=r.category==='Personal'?'Puesto':'Maquinaria';changed=true;}if(r.kind==='recruitment'&&r.legacyCovered===undefined){r.legacyCovered=Number(r.covered||0);r.openedDate=r.openedDate||r.date||'2026-10-19';changed=true;}if(r.kind==='project'&&r.id==='p2'&&!r.legacyImport){r.legacyImport=true;r.legacyReason='Proyecto de demostración existente al inicio';delete r.quoteId;changed=true;}if(r.division==='Backoffice'){r.division='';r.department='Administración compartida';changed=true;}if(r.kind in prefixes&&!r.folio){r.folio=await folio(db,r.kind,r);changed=true;}if(r.kind==='quote'&&!r.generalTerms){r.generalTerms=defaultTerms;changed=true;}if(r.kind==='quote'&&!r.opportunityId&&['q1','q2'].includes(r.id)){r.opportunityId=r.id==='q1'?'o1':'o2';changed=true;}if(r.kind==='project'&&!r.quoteId&&r.id==='p1'){r.quoteId=r.id==='p1'?'q1':'q2';changed=true;}if(r.kind==='quote'&&/^REP-\d{4}-\d+/.test(r.name)){r.name=r.name.replace(/^REP-\d{4}-\d+\s*·?\s*/,'');changed=true;}if(changed){anyMigrated=true;await db.prepare('UPDATE records SET payload=?,revision=revision+1 WHERE id=? AND revision=?').bind(JSON.stringify(r),r.id,entry.revision).run();}}
  if(anyMigrated)rows=await db.prepare('SELECT * FROM records').all();
- const config:any=rows.results.find((r:any)=>r.id==='system-admin');const all=rows.results.map((r:any)=>({...JSON.parse(r.payload),revision:r.revision}));
+ const config:any=rows.results.find((r:any)=>r.id==='system-admin');const all=await resolveCatalogReferences(db,rows.results.map((r:any)=>({...JSON.parse(r.payload),revision:r.revision})));
  const email=(req.headers.get('oai-authenticated-user-email')||'').toLowerCase();const member=all.find((r:any)=>r.kind==='membership'&&r.email===email&&r.status==='Activo');const profile=JSON.parse(config.payload).userId===actor?{role:'Administrador',email}:member?{role:member.role,name:member.name,rights:member.rights,details:member.details,level:member.level,email,division:member.division,projectIds:member.projectIds||[]}:{role:'Usuario',email};
 
  Object.assign(profile,normalizedAccessProfile(profile));

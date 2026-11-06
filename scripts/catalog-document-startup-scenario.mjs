@@ -27,12 +27,22 @@ export async function exerciseCatalogDocuments(request,adminCookie,origin){
  assert(!(await ok(await request('/api/material-workspace?catalogOnly=1',{headers:{Cookie:adminCookie}}))).catalog.some(r=>r.id===article.id));
  assert.equal((await send('/api/document-flow',{action:'configure',data:{reviewer:'doc-process',approver:'doc-director'}},author)).status,403);
  let routing=(await ok(await send('/api/document-flow',{action:'configure',data:{reviewer:'doc-process',approver:'doc-director'}}))).routing;
- let doc=(await ok(await send('/api/document-flow',{action:'saveDocument',data:{name:'Procedimiento de prueba',type:'Procedimiento',body:'<p>Versión inicial</p>',owner:'Calidad'}},author))).record;
+ const adminIdentity=await ok(await request('/api/document-flow',{headers:{Cookie:adminCookie}}));const adminUsername=adminIdentity.user.username;
+ routing=(await ok(await send('/api/document-flow',{action:'configure',revision:routing.revision,data:{reviewer:adminUsername,approver:'doc-director'}}))).routing;
+ let adminDoc=(await ok(await send('/api/document-flow',{action:'saveDocument',data:{name:'Documento de Administración / Procesos',type:'Documento',body:'<p>Elaborado por Procesos</p>'}}))).record;assert.equal(adminDoc.authorRole,'Administrador');
+ adminDoc=(await ok(await send('/api/document-flow',{action:'submitDocument',id:adminDoc.id,revision:adminDoc.revision}))).record;assert.equal(adminDoc.status,'En autorización de Dirección');assert.equal(adminDoc.processReviewSkipped,true);assert(adminDoc.history.at(-1).action.includes('directo a Dirección'));
+ assert.equal((await send('/api/document-flow',{action:'publishDocument',id:adminDoc.id,revision:adminDoc.revision})).status,403);
+ adminDoc=(await ok(await send('/api/document-flow',{action:'returnDocument',id:adminDoc.id,revision:adminDoc.revision,comment:'Ajustar antes de publicar'},director))).record;
+ adminDoc=(await ok(await send('/api/document-flow',{action:'saveDocument',id:adminDoc.id,revision:adminDoc.revision,data:{...adminDoc,body:'<p>Corregido</p>'}}))).record;
+ adminDoc=(await ok(await send('/api/document-flow',{action:'submitDocument',id:adminDoc.id,revision:adminDoc.revision}))).record;assert.equal(adminDoc.status,'En autorización de Dirección');
+ adminDoc=(await ok(await send('/api/document-flow',{action:'publishDocument',id:adminDoc.id,revision:adminDoc.revision},director))).record;assert.equal(adminDoc.status,'Vigente');
+ routing=(await ok(await send('/api/document-flow',{action:'configure',revision:routing.revision,data:{reviewer:'doc-process',approver:'doc-director'}}))).routing;
+ let doc=(await ok(await send('/api/document-flow',{action:'saveDocument',data:{name:'Procedimiento de prueba',type:'Procedimiento',body:'<p>Versión inicial</p>',owner:'Calidad',authorRole:'Administrador'}},author))).record;
  assert.match(doc.folio,/^PR-TRA-\d{5,}$/);const policy=(await ok(await send('/api/document-flow',{action:'saveDocument',data:{name:'Política financiera de prueba',type:'Política',cycleCode:'FIN',body:'<p>Política</p>'}},author))).record;assert.match(policy.folio,/^PO-FIN-\d{5,}$/);const changedCycle=(await ok(await send('/api/document-flow',{action:'saveDocument',id:policy.id,revision:policy.revision,data:{...policy,cycleCode:'COM'}} ,author))).record;assert.equal(changedCycle.cycleCode,'FIN');assert.equal(changedCycle.folio,policy.folio);
  const act=async(action,cookie,extra={})=>{doc=(await ok(await send('/api/document-flow',{action,id:doc.id,revision:doc.revision,...extra},cookie))).record;return doc};
  assert(!(await ok(await request('/api/document-flow',{headers:{Cookie:process}}))).records.some(r=>r.id===doc.id));
  assert.equal((await send('/api/support',{action:'publishDocument',id:doc.id,revision:doc.revision,data:doc},author)).status,403);
- await act('submitDocument',author);assert.equal(doc.status,'En revisión de Procesos');assert(!(await ok(await request('/api/document-flow',{headers:{Cookie:director}}))).records.some(r=>r.id===doc.id));
+ assert.notEqual(doc.authorRole,'Administrador');await act('submitDocument',author);assert.equal(doc.status,'En revisión de Procesos');assert(!(await ok(await request('/api/document-flow',{headers:{Cookie:director}}))).records.some(r=>r.id===doc.id));
  assert.equal((await send('/api/document-flow',{action:'publishDocument',id:doc.id,revision:doc.revision},director)).status,403);
  assert.equal((await send('/api/document-flow',{action:'saveDocument',id:doc.id,revision:doc.revision,data:doc},author)).status,409);
  assert.equal((await send('/api/document-flow',{action:'configure',revision:routing.revision,data:{reviewer:'doc-author',approver:'doc-director'}})).status,409);
@@ -45,5 +55,5 @@ export async function exerciseCatalogDocuments(request,adminCookie,origin){
  await act('saveDocument',author,{data:{...doc,body:'<p>Segunda versión en elaboración</p>'}});assert.equal(doc.version,2);assert.equal(doc.status,'Borrador');
  const retained=(await ok(await request('/api/documents-workspace',{headers:{Cookie:reader}}))).records.find(r=>r.id===doc.id);assert.equal(retained.version,1);assert.equal(retained.body,'<p>Alcance y responsables</p>');
  assert.equal((await send('/api/document-flow',{action:'saveDocument',id:doc.id,revision:doc.revision,data:doc},process)).status,403);
- console.log('Catalog/document HTTP passed: admin project fields, unique RP, activation in Materials, stale-write denial, editable articles, four distinct users, mandatory Process/Director sequence, returns and re-review, protected pending reviewers, private drafts and retained published version.');
+ console.log('Catalog/document HTTP passed: admin project fields, unique RP, activation in Materials, stale-write denial, editable articles, four distinct users, admin/Processes direct submission with independent Director, standard Process/Director sequence, returns and re-review, protected pending reviewers, private drafts and retained published version.');
 }

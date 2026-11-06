@@ -3,7 +3,7 @@ export const featureGroups=[
  {key:'workspaces',name:'Acceso a espacios',items:[['workspaceCaja','Botón Viáticos'],['workspacePanel','Botón Panel completo']]},
  {key:'cycle1',name:'Comercial',items:[['opportunity','Oportunidades'],['quote','Cotizaciones'],['client','Clientes'],['concept','Conceptos'],['commercial','Contratos y seguimiento']]},
  {key:'cycle2',name:'Operaciones',items:[['project','Proyectos'],['operation','Planeación y ejecución'],['requirement','Requerimientos']]},
- {key:'cycle3',name:'Suministros',items:[['materialRequest','Solicitudes de materiales'],['materialPurchase','Compras y surtido'],['inventory','Inventarios piloto por proyecto'],['purchaseOrder','Pedidos y proveedores'],['resource','Catálogos']]},
+ {key:'cycle3',name:'Suministros',items:[['materialRequest','Solicitudes de materiales'],['materialPurchase','Compras y surtido'],['inventory','Inventarios por proyecto'],['purchaseOrder','Pedidos y proveedores'],['resource','Catálogos']]},
  {key:'cycle4',name:'Recursos Humanos',items:[['recruitment','Reclutamiento'],['candidate','Candidatos'],['employee','Personal y expedientes'],['hrIncident','Incidentes y seguimiento laboral'],['laborContract','Contratos laborales'],['settlement','Finiquito y liquidación'],['ticketRequest','Boletos'],['flightComparison','Cotizar vuelos'],['camp','Campamentos'],['transfer','Traslados'],['travel','Viáticos'],['program','Programas']]},
  {key:'cycle5',name:'Finanzas y Caja',items:[['fuelLog','Control de combustible'],['cashAdvance','Anticipos'],['cashProof','Comprobaciones'],['cashMovement','Tesorería y pagos'],['cashAccount','Cuentas de caja'],['payment','Pagos']]},
  {key:'transversal',name:'Transversal',items:[['controlledDocument','Documentos'],['controlledAsset','Archivos documentales']]}
