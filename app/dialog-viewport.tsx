@@ -1,0 +1,4 @@
+'use client';
+import {useEffect} from 'react';
+// iOS keyboards resize the visual viewport without reliably changing 100dvh.
+export function DialogViewport(){useEffect(()=>{let frame=0;const viewport=window.visualViewport,root=document.documentElement;const sync=()=>{cancelAnimationFrame(frame);frame=requestAnimationFrame(()=>{root.style.setProperty('--dialog-viewport-height',(viewport?.height||window.innerHeight)+'px');root.style.setProperty('--dialog-viewport-top',(viewport?.offsetTop||0)+'px')})};sync();window.addEventListener('resize',sync);viewport?.addEventListener('resize',sync);viewport?.addEventListener('scroll',sync);return()=>{cancelAnimationFrame(frame);window.removeEventListener('resize',sync);viewport?.removeEventListener('resize',sync);viewport?.removeEventListener('scroll',sync);root.style.removeProperty('--dialog-viewport-height');root.style.removeProperty('--dialog-viewport-top')}},[]);return null}
