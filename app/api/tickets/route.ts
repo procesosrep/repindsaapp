@@ -1,15 +1,19 @@
+import {isActiveProject} from '../../active-projects-view';
 import {featureGuard} from '../../feature-server';
 import {hasAccess} from '../../access-policy';
-import {cashContext,cashFail,cashFolio,storeCash} from '../../cash-server';
+import {cashContext,cashFail,cashFolio,storeCash,cashOwned} from '../../cash-server';
 import {inScope} from '../../permissions';
+import {featureAllowed} from '../../feature-policy';
 import {today} from '../../workflow-utils';
+const reply=(value:any,status=200)=>Response.json(value,{status,headers:{'Cache-Control':'no-store'}});
+export async function GET(req:Request){const unavailable=await featureGuard(req);if(unavailable)return unavailable;const c=await cashContext(req);if(!c)return cashFail('Inicia sesión.',401);const canRequest=featureAllowed(c.profile,'ticketRequest')&&hasAccess(c.profile,'requestTickets')&&(hasAccess(c.profile,'box')||['Administrador','Recursos Humanos'].includes(c.profile.role)&&hasAccess(c.profile,'editRecords')),canPay=hasAccess(c.profile,'payments');if(!canRequest&&!canPay&&!hasAccess(c.profile,'box'))return cashFail('Sin acceso a boletos.',403);const tickets=c.rows.filter((r:any)=>r.kind==='ticketRequest'&&cashOwned(r,c)),ids=new Set(tickets.map((r:any)=>r.id));return reply({records:[...tickets,...c.rows.filter((r:any)=>r.kind==='cashAttachment'&&ids.has(r.ownerId)).map((r:any)=>({...r,key:undefined})),...c.rows.filter((r:any)=>isActiveProject(r)&&inScope(r,c.profile,c.rows)).map((r:any)=>({id:r.id,kind:r.kind,name:r.name,status:r.status,folio:r.folio})),...(canRequest?c.rows.filter((r:any)=>inScope(r,c.profile,c.rows)&&(r.kind==='employee'&&!['Baja','Inactivo','Dado de baja'].includes(r.status)||r.kind==='candidate'&&['Contratación','Apto','Traslado','Seleccionado','Contratado','Incorporado'].includes(r.status))).map((r:any)=>({id:r.id,kind:r.kind,name:r.name,folio:r.folio,status:r.status,birthDate:r.birthDate,phone:r.phone,email:r.email,projectId:r.projectId})):[])],user:{username:c.username,email:c.email,name:c.profile.name,role:c.actualRole},permissions:{requestTickets:canRequest,payments:canPay}})}
 export async function POST(req:Request){const unavailable=await featureGuard(req);if(unavailable)return unavailable;
  const c=await cashContext(req);if(!c)return cashFail('Inicia sesión.',401);
  const role=c.profile.role,rh=['Administrador','Recursos Humanos'].includes(role)&&(!c.profile.rights||hasAccess(c.profile,'editRecords')),treasury=c.profile.rights?hasAccess(c.profile,'payments'):['Administrador','Tesorería'].includes(role);
- if(!rh&&!treasury)return cashFail('Sin permiso.',403);
+ const requestTickets=featureAllowed(c.profile,'ticketRequest')&&hasAccess(c.profile,'requestTickets')&&(rh||hasAccess(c.profile,'box'));if(!rh&&!treasury&&!requestTickets)return cashFail('Sin permiso.',403);
  if(req.headers.get('Origin')&&req.headers.get('Origin')!==new URL(process.env.APP_ORIGIN||req.url).origin)return cashFail('Origen no permitido.',403);
- try{const b:any=await req.json();
- if(b.action==='saveComparison'){
+ try{const b:any=await req.json();if(b.expectedOwner&&b.expectedOwner!==c.email)return cashFail('La sesión cambió. Vuelve a abrir Boletos.',409);
+ if(b.action==='saveComparison'){if(!rh&&!treasury)return cashFail('Sin permiso para comparar tarifas.',403);
  const d=b.data||{},prior=b.id?c.rows.find((x:any)=>x.id===b.id&&x.kind==='flightComparison'):undefined;
  if(b.id&&!prior)return cashFail('Comparación no encontrada.',404);
  if(prior&&(!inScope(prior,c.profile,c.rows)||Number(b.revision)!==prior.revision))return cashFail('Actualiza la comparación antes de continuar.',409);
@@ -28,7 +32,7 @@ export async function POST(req:Request){const unavailable=await featureGuard(req
  if(old&&Number(b.revision)!==old.revision)return cashFail('La solicitud cambió. Actualiza la página.',409);
  let r:any,action='';
  if(b.action==='send'){
- if(!rh)return cashFail('La solicitud corresponde a Recursos Humanos.',403);
+ if(!requestTickets)return cashFail('Necesitas acceso a Viáticos para solicitar boletos.',403);if(old&&!rh&&old.createdBy!==c.email)return cashFail('Sólo puedes corregir tus propias solicitudes.',403);
  if(old&&!['Devuelta'].includes(old.status))return cashFail('Esta solicitud ya fue enviada.',409);
  const d=b.data||{},person=c.rows.find((x:any)=>x.id===d.personId&&['candidate','employee'].includes(x.kind));
  if(!person||!inScope(person,c.profile,c.rows))return cashFail('Selecciona personal o un candidato de tu alcance.');
@@ -46,15 +50,15 @@ export async function POST(req:Request){const unavailable=await featureGuard(req
  if(d.origin.trim().toLowerCase()===d.destination.trim().toLowerCase())return cashFail('Origen y destino deben ser distintos.');
  if(d.tripType==='Redondo'&&(!validDate(d.returnDate)||d.returnDate<d.travelDate||!d.returnTime))return cashFail('Revisa fecha y horario de regreso.');
  if(c.rows.some((x:any)=>x.kind==='ticketRequest'&&x.id!==old?.id&&x.personId===person.id&&x.travelDate===d.travelDate&&x.origin?.trim().toLowerCase()===d.origin.trim().toLowerCase()&&x.destination?.trim().toLowerCase()===d.destination.trim().toLowerCase()&&x.status!=='Cancelada'))return cashFail('Ya existe una solicitud para esta persona, ruta y fecha.');
- r={...(old||{}),id:old?.id||crypto.randomUUID(),kind:'ticketRequest',folio:old?.folio||await cashFolio(c.db,'BO'),createdBy:old?.createdBy||c.email,personId:person.id,personType:person.kind,name:person.name,birthDate,projectId:project?.id||'',projectName:project?.name||'Sin proyecto',division:project?.division||person.division||'',status:'Solicitada'};
+ r={...(old||{}),id:old?.id||crypto.randomUUID(),kind:'ticketRequest',folio:old?.folio||await cashFolio(c.db,'BO'),createdBy:old?.createdBy||c.email,createdById:old?.createdById||c.userId,personId:person.id,personType:person.kind,name:person.name,birthDate,projectId:project?.id||'',projectName:project?.name||'Sin proyecto',division:project?.division||person.division||'',status:'Solicitada'};
  for(const k of ['otherReason','reason','transport','tripType','origin','destination','travelDate','preferredTime','returnDate','returnTime','contact','baggage','notes'])r[k]=String(d[k]||'').trim().slice(0,1500);
  if(r.tripType==='Sencillo'){r.returnDate='';r.returnTime='';}action='Solicitud enviada a Tesorería';
  }else{
  if(!old)return cashFail('Solicitud no encontrada.',404);r={...old};
- if(b.action==='cancel') {if(!rh||!['Solicitada','Devuelta'].includes(old.status))return cashFail('No es posible cancelar en esta etapa.',403);r.status='Cancelada';action='Solicitud cancelada';}
+ if(b.action==='cancel') {if((!rh&&(!requestTickets||old.createdBy!==c.email))||!['Solicitada','Devuelta'].includes(old.status))return cashFail('No es posible cancelar en esta etapa.',403);r.status='Cancelada';action='Solicitud cancelada';}
  else {if(!treasury)return cashFail('Esta acción corresponde a Tesorería.',403);
  if(b.action==='start'&&old.status==='Solicitada'){r.status='En gestión';action='Compra en gestión';}
- else if(b.action==='return'&&['Solicitada','En gestión'].includes(old.status)){if(!String(b.reason||'').trim())return cashFail('Indica qué debe corregirse.');r.status='Devuelta';r.returnReason=String(b.reason).slice(0,1500);action='Devuelta a RH para corrección';}
+ else if(b.action==='return'&&['Solicitada','En gestión'].includes(old.status)){if(!String(b.reason||'').trim())return cashFail('Indica qué debe corregirse.');r.status='Devuelta';r.returnReason=String(b.reason).slice(0,1500);action='Devuelta al solicitante para corrección';}
  else if(b.action==='purchase'&&old.status==='En gestión'){
  if(!String(b.reservation||'').trim()||!String(b.carrier||'').trim()||!Number.isFinite(Number(b.amount))||Number(b.amount)<=0)return cashFail('Captura proveedor, localizador o folio e importe MXN.');
  if(!c.rows.some((x:any)=>x.kind==='cashAttachment'&&x.ownerId===old.id&&['application/pdf','image/jpeg','image/png'].includes(x.type)))return cashFail('Adjunta el boleto en PDF o imagen antes de registrar la compra.');
