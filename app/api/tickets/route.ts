@@ -57,7 +57,7 @@ export async function POST(req:Request){const unavailable=await featureGuard(req
  if(!old)return cashFail('Solicitud no encontrada.',404);r={...old};
  if(b.action==='cancel') {if((!rh&&(!requestTickets||old.createdBy!==c.email))||!['Solicitada','Devuelta'].includes(old.status))return cashFail('No es posible cancelar en esta etapa.',403);r.status='Cancelada';action='Solicitud cancelada';}
  else {if(!treasury)return cashFail('Esta acción corresponde a Tesorería.',403);
- if(b.action==='start'&&old.status==='Solicitada'){r.status='En gestión';action='Compra en gestión';}
+ if(b.action==='start'&&old.status==='Solicitada'){r.status='En gestión';r.handledBy=c.email;r.handledByName=c.profile.name;r.attendedAt=new Date().toISOString();action='Compra en gestión';}
  else if(b.action==='return'&&['Solicitada','En gestión'].includes(old.status)){if(!String(b.reason||'').trim())return cashFail('Indica qué debe corregirse.');r.status='Devuelta';r.returnReason=String(b.reason).slice(0,1500);action='Devuelta al solicitante para corrección';}
  else if(b.action==='purchase'&&old.status==='En gestión'){
  if(!String(b.reservation||'').trim()||!String(b.carrier||'').trim()||!Number.isFinite(Number(b.amount))||Number(b.amount)<=0)return cashFail('Captura proveedor, localizador o folio e importe MXN.');

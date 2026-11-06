@@ -1,3 +1,4 @@
+import {purchaseLineProgress} from './purchase-progress';
 import {hasAccess} from './access-policy';
 type R=Record<string,any>;
 const normalize=(v:any)=>String(v||'').trim().toLowerCase();
@@ -16,3 +17,28 @@ export function requestNotificationParticipation(r:R,c:R){if(suppressRequestNoti
  for(const h of r.history||[])if(/almac[eé]n|compra|surtido|entrega|recepci[oó]n|pago|reembolso|gesti[oó]n/i.test(h.action||''))actualHandlers.push(h.actor);
  if(cash)for(const movement of c.rows||[])if(movement.kind==='cashMovement'&&(movement.advanceId===r.id||movement.proofId===r.id))actualHandlers.push(movement.createdBy,movement.createdById);
  const unassignedFinancial=financialNotificationRecipient(c)&&!assigned&&(ticket||cash&&(r.viaticosVersion===3?!!r.approvedAt:['Aprobada','Cerrada'].includes(r.status)));const handler=(material||cash||ticket)&&handlerPermission&&(unassignedFinancial||matches([assigned,...actualHandlers]));return {requester,approver,handler};}
+// Status notices belong to the current action, not to every previous participant.
+// Owners still receive results; receipt/deadline reminders are handled separately.
+export function requestNotificationNeedsAction(r:R,c:R,participation?:R){
+ const p=participation||requestNotificationParticipation(r,c);if(p.requester)return true;
+ if(['cashAdvance','cashProof'].includes(r.kind)){
+  if(r.viaticosVersion===3){
+   if(r.viaticosStage==='Visto bueno')return notificationIdentity(r.viaticosReviewer,c)&&(hasAccess(c.profile,'reviewBox')||hasAccess(c.profile,'approveBox'));
+   if(r.viaticosStage==='Autorización')return hasAccess(c.profile,'approveBox')&&(r.viaticosAuthorizers||[]).some((v:any)=>notificationIdentity(v,c));
+   const director=[c.actualRole,c.profile?.role,c.profile?.level].some(v=>/^(direccion|director|directora)(\b|\s|$)/.test(normalize(v).normalize('NFD').replace(/[\u0300-\u036f]/g,'')));
+   const assignedPay=notificationIdentity(r.assignedTreasury||r.assignedHandler||c.routing?.treasuryOperator,c);return (!director||assignedPay)&&p.handler&&hasAccess(c.profile,'payments')&&r.viaticosStage==='Aplicar'&&!!r.approvedAt;
+  }
+  return !['Cerrada','Rechazada','Cancelada'].includes(r.status)&&(p.approver||p.handler);
+ }
+ if(r.kind==='ticketRequest'){
+  if(r.status==='Solicitada')return p.approver||p.handler;
+  const handler=r.handledBy||(r.history||[]).filter((h:R)=>h.action==='Compra en gestión').at(-1)?.actor||r.assignedTreasury||c.routing?.treasuryOperator;
+  return r.status==='En gestión'&&p.handler&&notificationIdentity(handler,c);
+ }
+ if(['materialRequest','materialPurchase'].includes(r.kind)){
+  if(['Completada y confirmada','Completada','Atendida','Recibida','Rechazada','Cancelada'].includes(r.status))return false;
+  if(p.handler){if(r.kind==='materialRequest'&&r.lines?.length)return r.lines.some((l:R)=>Number(l.delivered||0)+.000001<Number(l.quantity||0))||r.status==='Diferencia reportada'||(r.deliveries||[]).some((d:R)=>d.status==='Diferencia');if(r.kind==='materialPurchase'&&r.lines?.length&&hasAccess(c.profile,'purchaseTracking')&&!hasAccess(c.profile,'warehouse'))return r.lines.some((l:R)=>{const progress=purchaseLineProgress(l,r);return progress.toBuy>.000001||progress.toSend>.000001});return true;}
+  return p.approver&&['Pendiente de autorización','Pendiente de visto bueno'].includes(r.status);
+ }
+ return true;
+}

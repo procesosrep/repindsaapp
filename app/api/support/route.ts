@@ -6,7 +6,7 @@ import {checkedViaticosAuthorizers} from '../../viaticos-policy';
 import {documentAction} from '../../document-flow-server';
 import {cleanRichText,richTextLimit} from '../../rich-text';
 import {warehouseCatalog,saveWarehouseArticle} from '../../warehouse-catalog';
-import {suppressRequestNotifications,requestNotificationParticipation,financialNotificationRecipient} from '../../notification-policy';
+import {suppressRequestNotifications,requestNotificationParticipation,financialNotificationRecipient,requestNotificationNeedsAction} from '../../notification-policy';
 import {pendingReceipts,receiptOverdue,receiptIsOwner,receiptResponsible,receiptToday} from '../../material-receipt';
 import {readFeatures} from '../../feature-server';
 import {featureGroups,featureAllowed} from '../../feature-policy';
@@ -44,12 +44,13 @@ export async function POST(req:Request){const c=await cashContext(req);if(!c)ret
  if(c.system==='caja'&&!['cashAdvance','cashProof','ticketRequest'].includes(r.kind))continue;
  const participation=requestNotificationParticipation(r,c);if(!participation.requester&&!participation.approver&&!participation.handler)continue;
  if(['materialRequest','materialPurchase'].includes(r.kind)?!canAccessMaterial(r,c.profile,c.rows):!cashOwned(r,c))continue;
- const deadline=r.kind==='materialRequest'?materialDeadline(r):null;if(deadline)notifications.push({id:'material-deadline:'+r.id+':'+receiptToday(),recordId:r.id,date:new Date().toISOString(),status:deadline.label,title:deadline.overdue?'Solicitud con fecha requerida vencida':'Solicitud próxima a vencer',message:r.folio+' · '+deadline.label+' · '+r.neededBy,href:'/materiales?receipt='+encodeURIComponent(r.folio)});
+ const actionable=requestNotificationNeedsAction(r,c,participation),deadline=r.kind==='materialRequest'&&actionable?materialDeadline(r):null;if(deadline)notifications.push({id:'material-deadline:'+r.id+':'+receiptToday(),recordId:r.id,date:new Date().toISOString(),status:deadline.label,title:deadline.overdue?'Solicitud con fecha requerida vencida':'Solicitud próxima a vencer',message:r.folio+' · '+deadline.label+' · '+r.neededBy,href:'/materiales?receipt='+encodeURIComponent(r.folio)});
  const role=c.profile.role;
  if(r.kind==='materialRequest')for(const delivery of pendingReceipts(r)){
  const overdue=receiptToday()>delivery.dueDate,manager=participation.approver;
  if(receiptIsOwner(r,c)||overdue&&manager)notifications.push({id:'receipt-reminder:'+r.id+':'+delivery.id+':'+receiptToday(),recordId:r.id,date:new Date().toISOString(),status:overdue?'Confirmación vencida':'Por confirmar',title:receiptIsOwner(r,c)?'Tienes una entrega por confirmar':'Confirmación vencida del solicitante',message:r.folio+' · '+(r.receiptOwnerName||r.ownerName||r.requester)+' · Fecha límite: '+delivery.dueDate+(overdue?' · Bloqueo de nuevas solicitudes de materiales':''),href:'/materiales?receipt='+encodeURIComponent(r.folio)});
  }
+ if(!actionable)continue;
  const history=r.history?.length?r.history:[{status:r.status,date:r.createdAt||r.requestDate||''}];for(let i=0;i<history.length;i++){const h=history[i],previous=history[i-1]?.status;if(h.status==='Borrador'||!(h.notify===true||h.notify===undefined&&h.status!==previous))continue;
  if(r.kind==='materialRequest'&&participation.handler&&!participation.requester&&!participation.approver&&(!(r.managerApprovedAt||r.materialReleasedAt)||h.date<(r.managerApprovedAt||r.materialReleasedAt)))continue;
  const partial=!!h.partial||/parcial/i.test(h.status||''),status=h.status==='Pendiente de visto bueno'?'Pendiente de autorización':h.status;
