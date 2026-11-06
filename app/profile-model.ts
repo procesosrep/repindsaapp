@@ -1,0 +1,6 @@
+type R=Record<string,any>;
+export class ProfileError extends Error{constructor(message:string,public status=400){super(message)}}
+export function personalFields(body:R){if(Object.keys(body).some(key=>!['action','revision','expectedUser','name','email','phone'].includes(key)))throw new ProfileError('Sólo puedes modificar tus datos personales.');const name=typeof body.name==='string'?body.name.trim():'',email=typeof body.email==='string'?body.email.trim().toLowerCase():'',phone=typeof body.phone==='string'?body.phone.trim():'';if(!name||name.length>150||/[\u0000-\u001f]/.test(name))throw new ProfileError('Indica un nombre de hasta 150 caracteres.');if(email&&(email.length>254||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)))throw new ProfileError('Indica un correo válido.');if(phone.length>40||/[\u0000-\u001f]/.test(phone))throw new ProfileError('Indica un teléfono de hasta 40 caracteres.');return {name,email,phone}}
+export function checkProfileRevision(expected:any,actual:number){if(!Number.isSafeInteger(expected)||expected!==actual)throw new ProfileError('Tu perfil cambió. Actualiza la pantalla antes de guardar.',409)}
+
+export function checkProfileIdentity(expected:any,current:string){if(expected!==current)throw new ProfileError('La sesión cambió. Cierra el perfil y vuelve a abrirlo antes de guardar.',409)}

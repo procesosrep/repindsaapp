@@ -55,7 +55,8 @@
     "typescript": "5.9.3",
     "@libsql/client": "^0.15.15",
     "@aws-sdk/client-s3": "^3.0.0",
-    "mysql2": "^3.24.6"
+    "mysql2": "^3.24.6",
+    "sharp": "^0.35.5"
   },
   "devDependencies": {
     "playwright-core": "^1.64.1"
