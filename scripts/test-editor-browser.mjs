@@ -1,3 +1,4 @@
+import {launchTestBrowser} from './test-browser.mjs';
 import {existsSync} from 'node:fs';
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
@@ -6,7 +7,7 @@ import path from 'node:path';
 import http from 'node:http';
 import {createRequire} from 'node:module';
 import ts from 'typescript';
-import {chromium} from 'playwright-core';
+
 const require=createRequire(import.meta.url),{webpack}=require('next/dist/compiled/webpack/webpack');
 const root=process.cwd(),directory=await fs.mkdtemp(path.join(os.tmpdir(),'repindsa-editor-'));
 let browser,server;
@@ -22,7 +23,7 @@ try{
  const css=(await fs.readFile(path.join(root,'app/globals.css'),'utf8')).replace(/^@import[^\n]*$/gm,'');
  server=http.createServer((req,res)=>{res.setHeader('Content-Type',req.url==='/bundle.js'?'text/javascript':req.url==='/style.css'?'text/css':'text/html');res.end(req.url==='/bundle.js'?bundle:req.url==='/style.css'?css:'<!doctype html><html lang="es"><head><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="/style.css"></head><body><div id="root"></div><script src="/bundle.js"></script></body></html>')});
  await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
- browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||(existsSync('/usr/bin/chromium')?'/usr/bin/chromium':chromium.executablePath()),headless:true,args:['--no-sandbox']});
+ browser=await launchTestBrowser();
  const page=await browser.newPage();const errors=[];page.on('pageerror',error=>errors.push(error.message));
  const url='http://127.0.0.1:'+server.address().port;
  await page.goto(url);await page.getByRole('textbox').waitFor();

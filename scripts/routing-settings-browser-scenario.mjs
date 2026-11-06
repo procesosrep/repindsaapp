@@ -1,9 +1,10 @@
+import {launchTestBrowser} from './test-browser.mjs';
 import assert from 'node:assert/strict';
 import {existsSync,readFileSync} from 'node:fs';
 import ts from 'typescript';
-import {chromium} from 'playwright-core';
+
 const policy=new Function(ts.transpile(readFileSync('app/access-policy.ts','utf8').replace(/export /g,''),{target:ts.ScriptTarget.ES2022})+';return {defaultAccess,accessPermissionGroups,accessBaseRoles}')();
-export async function exerciseRoutingSettingsUI(baseURL){const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||(existsSync('/usr/bin/chromium')?'/usr/bin/chromium':chromium.executablePath()),headless:true,args:['--no-sandbox']});let page;try{
+export async function exerciseRoutingSettingsUI(baseURL){const browser=await launchTestBrowser();let page;try{
  page=await browser.newPage();const errors=[],writes=[];let routing={},reads=0;page.on('pageerror',e=>errors.push(e.message));
  const admin={username:'admin',name:'Administración',role:'Administrador',system:'operaciones',rights:policy.defaultAccess('Administrador'),systems:['operaciones','materiales','caja']};
  const users=[{username:'finance',name:'Finanzas',role:'Dirección',level:'Dirección',active:true,rights:policy.defaultAccess('Dirección'),details:{}},{username:'alternate',name:'Dirección General',role:'Operaciones',level:'Director general',active:true,rights:policy.defaultAccess('Dirección'),details:{}}];

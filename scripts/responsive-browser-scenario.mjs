@@ -1,11 +1,12 @@
+import {launchTestBrowser} from './test-browser.mjs';
 import {assertDialogScroll} from './dialog-scroll-check.mjs';
 import {existsSync} from 'node:fs';
-import {chromium} from 'playwright-core';
+
 import assert from 'node:assert/strict';
 import {mkdir} from 'node:fs/promises';
 import path from 'node:path';
 export async function exerciseResponsiveUI(baseURL){
- const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||(existsSync('/usr/bin/chromium')?'/usr/bin/chromium':chromium.executablePath()),headless:true,args:['--no-sandbox']});
+ const browser=await launchTestBrowser();
  try{
   const page=await browser.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));
   let authenticated=true;let documentMode='viewer';

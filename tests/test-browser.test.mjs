@@ -1,0 +1,7 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {testBrowserOptions} from '../scripts/test-browser.mjs';
+test('browser validation uses the Playwright-installed revision even when system Chromium exists',()=>{const options=testBrowserOptions({env:{},managedPath:'/managed/chromium',exists:()=>true});assert.equal(options.executablePath,'/managed/chromium');assert(options.args.includes('--disable-dev-shm-usage'));assert.equal(options.headless,true)});
+test('an explicit browser path is respected and a missing override fails instead of silently changing browsers',()=>{const options=testBrowserOptions({env:{CHROMIUM_PATH:'/custom/chromium'},managedPath:'/managed/chromium',exists:()=>true});assert.equal(options.executablePath,'/custom/chromium');assert.throws(()=>testBrowserOptions({env:{CHROMIUM_PATH:'/missing'},exists:()=>false}),/CHROMIUM_PATH/)});
+test('local environments may use system Chromium when the managed revision has not been installed',()=>{const options=testBrowserOptions({env:{},managedPath:'/missing',exists:p=>p==='/usr/bin/chromium'});assert.equal(options.executablePath,'/usr/bin/chromium');assert.throws(()=>testBrowserOptions({env:{},exists:()=>false}),/install --with-deps/)});
+test('CI never silently falls back to an unrelated system browser',()=>{assert.throws(()=>testBrowserOptions({env:{CI:'true'},managedPath:'/missing',exists:p=>p==='/usr/bin/chromium'}),/CI requiere/);assert.equal(testBrowserOptions({env:{CI:'true',CHROMIUM_PATH:'/override'},exists:p=>p==='/override'}).executablePath,'/override')});

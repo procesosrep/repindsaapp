@@ -1,7 +1,8 @@
+import {launchTestBrowser} from './test-browser.mjs';
 import assert from 'node:assert/strict';
-import {chromium} from 'playwright-core';
+
 export async function exercisePwa(baseURL){
- const browser=await chromium.launch({executablePath:'/usr/bin/chromium',headless:true,args:['--no-sandbox']});
+ const browser=await launchTestBrowser();
  try{
   const context=await browser.newContext(),page=await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));
   const response=await page.request.get(baseURL+'/manifest.webmanifest'),manifest=await response.json();assert.equal(response.status(),200);assert.equal(manifest.start_url,'/acceso');assert.equal(manifest.display,'standalone');assert.equal(manifest.name,'REPINDSA');assert(manifest.icons.some(i=>i.purpose==='maskable'));assert.match(response.headers()['content-type'],/manifest\+json/);

@@ -48,7 +48,7 @@ jobs:
         run: npm run test:mysql:startup
       - name: Guardar capturas de las pruebas
         if: always()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6 · Node.js 24
         with:
           name: capturas-pruebas
           path: .test-artifacts/screenshots/
