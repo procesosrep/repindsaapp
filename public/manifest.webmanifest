@@ -1,1 +1,18 @@
-{"id":"/","name":"REPINDSA · Materiales","short_name":"REPINDSA","lang":"es-MX","start_url":"/materiales","scope":"/","display":"standalone","background_color":"#f4f6fa","theme_color":"#142d50","icons":[{"src":"/app-icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any"}]}
+{
+  "id": "/",
+  "name": "REPINDSA",
+  "short_name": "REPINDSA",
+  "description": "Materiales, viáticos, inventarios y gestión por proyectos",
+  "lang": "es-MX",
+  "start_url": "/acceso",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f4f6fa",
+  "theme_color": "#142d50",
+  "prefer_related_applications": false,
+  "icons": [
+    {"src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+    {"src": "/icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}
